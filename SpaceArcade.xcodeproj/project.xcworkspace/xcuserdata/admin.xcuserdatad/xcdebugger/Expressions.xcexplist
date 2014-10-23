@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "Game::GLESSpaceGameRenderer::drawArray(std::__1::vector&lt;Math::Vector, std::__1::allocator&lt;Math::Vector&gt; &gt;&amp;, std::__1::vector&lt;Math::Vector4, std::__1::allocator&lt;Math::Vector4&gt; &gt;&amp;) const:glesspacegamerenderer.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "Vector(points[0])">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
