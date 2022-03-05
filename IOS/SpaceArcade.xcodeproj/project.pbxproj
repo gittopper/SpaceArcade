@@ -1,0 +1,470 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
+		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+		28FD15000DC6FC520079059D /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD14FF0DC6FC520079059D /* OpenGLES.framework */; };
+		28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD15070DC6FC5B0079059D /* QuartzCore.framework */; };
+		84A2B54A1A35EB02002B3382 /* fileresourceloader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A2B5471A35EB02002B3382 /* fileresourceloader.cpp */; };
+		84A6C8C51A2626CC0086A212 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84A6C8C41A2626CC0086A212 /* MainWindow.xib */; };
+		84A6CAA11A2634BF0086A212 /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA301A2634BF0086A212 /* EAGLView.mm */; };
+		84A6CAA21A2634BF0086A212 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA311A2634BF0086A212 /* main.m */; };
+		84A6CAA41A2634BF0086A212 /* ShaderAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA341A2634BF0086A212 /* ShaderAppDelegate.m */; };
+		84A6CAA51A2634BF0086A212 /* collider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA361A2634BF0086A212 /* collider.cpp */; };
+		84A6CAA61A2634BF0086A212 /* collisionrules.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA381A2634BF0086A212 /* collisionrules.cpp */; };
+		84A6CAA71A2634BF0086A212 /* igame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA3B1A2634BF0086A212 /* igame.cpp */; };
+		84A6CAA81A2634BF0086A212 /* iobject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA3D1A2634BF0086A212 /* iobject.cpp */; };
+		84A6CAA91A2634BF0086A212 /* asteroid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA401A2634BF0086A212 /* asteroid.cpp */; };
+		84A6CAAA1A2634BF0086A212 /* bullet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA421A2634BF0086A212 /* bullet.cpp */; };
+		84A6CAAB1A2634BF0086A212 /* scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA451A2634BF0086A212 /* scene.cpp */; };
+		84A6CAAC1A2634BF0086A212 /* spaceship.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA471A2634BF0086A212 /* spaceship.cpp */; };
+		84A6CAAD1A2634BF0086A212 /* physics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA491A2634BF0086A212 /* physics.cpp */; };
+		84A6CAAE1A2634BF0086A212 /* regressvisitor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA4B1A2634BF0086A212 /* regressvisitor.cpp */; };
+		84A6CAAF1A2634BF0086A212 /* spacegame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA4D1A2634BF0086A212 /* spacegame.cpp */; };
+		84A6CAB01A2634BF0086A212 /* boundingbox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA511A2634BF0086A212 /* boundingbox.cpp */; };
+		84A6CAB11A2634BF0086A212 /* mat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA551A2634BF0086A212 /* mat.cpp */; };
+		84A6CAB21A2634BF0086A212 /* mat44.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA571A2634BF0086A212 /* mat44.cpp */; };
+		84A6CAB31A2634BF0086A212 /* mathutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA591A2634BF0086A212 /* mathutils.cpp */; };
+		84A6CAB41A2634BF0086A212 /* vector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA5B1A2634BF0086A212 /* vector.cpp */; };
+		84A6CAB51A2634BF0086A212 /* vector4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA5D1A2634BF0086A212 /* vector4.cpp */; };
+		84A6CACB1A2634BF0086A212 /* glesrenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA951A2634BF0086A212 /* glesrenderer.cpp */; };
+		84A6CACC1A2634BF0086A212 /* glesspacegamerenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA971A2634BF0086A212 /* glesspacegamerenderer.cpp */; };
+		84A6CACD1A2634BF0086A212 /* rendererfactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA9A1A2634BF0086A212 /* rendererfactory.cpp */; };
+		84A6CAD01A2634BF0086A212 /* spacegamerenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84A6CA9F1A2634BF0086A212 /* spacegamerenderer.cpp */; };
+		84DC47FE1A3166FE0068D6EB /* fragment_shader.txt in Resources */ = {isa = PBXBuildFile; fileRef = 84DC47FC1A3166FE0068D6EB /* fragment_shader.txt */; };
+		84DC47FF1A3166FE0068D6EB /* vertex_shader.txt in Resources */ = {isa = PBXBuildFile; fileRef = 84DC47FD1A3166FE0068D6EB /* vertex_shader.txt */; };
+		84E145C619F48A1B0089D163 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84E145C519F48A1B0089D163 /* Default-568h@2x.png */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1D6058910D05DD3D006BFB54 /* SpaceArcade.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpaceArcade.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		28FD14FF0DC6FC520079059D /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		28FD15070DC6FC5B0079059D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		32CA4F630368D1EE00C91783 /* SpaceArcade_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpaceArcade_Prefix.pch; sourceTree = "<group>"; };
+		84A2B5471A35EB02002B3382 /* fileresourceloader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fileresourceloader.cpp; sourceTree = "<group>"; };
+		84A2B5481A35EB02002B3382 /* fileresourceloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fileresourceloader.h; sourceTree = "<group>"; };
+		84A2B5491A35EB02002B3382 /* resourceloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = resourceloader.h; sourceTree = "<group>"; };
+		84A6C8C41A2626CC0086A212 /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MainWindow.xib; path = ../src/cocoa/MainWindow.xib; sourceTree = "<group>"; };
+		84A6CA2F1A2634BF0086A212 /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EAGLView.h; sourceTree = "<group>"; };
+		84A6CA301A2634BF0086A212 /* EAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EAGLView.mm; sourceTree = "<group>"; };
+		84A6CA311A2634BF0086A212 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		84A6CA331A2634BF0086A212 /* ShaderAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderAppDelegate.h; sourceTree = "<group>"; };
+		84A6CA341A2634BF0086A212 /* ShaderAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShaderAppDelegate.m; sourceTree = "<group>"; };
+		84A6CA361A2634BF0086A212 /* collider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = collider.cpp; sourceTree = "<group>"; };
+		84A6CA371A2634BF0086A212 /* collider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = collider.h; sourceTree = "<group>"; };
+		84A6CA381A2634BF0086A212 /* collisionrules.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = collisionrules.cpp; sourceTree = "<group>"; };
+		84A6CA391A2634BF0086A212 /* collisionrules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = collisionrules.h; sourceTree = "<group>"; };
+		84A6CA3A1A2634BF0086A212 /* gameconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gameconfig.h; sourceTree = "<group>"; };
+		84A6CA3B1A2634BF0086A212 /* igame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = igame.cpp; sourceTree = "<group>"; };
+		84A6CA3C1A2634BF0086A212 /* igame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = igame.h; sourceTree = "<group>"; };
+		84A6CA3D1A2634BF0086A212 /* iobject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = iobject.cpp; sourceTree = "<group>"; };
+		84A6CA3E1A2634BF0086A212 /* iobject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iobject.h; sourceTree = "<group>"; };
+		84A6CA401A2634BF0086A212 /* asteroid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = asteroid.cpp; sourceTree = "<group>"; };
+		84A6CA411A2634BF0086A212 /* asteroid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asteroid.h; sourceTree = "<group>"; };
+		84A6CA421A2634BF0086A212 /* bullet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bullet.cpp; sourceTree = "<group>"; };
+		84A6CA431A2634BF0086A212 /* bullet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bullet.h; sourceTree = "<group>"; };
+		84A6CA441A2634BF0086A212 /* gameobjects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gameobjects.h; sourceTree = "<group>"; };
+		84A6CA451A2634BF0086A212 /* scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scene.cpp; sourceTree = "<group>"; };
+		84A6CA461A2634BF0086A212 /* scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scene.h; sourceTree = "<group>"; };
+		84A6CA471A2634BF0086A212 /* spaceship.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spaceship.cpp; sourceTree = "<group>"; };
+		84A6CA481A2634BF0086A212 /* spaceship.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = spaceship.h; sourceTree = "<group>"; };
+		84A6CA491A2634BF0086A212 /* physics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = physics.cpp; sourceTree = "<group>"; };
+		84A6CA4A1A2634BF0086A212 /* physics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = physics.h; sourceTree = "<group>"; };
+		84A6CA4B1A2634BF0086A212 /* regressvisitor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = regressvisitor.cpp; sourceTree = "<group>"; };
+		84A6CA4C1A2634BF0086A212 /* regressvisitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = regressvisitor.h; sourceTree = "<group>"; };
+		84A6CA4D1A2634BF0086A212 /* spacegame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spacegame.cpp; sourceTree = "<group>"; };
+		84A6CA4E1A2634BF0086A212 /* spacegame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = spacegame.h; sourceTree = "<group>"; };
+		84A6CA4F1A2634BF0086A212 /* visitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = visitor.h; sourceTree = "<group>"; };
+		84A6CA511A2634BF0086A212 /* boundingbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundingbox.cpp; sourceTree = "<group>"; };
+		84A6CA521A2634BF0086A212 /* boundingbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boundingbox.h; sourceTree = "<group>"; };
+		84A6CA531A2634BF0086A212 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
+		84A6CA541A2634BF0086A212 /* gamemath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gamemath.h; sourceTree = "<group>"; };
+		84A6CA551A2634BF0086A212 /* mat.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mat.cpp; sourceTree = "<group>"; };
+		84A6CA561A2634BF0086A212 /* mat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mat.h; sourceTree = "<group>"; };
+		84A6CA571A2634BF0086A212 /* mat44.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mat44.cpp; sourceTree = "<group>"; };
+		84A6CA581A2634BF0086A212 /* mat44.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mat44.h; sourceTree = "<group>"; };
+		84A6CA591A2634BF0086A212 /* mathutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mathutils.cpp; sourceTree = "<group>"; };
+		84A6CA5A1A2634BF0086A212 /* mathutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mathutils.h; sourceTree = "<group>"; };
+		84A6CA5B1A2634BF0086A212 /* vector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vector.cpp; sourceTree = "<group>"; };
+		84A6CA5C1A2634BF0086A212 /* vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vector.h; sourceTree = "<group>"; };
+		84A6CA5D1A2634BF0086A212 /* vector4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vector4.cpp; sourceTree = "<group>"; };
+		84A6CA5E1A2634BF0086A212 /* vector4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vector4.h; sourceTree = "<group>"; };
+		84A6CA951A2634BF0086A212 /* glesrenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glesrenderer.cpp; sourceTree = "<group>"; };
+		84A6CA961A2634BF0086A212 /* glesrenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glesrenderer.h; sourceTree = "<group>"; };
+		84A6CA971A2634BF0086A212 /* glesspacegamerenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glesspacegamerenderer.cpp; sourceTree = "<group>"; };
+		84A6CA981A2634BF0086A212 /* glesspacegamerenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glesspacegamerenderer.h; sourceTree = "<group>"; };
+		84A6CA991A2634BF0086A212 /* renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = renderer.h; sourceTree = "<group>"; };
+		84A6CA9A1A2634BF0086A212 /* rendererfactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rendererfactory.cpp; sourceTree = "<group>"; };
+		84A6CA9B1A2634BF0086A212 /* rendererfactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rendererfactory.h; sourceTree = "<group>"; };
+		84A6CA9F1A2634BF0086A212 /* spacegamerenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spacegamerenderer.cpp; sourceTree = "<group>"; };
+		84A6CAA01A2634BF0086A212 /* spacegamerenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = spacegamerenderer.h; sourceTree = "<group>"; };
+		84DC47FC1A3166FE0068D6EB /* fragment_shader.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = fragment_shader.txt; path = ../src/rendering/shaders/fragment_shader.txt; sourceTree = "<group>"; };
+		84DC47FD1A3166FE0068D6EB /* vertex_shader.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = vertex_shader.txt; path = ../src/rendering/shaders/vertex_shader.txt; sourceTree = "<group>"; };
+		84E145C519F48A1B0089D163 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* SpaceArcade-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "SpaceArcade-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1D60588F0D05DD3D006BFB54 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
+				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
+				28FD15000DC6FC520079059D /* OpenGLES.framework in Frameworks */,
+				28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1D6058910D05DD3D006BFB54 /* SpaceArcade.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
+			isa = PBXGroup;
+			children = (
+				84A6CA2D1A2634BF0086A212 /* src */,
+				84E145C519F48A1B0089D163 /* Default-568h@2x.png */,
+				599361C9103F5D8B00250E4D /* Shaders */,
+				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = CustomTemplate;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				32CA4F630368D1EE00C91783 /* SpaceArcade_Prefix.pch */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				84A6C8C41A2626CC0086A212 /* MainWindow.xib */,
+				8D1107310486CEB800E47090 /* SpaceArcade-Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				28FD15070DC6FC5B0079059D /* QuartzCore.framework */,
+				28FD14FF0DC6FC520079059D /* OpenGLES.framework */,
+				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
+				1D30AB110D05D00D00671497 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		599361C9103F5D8B00250E4D /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				84DC47FC1A3166FE0068D6EB /* fragment_shader.txt */,
+				84DC47FD1A3166FE0068D6EB /* vertex_shader.txt */,
+			);
+			name = Shaders;
+			sourceTree = "<group>";
+		};
+		84A6CA2D1A2634BF0086A212 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				84A6CA2E1A2634BF0086A212 /* cocoa */,
+				84A6CA351A2634BF0086A212 /* game */,
+				84A6CA501A2634BF0086A212 /* math */,
+				84A6CA941A2634BF0086A212 /* rendering */,
+			);
+			name = src;
+			path = ../src;
+			sourceTree = "<group>";
+		};
+		84A6CA2E1A2634BF0086A212 /* cocoa */ = {
+			isa = PBXGroup;
+			children = (
+				84A6CA2F1A2634BF0086A212 /* EAGLView.h */,
+				84A6CA301A2634BF0086A212 /* EAGLView.mm */,
+				84A6CA311A2634BF0086A212 /* main.m */,
+				84A6CA331A2634BF0086A212 /* ShaderAppDelegate.h */,
+				84A6CA341A2634BF0086A212 /* ShaderAppDelegate.m */,
+			);
+			path = cocoa;
+			sourceTree = "<group>";
+		};
+		84A6CA351A2634BF0086A212 /* game */ = {
+			isa = PBXGroup;
+			children = (
+				84A6CA361A2634BF0086A212 /* collider.cpp */,
+				84A6CA371A2634BF0086A212 /* collider.h */,
+				84A6CA381A2634BF0086A212 /* collisionrules.cpp */,
+				84A6CA391A2634BF0086A212 /* collisionrules.h */,
+				84A6CA3A1A2634BF0086A212 /* gameconfig.h */,
+				84A6CA3B1A2634BF0086A212 /* igame.cpp */,
+				84A6CA3C1A2634BF0086A212 /* igame.h */,
+				84A6CA3D1A2634BF0086A212 /* iobject.cpp */,
+				84A6CA3E1A2634BF0086A212 /* iobject.h */,
+				84A6CA3F1A2634BF0086A212 /* objects */,
+				84A6CA491A2634BF0086A212 /* physics.cpp */,
+				84A6CA4A1A2634BF0086A212 /* physics.h */,
+				84A6CA4B1A2634BF0086A212 /* regressvisitor.cpp */,
+				84A6CA4C1A2634BF0086A212 /* regressvisitor.h */,
+				84A6CA4D1A2634BF0086A212 /* spacegame.cpp */,
+				84A6CA4E1A2634BF0086A212 /* spacegame.h */,
+				84A6CA4F1A2634BF0086A212 /* visitor.h */,
+			);
+			path = game;
+			sourceTree = "<group>";
+		};
+		84A6CA3F1A2634BF0086A212 /* objects */ = {
+			isa = PBXGroup;
+			children = (
+				84A6CA401A2634BF0086A212 /* asteroid.cpp */,
+				84A6CA411A2634BF0086A212 /* asteroid.h */,
+				84A6CA421A2634BF0086A212 /* bullet.cpp */,
+				84A6CA431A2634BF0086A212 /* bullet.h */,
+				84A6CA441A2634BF0086A212 /* gameobjects.h */,
+				84A6CA451A2634BF0086A212 /* scene.cpp */,
+				84A6CA461A2634BF0086A212 /* scene.h */,
+				84A6CA471A2634BF0086A212 /* spaceship.cpp */,
+				84A6CA481A2634BF0086A212 /* spaceship.h */,
+			);
+			path = objects;
+			sourceTree = "<group>";
+		};
+		84A6CA501A2634BF0086A212 /* math */ = {
+			isa = PBXGroup;
+			children = (
+				84A6CA511A2634BF0086A212 /* boundingbox.cpp */,
+				84A6CA521A2634BF0086A212 /* boundingbox.h */,
+				84A6CA531A2634BF0086A212 /* common.h */,
+				84A6CA541A2634BF0086A212 /* gamemath.h */,
+				84A6CA551A2634BF0086A212 /* mat.cpp */,
+				84A6CA561A2634BF0086A212 /* mat.h */,
+				84A6CA571A2634BF0086A212 /* mat44.cpp */,
+				84A6CA581A2634BF0086A212 /* mat44.h */,
+				84A6CA591A2634BF0086A212 /* mathutils.cpp */,
+				84A6CA5A1A2634BF0086A212 /* mathutils.h */,
+				84A6CA5B1A2634BF0086A212 /* vector.cpp */,
+				84A6CA5C1A2634BF0086A212 /* vector.h */,
+				84A6CA5D1A2634BF0086A212 /* vector4.cpp */,
+				84A6CA5E1A2634BF0086A212 /* vector4.h */,
+			);
+			path = math;
+			sourceTree = "<group>";
+		};
+		84A6CA941A2634BF0086A212 /* rendering */ = {
+			isa = PBXGroup;
+			children = (
+				84A2B5471A35EB02002B3382 /* fileresourceloader.cpp */,
+				84A2B5481A35EB02002B3382 /* fileresourceloader.h */,
+				84A2B5491A35EB02002B3382 /* resourceloader.h */,
+				84A6CA951A2634BF0086A212 /* glesrenderer.cpp */,
+				84A6CA961A2634BF0086A212 /* glesrenderer.h */,
+				84A6CA971A2634BF0086A212 /* glesspacegamerenderer.cpp */,
+				84A6CA981A2634BF0086A212 /* glesspacegamerenderer.h */,
+				84A6CA991A2634BF0086A212 /* renderer.h */,
+				84A6CA9A1A2634BF0086A212 /* rendererfactory.cpp */,
+				84A6CA9B1A2634BF0086A212 /* rendererfactory.h */,
+				84A6CA9F1A2634BF0086A212 /* spacegamerenderer.cpp */,
+				84A6CAA01A2634BF0086A212 /* spacegamerenderer.h */,
+			);
+			path = rendering;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1D6058900D05DD3D006BFB54 /* SpaceArcade */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "SpaceArcade" */;
+			buildPhases = (
+				1D60588D0D05DD3D006BFB54 /* Resources */,
+				1D60588E0D05DD3D006BFB54 /* Sources */,
+				1D60588F0D05DD3D006BFB54 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SpaceArcade;
+			productName = Shader;
+			productReference = 1D6058910D05DD3D006BFB54 /* SpaceArcade.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0600;
+			};
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "SpaceArcade" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1D6058900D05DD3D006BFB54 /* SpaceArcade */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1D60588D0D05DD3D006BFB54 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84A6C8C51A2626CC0086A212 /* MainWindow.xib in Resources */,
+				84DC47FE1A3166FE0068D6EB /* fragment_shader.txt in Resources */,
+				84E145C619F48A1B0089D163 /* Default-568h@2x.png in Resources */,
+				84DC47FF1A3166FE0068D6EB /* vertex_shader.txt in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1D60588E0D05DD3D006BFB54 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84A6CAAB1A2634BF0086A212 /* scene.cpp in Sources */,
+				84A6CAA91A2634BF0086A212 /* asteroid.cpp in Sources */,
+				84A6CAAA1A2634BF0086A212 /* bullet.cpp in Sources */,
+				84A6CAAE1A2634BF0086A212 /* regressvisitor.cpp in Sources */,
+				84A6CAB41A2634BF0086A212 /* vector.cpp in Sources */,
+				84A6CAA21A2634BF0086A212 /* main.m in Sources */,
+				84A6CAA11A2634BF0086A212 /* EAGLView.mm in Sources */,
+				84A6CAAF1A2634BF0086A212 /* spacegame.cpp in Sources */,
+				84A6CAA81A2634BF0086A212 /* iobject.cpp in Sources */,
+				84A6CAB01A2634BF0086A212 /* boundingbox.cpp in Sources */,
+				84A6CAA41A2634BF0086A212 /* ShaderAppDelegate.m in Sources */,
+				84A6CAB11A2634BF0086A212 /* mat.cpp in Sources */,
+				84A6CAAD1A2634BF0086A212 /* physics.cpp in Sources */,
+				84A2B54A1A35EB02002B3382 /* fileresourceloader.cpp in Sources */,
+				84A6CAA61A2634BF0086A212 /* collisionrules.cpp in Sources */,
+				84A6CAB31A2634BF0086A212 /* mathutils.cpp in Sources */,
+				84A6CAA51A2634BF0086A212 /* collider.cpp in Sources */,
+				84A6CAA71A2634BF0086A212 /* igame.cpp in Sources */,
+				84A6CACD1A2634BF0086A212 /* rendererfactory.cpp in Sources */,
+				84A6CAD01A2634BF0086A212 /* spacegamerenderer.cpp in Sources */,
+				84A6CAB21A2634BF0086A212 /* mat44.cpp in Sources */,
+				84A6CAAC1A2634BF0086A212 /* spaceship.cpp in Sources */,
+				84A6CACB1A2634BF0086A212 /* glesrenderer.cpp in Sources */,
+				84A6CAB51A2634BF0086A212 /* vector4.cpp in Sources */,
+				84A6CACC1A2634BF0086A212 /* glesspacegamerenderer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1D6058940D05DD3E006BFB54 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Noel Llopis";
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = SpaceArcade_Prefix.pch;
+				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
+				INFOPLIST_FILE = "SpaceArcade-Info.plist";
+				OTHER_CFLAGS = "-I../src/";
+				PRODUCT_NAME = SpaceArcade;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "869C30D9-81BD-4347-AEAF-471F8703E648";
+			};
+			name = Debug;
+		};
+		1D6058950D05DD3E006BFB54 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Noel Llopis";
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = SpaceArcade_Prefix.pch;
+				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
+				INFOPLIST_FILE = "SpaceArcade-Info.plist";
+				OTHER_CFLAGS = "-I../src/";
+				PRODUCT_NAME = SpaceArcade;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "869C30D9-81BD-4347-AEAF-471F8703E648";
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "SpaceArcade" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D6058940D05DD3E006BFB54 /* Debug */,
+				1D6058950D05DD3E006BFB54 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "SpaceArcade" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}
