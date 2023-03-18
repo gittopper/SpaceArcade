@@ -4,6 +4,8 @@
 #include <list>
 #include <string>
 #include "rendering/androidresourceloader.h"
+#include "rendering/rendererfactory.h"
+
 
 using namespace Game;
 
@@ -20,6 +22,7 @@ extern "C" {
 			t = true;
 		}
 		game = new SpaceGame;
+		game->setRenderer(RendererFactory::getGLESRenderer());
 		ResourceLoader* res = dynamic_cast<ResourceLoader*>(new AndroidResourceLoader(AAssetManager_fromJava(env, javaAssetManager)));
 
         const bool ok = game->getRenderer()->initRenderer(res);

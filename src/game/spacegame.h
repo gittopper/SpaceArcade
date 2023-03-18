@@ -39,7 +39,7 @@ namespace Game
         void tap(int x, int y);
         
         void renderStep();
-        
+        void setRenderer(SpaceGameRenderer* r) { renderer = r; }
         Renderer* getRenderer() { return renderer;}
 
         void gameOver();
