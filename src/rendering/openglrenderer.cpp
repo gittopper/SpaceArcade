@@ -22,7 +22,7 @@ void OpenGLRenderer::drawGameObject(IObject &obj) const {
                    width / scale,
                (p[0] * obj.getTransform().el(1, 0) +
                 p[1] * obj.getTransform().el(1, 1) + obj.getShift()[1]) *
-                   height / scale);
+                   width / scale);
   }
   glEnd();
 }
