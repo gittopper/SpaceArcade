@@ -15,10 +15,7 @@ using namespace Game;
 using namespace std;
 
 SpaceGame::SpaceGame()
-    : paused(false),
-      collider(&scene),
-      time(0),
-      asteroidsNextTime(-1),
+    : paused(false), collider(&scene), time(0), asteroidsNextTime(-1),
       renderer(nullptr) {}
 
 void SpaceGame::pause() { paused = true; }
@@ -34,7 +31,7 @@ void SpaceGame::setupGame(GameConfig conf) {
 
   renderer->setScale(config.scale);
   renderer->getScreeenSize(w, h);
-  aspect = (float)h / w;
+  aspect = static_cast<float>(h) / w;
   scene.setupScene(config.scale, aspect * config.scale);
 
   spaceship = new SpaceShip(config.bulletSpeed * config.dt);
@@ -45,9 +42,9 @@ void SpaceGame::setupGame(GameConfig conf) {
       0, -aspect * config.scale / 2. +
              (spaceship->getShift() - spaceship->getBBox().getMin())[1]));
 
-  asteroidsDelay = normal_distribution<float>(
-      1 / config.asteroidsAvgPerSec,
-      config.asteroidsSigmaPerSec / config.asteroidsAvgPerSec);
+  asteroidsDelay = normal_distribution<float>(1 / config.asteroidsAvgPerSec,
+                                              config.asteroidsSigmaPerSec /
+                                                  config.asteroidsAvgPerSec);
 
   asteroidsSpeed = normal_distribution<float>(config.asteroidsAvgSpeed,
                                               config.asteroidsSigmaSpeed);
@@ -119,10 +116,10 @@ void SpaceGame::renderStep() {
   renderer->showFrame();
 }
 
-void SpaceGame::addGameObject(class IObject* o) { objectsToAdd.insert(o); }
+void SpaceGame::addGameObject(class IObject *o) { objectsToAdd.insert(o); }
 
 void SpaceGame::createAsteroid() {
-  IObject* asteroid = new Asteroid;
+  IObject *asteroid = new Asteroid;
   float size = asteroidsSize(generator);
   size = size < 0.1 ? 0.1 : size;
   asteroid->scale(size);

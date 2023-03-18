@@ -26,5 +26,6 @@ namespace Game
         void drawGameObject(IObject& obj) const;
         int width = 500;
         int height = 500;
+        double scale;
     };
 }

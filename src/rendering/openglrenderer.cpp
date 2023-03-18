@@ -19,10 +19,10 @@ void OpenGLRenderer::drawGameObject(IObject &obj) const {
     // Координаты курсора
     glVertex2f((p[0] * obj.getTransform().el(0, 0) +
                 p[1] * obj.getTransform().el(0, 1) + obj.getShift()[0]) *
-                   width / 10,
+                   width / scale,
                (p[0] * obj.getTransform().el(1, 0) +
                 p[1] * obj.getTransform().el(1, 1) + obj.getShift()[1]) *
-                   height / 10);
+                   height / scale);
   }
   glEnd();
 }
@@ -63,7 +63,7 @@ void OpenGLRenderer::setScreeenSize(int &w, int &h) {
   height = h;
 }
 
-void OpenGLRenderer::setScale(float s) {}
+void OpenGLRenderer::setScale(float s) { scale = s; }
 
 bool OpenGLRenderer::initRenderer(ResourceLoader *loader) {}
 
