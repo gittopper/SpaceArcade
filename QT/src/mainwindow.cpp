@@ -23,11 +23,12 @@ void MainWindow::resizeGL(int nWidth, int nHeight) {
   if (!game) {
     game.reset(new SpaceGame);
     game->setRenderer(new OpenGLRenderer);
-    game->getRenderer()->setScreeenSize(nWidth, nHeight);
     GameConfig config;
     config.dt = 1. / 20;
+    game->getRenderer()->setScreeenSize(nWidth, nHeight);
     game->setupGame(config);
   }
+  game->getRenderer()->setScreeenSize(nWidth, nHeight);
   render();
 }
 

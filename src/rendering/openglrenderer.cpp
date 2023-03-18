@@ -17,10 +17,10 @@ void OpenGLRenderer::drawGameObject(IObject &obj) const {
     auto p = obj.getDrawPoints()[i];
     glColor3f(c[0], c[1], c[2]); // Цвет курсора
     // Координаты курсора
-    glVertex2f((p[0] * obj.getTransform().el(0, 0) + 4 +
+    glVertex2f((p[0] * obj.getTransform().el(0, 0) +
                 p[1] * obj.getTransform().el(0, 1) + obj.getShift()[0]) *
                    width / 10,
-               (p[0] * obj.getTransform().el(1, 0) + 4 +
+               (p[0] * obj.getTransform().el(1, 0) +
                 p[1] * obj.getTransform().el(1, 1) + obj.getShift()[1]) *
                    height / 10);
   }
@@ -40,7 +40,8 @@ void OpenGLRenderer::prepareFrame() {
           GL_DEPTH_BUFFER_BIT); // чистим буфер изображения и буфер глубины
   glMatrixMode(GL_PROJECTION); // устанавливаем матрицу
   glLoadIdentity();            // загружаем матрицу
-  glOrtho(0, width, height, 0, 1, 0); // подготавливаем плоскости для матрицы
+  glOrtho(-width / 2, width / 2, height / 2, -height / 2, 1,
+          0); // подготавливаем плоскости для матрицы
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
