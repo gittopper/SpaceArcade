@@ -20,12 +20,14 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        arcadeView.onPause();
     }
     
 
     @Override
     protected void onResume() {
         super.onResume();
+        arcadeView.onResume();
     }
     
     @Override
