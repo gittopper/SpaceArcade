@@ -103,28 +103,28 @@ bool GLESRenderer::compileShader()
 
 void GLESRenderer::createFramebuffer()
 {
-    glGenFramebuffersOES(1, &viewFramebuffer);
-    glGenRenderbuffersOES(1, &viewRenderbuffer);
+    glGenFramebuffers(1, &viewFramebuffer);
+    glGenRenderbuffers(1, &viewRenderbuffer);
     
-    glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
-    glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER_OES, viewFramebuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER_OES, viewRenderbuffer);
     
-    glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, viewRenderbuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, viewRenderbuffer);
     
 }
 bool GLESRenderer::updateInfoAboutWindow()
 {
-    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth);
-    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight);
     
     if (USE_DEPTH_BUFFER) {
-        glGenRenderbuffersOES(1, &depthRenderbuffer);
-        glBindRenderbufferOES(GL_RENDERBUFFER_OES, depthRenderbuffer);
-        glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, backingWidth, backingHeight);
-        glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, depthRenderbuffer);
+        glGenRenderbuffers(1, &depthRenderbuffer);
+        glBindRenderbuffer(GL_RENDERBUFFER_OES, depthRenderbuffer);
+        glRenderbufferStorage(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, backingWidth, backingHeight);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, depthRenderbuffer);
     }
     
-    if(glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES) {
+    if(glCheckFramebufferStatus(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES) {
         return false;
     }
     
@@ -139,7 +139,7 @@ void GLESRenderer::prepareFrame()
     
     SetOrtho(proj, -hs, hs,-aspect * hs, aspect*hs, -scale, scale);
     
-    glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER_OES, viewFramebuffer);
     glViewport(0, 0, backingWidth, backingHeight);
     
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
@@ -157,20 +157,20 @@ void GLESRenderer::setScale(float s)
 
 void GLESRenderer::showFrame()
 {
-    glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER_OES, viewRenderbuffer);
 }
 
 
 void GLESRenderer::destroyFramebuffer()
 {
     
-    glDeleteFramebuffersOES(1, &viewFramebuffer);
+    glDeleteFramebuffers(1, &viewFramebuffer);
     viewFramebuffer = 0;
-    glDeleteRenderbuffersOES(1, &viewRenderbuffer);
+    glDeleteRenderbuffers(1, &viewRenderbuffer);
     viewRenderbuffer = 0;
     
     if(USE_DEPTH_BUFFER) {
-        glDeleteRenderbuffersOES(1, &depthRenderbuffer);
+        glDeleteRenderbuffers(1, &depthRenderbuffer);
         depthRenderbuffer = 0;
     }
 }
