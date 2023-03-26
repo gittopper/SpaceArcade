@@ -22,6 +22,9 @@ package com.arm.malideveloper.openglessdk.simplecube;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+import android.view.MotionEvent;
+import android.util.Log;
+
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
@@ -87,6 +90,25 @@ class TutorialView extends GLSurfaceView
             return configs[0];
         }
 
+    }
+
+    public boolean onTouchEvent(final MotionEvent e) {
+        float x = e.getX();
+        float y = e.getY();
+        switch(e.getAction())
+        {
+            case MotionEvent.ACTION_DOWN:
+                Log.i("received ", Integer.toString(e.getPointerCount()));
+                NativeLibrary.dragStart((int)0, (int)0, (int)x, (int)y);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                NativeLibrary.drag((int)0, (int)0, (int)x, (int)y);
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
+        }
+
+        return true;
     }
         private static class Renderer implements GLSurfaceView.Renderer
         {

@@ -35,27 +35,29 @@
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
 /* [vertexShader] */
-static const char  glVertexShader[] =
-        "attribute vec4 vertexPosition;\n"
-        "attribute vec3 vertexColour;\n"
-        "varying vec3 fragColour;\n"
-        "uniform mat4 projection;\n"
-        "uniform mat4 modelView;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = projection * modelView * vertexPosition;\n"
-        "    fragColour = vertexColour;\n"
-        "}\n";
+static const char  glVertexShader[] = R"(
+    attribute vec4 vertexPosition;
+    attribute vec3 vertexColour;
+    varying vec3 fragColour;
+    uniform mat4 projection;
+    uniform mat4 modelView;
+    void main()
+    {
+        gl_Position = projection * modelView * vertexPosition;
+        fragColour = vertexColour;
+    }
+)";
 /* [vertexShader] */
 
 /* [fragmentShader] */
-static const char  glFragmentShader[] =
-        "precision mediump float;\n"
-        "varying vec3 fragColour;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_FragColor = vec4(fragColour, 1.0);\n"
-        "}\n";
+static const char  glFragmentShader[] = R"(
+    precision mediump float;
+    varying vec3 fragColour;
+    void main()
+    {
+        gl_FragColor = vec4(fragColour, 1.0);
+    }
+)";
 /* [fragmentShader] */
 
 GLuint loadShader(GLenum shaderType, const char* shaderSource)
@@ -79,7 +81,7 @@ GLuint loadShader(GLenum shaderType, const char* shaderSource)
                 if (logBuffer != NULL)
                 {
                     glGetShaderInfoLog(shader, infoLen, NULL, logBuffer);
-                    LOGE("Could not Compile Shader %d:\n%s\n", shaderType, logBuffer);
+                    LOGE("Could not Compile Shader %d:\n%s, shaderType, logBuffer\n");
                     free(logBuffer);
                     logBuffer = NULL;
                 }
@@ -127,7 +129,7 @@ GLuint createProgram(const char* vertexSource, const char * fragmentSource)
                 if (logBuffer != NULL)
                 {
                     glGetProgramInfoLog(program, bufLength, NULL, logBuffer);
-                    LOGE("Could not link program:\n%s\n", logBuffer);
+                    LOGE("Could not link program:\n%s, logBuffer\n");
                     free(logBuffer);
                     logBuffer = NULL;
                 }
@@ -257,18 +259,18 @@ void renderFrame()
     glUniformMatrix4fv(modelViewLocation, 1, GL_FALSE, modelViewMatrix);
 
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, indices);
-
-    angle += 1;
-    if (angle > 360)
-    {
-        angle -= 360;
-    }
 }
 /* [renderFrame] */
 extern "C"
 {
     JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_init(
             JNIEnv * env, jobject obj, jint width, jint height);
+JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_dragStart(
+        JNIEnv * env, jobject obj, jint x1, jint y1, jint x2, jint y2);
+    JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_drag(
+        JNIEnv * env, jobject obj, jint x1, jint y1, jint x2, jint y2);
+JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_dragStop(
+        JNIEnv * env, jobject obj);
     JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_step(
             JNIEnv * env, jobject obj);
 };
@@ -283,4 +285,22 @@ JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeL
         JNIEnv * env, jobject obj)
 {
     renderFrame();
+}
+JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_dragStart(
+        JNIEnv * env, jobject obj, jint x1, jint y1, jint x2, jint y2)
+{
+    LOGE("Received %d, %d, %d, %d", x1, y1, x2, y2);
+    angle = std::asin((x2 - x1) / std::sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))) * 180 / 3.141516;
+}
+
+JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_dragStop(
+        JNIEnv * env, jobject obj)
+{
+
+}
+JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_drag(
+        JNIEnv * env, jobject obj, jint x1, jint y1, jint x2, jint y2)
+{
+    LOGE("Received %d, %d, %d, %d", x1, y1, x2, y2);
+    angle = std::asin((x2 - x1) / std::sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))) * 180 / 3.141516;
 }
