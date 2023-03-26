@@ -149,7 +149,14 @@ GLuint modelViewLocation;
 
 float projectionMatrix[16];
 float modelViewMatrix[16];
-float angle = 0;
+float angleXLast = 0;
+float angleYLast = 0;
+float angleX = angleXLast;
+float angleY = angleYLast;
+float zLast = -10;
+float z = zLast;
+float shift_x = 0;
+float shift_y = 0;
 
 /* [setupGraphics] */
 bool setupGraphics(int width, int height)
@@ -244,10 +251,10 @@ void renderFrame()
 
     matrixIdentityFunction(modelViewMatrix);
 
-    matrixRotateX(modelViewMatrix, angle);
-    matrixRotateY(modelViewMatrix, angle);
+    matrixRotateX(modelViewMatrix, angleX);
+    matrixRotateY(modelViewMatrix, angleY);
 
-    matrixTranslate(modelViewMatrix, 0.0f, 0.0f, -10.0f);
+    matrixTranslate(modelViewMatrix, shift_x, shift_y, z);
 
     glUseProgram(simpleCubeProgram);
     glVertexAttribPointer(vertexLocation, 3, GL_FLOAT, GL_FALSE, 0, cubeVertices);
@@ -273,6 +280,10 @@ JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeL
         JNIEnv * env, jobject obj);
     JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_step(
             JNIEnv * env, jobject obj);
+JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_moveStart(
+        JNIEnv * env, jobject obj, jint x, jint y);
+JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_move(
+        JNIEnv * env, jobject obj, jint x, jint y);
 };
 
 JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_init(
@@ -286,21 +297,39 @@ JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeL
 {
     renderFrame();
 }
+
+float lstart;
+
 JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_dragStart(
         JNIEnv * env, jobject obj, jint x1, jint y1, jint x2, jint y2)
 {
-    LOGE("Received %d, %d, %d, %d", x1, y1, x2, y2);
-    angle = std::asin((x2 - x1) / std::sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))) * 180 / 3.141516;
+    lstart = std::sqrt((x2 - x1) * (x2 - x1)+ (y2 - y1) * (y2 - y1));
 }
 
 JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_dragStop(
         JNIEnv * env, jobject obj)
 {
-
+    zLast = z;
+    angleXLast = angleX;
+    angleYLast = angleY;
 }
 JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_drag(
         JNIEnv * env, jobject obj, jint x1, jint y1, jint x2, jint y2)
 {
-    LOGE("Received %d, %d, %d, %d", x1, y1, x2, y2);
-    angle = std::asin((x2 - x1) / std::sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))) * 180 / 3.141516;
+    auto l = std::sqrt((x2 - x1) * (x2 - x1)+ (y2 - y1) * (y2 - y1));
+    z = zLast + (l - lstart) / 100;
+}
+
+int move_start_x;
+int move_start_y;
+
+JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_moveStart(
+        JNIEnv * env, jobject obj, jint x, jint y) {
+    move_start_x = x;
+    move_start_y = y;
+}
+JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_move(
+        JNIEnv * env, jobject obj, jint x, jint y) {
+    angleX = angleXLast + (y - move_start_y) / 10;
+    angleY = angleYLast + (x - move_start_x) / 10;
 }

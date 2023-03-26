@@ -92,20 +92,53 @@ class TutorialView extends GLSurfaceView
 
     }
 
+    boolean wasTwoFingers = false;
     public boolean onTouchEvent(final MotionEvent e) {
-        float x = e.getX();
-        float y = e.getY();
-        switch(e.getAction())
+        if (e.getPointerCount() > 1)
         {
-            case MotionEvent.ACTION_DOWN:
-                Log.i("received ", Integer.toString(e.getPointerCount()));
-                NativeLibrary.dragStart((int)0, (int)0, (int)x, (int)y);
-                break;
-            case MotionEvent.ACTION_MOVE:
-                NativeLibrary.drag((int)0, (int)0, (int)x, (int)y);
-                break;
-            case MotionEvent.ACTION_UP:
-                break;
+            wasTwoFingers = true;
+            Log.i("received ", Integer.toString(e.getPointerCount()));
+            int itemPointerId0 = e.getPointerId(0);
+            int pointerIndex0 = e.findPointerIndex(itemPointerId0);
+            MotionEvent.PointerCoords pc0 = new MotionEvent.PointerCoords();
+            e.getPointerCoords(pointerIndex0, pc0);
+
+            int itemPointerId1 = e.getPointerId(1);
+            int pointerIndex1 = e.findPointerIndex(itemPointerId1);
+            MotionEvent.PointerCoords pc1 = new MotionEvent.PointerCoords();
+            e.getPointerCoords(pointerIndex1, pc1);
+            switch(e.getAction())
+            {
+                case MotionEvent.ACTION_DOWN:
+                case MotionEvent.ACTION_POINTER_2_DOWN:
+                    NativeLibrary.dragStart((int)pc0.x, (int)pc0.y, (int)pc1.x, (int)pc1.y);
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    NativeLibrary.drag((int)pc0.x, (int)pc0.y, (int)pc1.x, (int)pc1.y);
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_POINTER_2_UP:
+                    NativeLibrary.dragStop();
+                    wasTwoFingers = false;
+                    break;
+            }
+        }else if (!wasTwoFingers && e.getPointerCount() == 1) {
+            float x = e.getX();
+            float y = e.getY();
+            switch(e.getAction())
+            {
+                case MotionEvent.ACTION_DOWN:
+                    NativeLibrary.moveStart((int)x, (int)y);
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    NativeLibrary.move((int)x, (int)y);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    NativeLibrary.dragStop();
+                    break;
+            }
+        } else if (e.getPointerCount() < 2){
+            wasTwoFingers = false;
         }
 
         return true;
