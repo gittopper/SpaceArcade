@@ -1,1 +1,3 @@
 include ':SpaceArcade'
+include ':touch3d'
+include ':touch3d:common_java'
