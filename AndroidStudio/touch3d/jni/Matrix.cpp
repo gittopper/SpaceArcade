@@ -123,6 +123,13 @@ void matrixRotateX(float* matrix, float angle)
     matrixMultiply(matrix, tempMatrix, matrix);
 }
 
+void initByMatrix(float* m1, float* m2)
+{
+    for(int i = 0; i < 16; i++)
+    {
+        m1[i] = m2[i];
+    }
+}
 void matrixRotateY(float *matrix, float angle)
 {
     float tempMatrix[16];

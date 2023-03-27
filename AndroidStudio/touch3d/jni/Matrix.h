@@ -103,5 +103,6 @@ void matrixScale(float* matrix,float x, float y, float z);
  * \return Converted angle in Radians.
  */
 float matrixDegreesToRadians(float degrees);
+void initByMatrix(float* m1, float* m2);
 
 #endif
