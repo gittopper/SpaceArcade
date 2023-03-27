@@ -119,7 +119,6 @@ class TutorialView extends GLSurfaceView
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_POINTER_2_UP:
                     NativeLibrary.dragStop();
-                    wasTwoFingers = false;
                     break;
             }
         }else if (!wasTwoFingers && e.getPointerCount() == 1) {

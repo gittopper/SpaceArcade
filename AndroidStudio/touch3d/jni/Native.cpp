@@ -147,12 +147,19 @@ GLuint vertexColourLocation;
 GLuint projectionLocation;
 GLuint modelViewLocation;
 
+void initByMatrix(float* m1, float* m2)
+{
+    for(int i = 0; i < 16; i++)
+    {
+        m1[i] = m2[i];
+    }
+}
+
 float projectionMatrix[16];
 float modelViewMatrix[16];
-float angleXLast = 0;
-float angleYLast = 0;
-float angleX = angleXLast;
-float angleY = angleYLast;
+float modelViewMatrixLast[16];
+float angleX = 0;
+float angleY = 0;
 float zLast = -10;
 float z = zLast;
 float shift_x = 0;
@@ -176,6 +183,7 @@ bool setupGraphics(int width, int height)
 
     /* Setup the perspective */
     matrixPerspective(projectionMatrix, 45, (float)width / (float)height, 0.1f, 100);
+    matrixIdentityFunction(modelViewMatrixLast);
     glEnable(GL_DEPTH_TEST);
 
     glViewport(0, 0, width, height);
@@ -249,7 +257,8 @@ void renderFrame()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-    matrixIdentityFunction(modelViewMatrix);
+    initByMatrix(modelViewMatrix, modelViewMatrixLast);
+    //matrixIdentityFunction(modelViewMatrix);
 
     matrixRotateX(modelViewMatrix, angleX);
     matrixRotateY(modelViewMatrix, angleY);
@@ -310,8 +319,12 @@ JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeL
         JNIEnv * env, jobject obj)
 {
     zLast = z;
-    angleXLast = angleX;
-    angleYLast = angleY;
+    angleX = 0;
+    angleY = 0;
+    initByMatrix(modelViewMatrixLast, modelViewMatrix);
+    modelViewMatrixLast[12] = 0;
+    modelViewMatrixLast[13] = 0;
+    modelViewMatrixLast[14] = 0;
 }
 JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_drag(
         JNIEnv * env, jobject obj, jint x1, jint y1, jint x2, jint y2)
@@ -330,6 +343,6 @@ JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeL
 }
 JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_move(
         JNIEnv * env, jobject obj, jint x, jint y) {
-    angleX = angleXLast + (y - move_start_y) / 10;
-    angleY = angleYLast + (x - move_start_x) / 10;
+    angleX = (y - move_start_y) / 10;
+    angleY = (x - move_start_x) / 10;
 }
