@@ -92,11 +92,11 @@ class TutorialView extends GLSurfaceView
 
     }
 
-    boolean wasTwoFingers = false;
+    boolean moveStarted = false;
     public boolean onTouchEvent(final MotionEvent e) {
         if (e.getPointerCount() > 1)
         {
-            wasTwoFingers = true;
+            moveStarted = false;
             Log.i("received ", Integer.toString(e.getPointerCount()));
             int itemPointerId0 = e.getPointerId(0);
             int pointerIndex0 = e.findPointerIndex(itemPointerId0);
@@ -121,23 +121,25 @@ class TutorialView extends GLSurfaceView
                     NativeLibrary.dragStop();
                     break;
             }
-        }else if (!wasTwoFingers && e.getPointerCount() == 1) {
+        }else if (e.getPointerCount() == 1) {
             float x = e.getX();
             float y = e.getY();
-            switch(e.getAction())
-            {
+            switch (e.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    NativeLibrary.moveStart((int)x, (int)y);
+                    NativeLibrary.moveStart((int) x, (int) y);
+                    moveStarted = true;
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    NativeLibrary.move((int)x, (int)y);
+                    if (moveStarted)
+                    {
+                        NativeLibrary.move((int) x, (int) y);
+                    }
                     break;
                 case MotionEvent.ACTION_UP:
+                    moveStarted = false;
                     NativeLibrary.dragStop();
                     break;
             }
-        } else if (e.getPointerCount() < 2){
-            wasTwoFingers = false;
         }
 
         return true;
