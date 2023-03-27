@@ -47,7 +47,7 @@ GLuint Renderer::loadShader(GLenum shaderType, const char* shaderSource)
                 if (logBuffer != NULL)
                 {
                     glGetShaderInfoLog(shader, infoLen, NULL, logBuffer);
-                    LOGE("Could not Compile Shader %d:\n%s, shaderType, logBuffer\n");
+                    LOGE("Could not Compile Shader %d:\n%s\n", shaderType, logBuffer);
                     free(logBuffer);
                     logBuffer = NULL;
                 }
@@ -95,7 +95,7 @@ GLuint Renderer::createProgram(const char* vertexSource, const char * fragmentSo
                 if (logBuffer != NULL)
                 {
                     glGetProgramInfoLog(program, bufLength, NULL, logBuffer);
-                    LOGE("Could not link program:\n%s, logBuffer\n");
+                    LOGE("Could not link program:\n%s\n", logBuffer);
                     free(logBuffer);
                     logBuffer = NULL;
                 }

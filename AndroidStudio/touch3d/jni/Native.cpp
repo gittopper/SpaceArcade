@@ -118,6 +118,8 @@ namespace
 }
 Geometry::VolumePuzzle puzzle(3, 4, 2, generateWoodPuzzles());
 std::thread st(solve, &puzzle);
+std::vector<Geometry::Vector> colors;
+int found_solutions = 0;
 
 JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_init(
         JNIEnv * env, jobject obj, jint width, jint height)
@@ -132,6 +134,38 @@ JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeL
 {
     renderer.startFrame();
     renderer.render(cubeVertices, colour, indices, 36);
+
+    Geometry::PiecesSet sol;
+    int ns = puzzle.numFoundSolutions();
+    if (ns > found_solutions)
+    {
+        __android_log_print(ANDROID_LOG_INFO, LOG_TAG, "found solution %d", ns);
+        found_solutions = ns;
+    }
+    puzzle.getSolution(sol, ns);
+    sol.shift(Geometry::Vector(-5 / 2., -6 / 2., -4 / 2.));
+
+    Geometry::Vector cm;
+    for (int i = 0; i < sol.pieces.size(); i++)
+    {
+        cm += sol.pieces[i].getZero();
+    }
+    cm = cm * (1.f / sol.pieces.size());
+
+    for (int i = 0; i < sol.pieces.size(); i++)
+    {
+        Geometry::Piece p = sol.pieces[i];
+        if (colors.size() <= i)
+        {
+            colors.push_back(Geometry::Vector((rand() % 256) / 256.f, (rand() % 256) / 256.f, (rand() % 256) / 256.f));
+        }
+
+        //glColor3f(colors[i][0], colors[i][1], colors[i][2]);
+        p.shift(-cm + (sol.pieces[i].getZero() - cm) * 0.2f);
+        //partDrawer.draw(p);
+    }
+
+
 }
 
 float lstart;
