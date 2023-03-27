@@ -25,7 +25,9 @@
 #include <cmath>
 
 #include "renderer.h"
-
+#include <utils.h>
+#include <solver.h>
+#include <thread>
 
 /* [cubeVertices] */
 GLfloat cubeVertices[] = {-1.0f,  1.0f, -1.0f, /* Back. */
@@ -106,10 +108,21 @@ JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeL
 };
 
 Renderer renderer;
+namespace
+{
+    void solve(Geometry::VolumePuzzle* puzzle)
+    {
+        Geometry::Solver solver(*puzzle);
+        solver.solve();
+    }
+}
+Geometry::VolumePuzzle puzzle(3, 4, 2, generateWoodPuzzles());
+std::thread st(solve, &puzzle);
 
 JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_init(
         JNIEnv * env, jobject obj, jint width, jint height)
 {
+
     renderer.setup();
     renderer.setSize(width, height);
 }
