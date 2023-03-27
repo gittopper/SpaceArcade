@@ -14,6 +14,7 @@ set(SOURCES
         jni/puzzle/volpart.cpp
         jni/puzzle/volumepuzzle.cpp
         jni/puzzle/print.cpp
+        jni/puzzle/pieceshower.cpp
         )
 set(TARGET Native)
 add_library(${TARGET} SHARED ${SOURCES})

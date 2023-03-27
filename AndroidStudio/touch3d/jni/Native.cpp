@@ -27,6 +27,7 @@
 #include "renderer.h"
 #include <utils.h>
 #include <solver.h>
+#include <pieceshower.h>
 #include <thread>
 
 /* [cubeVertices] */
@@ -133,7 +134,7 @@ JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeL
         JNIEnv * env, jobject obj)
 {
     renderer.startFrame();
-    renderer.render(cubeVertices, colour, indices, 36);
+    //renderer.render(cubeVertices, colour, indices, 36);
 
     Geometry::PiecesSet sol;
     int ns = puzzle.numFoundSolutions();
@@ -151,7 +152,7 @@ JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeL
         cm += sol.pieces[i].getZero();
     }
     cm = cm * (1.f / sol.pieces.size());
-
+    Visualization::PieceDrawer partDrawer;
     for (int i = 0; i < sol.pieces.size(); i++)
     {
         Geometry::Piece p = sol.pieces[i];
@@ -162,7 +163,7 @@ JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeL
 
         //glColor3f(colors[i][0], colors[i][1], colors[i][2]);
         p.shift(-cm + (sol.pieces[i].getZero() - cm) * 0.2f);
-        //partDrawer.draw(p);
+        partDrawer.draw(renderer, p, colors[i]);
     }
 
 
