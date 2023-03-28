@@ -37,7 +37,7 @@ void main()
     float shininess = 2.0;
     vec3 lightReflectionDirection = reflect(vec3(0) - inverseLightDirection, transformedVertexNormal);
     float normalDotReflection = max(0.0, dot(inverseEyeDirection, lightReflectionDirection));
-    fragColour += pow(normalDotReflection, shininess) * vertexSpecularReflectionConstant * specularLightIntensity;
+    //fragColour += pow(normalDotReflection, shininess) * vertexSpecularReflectionConstant * specularLightIntensity;
 /* [Calculate the specular component.] */
 
     /* Make sure the fragment colour is between 0 and 1. */
