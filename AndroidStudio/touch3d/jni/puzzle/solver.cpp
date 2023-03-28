@@ -210,7 +210,7 @@ void Solver::recursiveSolve()
 {
     BREAK_ON_LINE(verifyAlgorithm());
 
-    if (m_maxSol < m_numPlaced && (m_numPlaced < m_pieces.size() - 1))
+    if (m_maxSol < m_numPlaced)
     {
         foundNewSolution();
     }

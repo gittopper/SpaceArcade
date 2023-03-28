@@ -57,6 +57,37 @@ GLfloat cubeVertices[] = {-1.0f,  1.0f, -1.0f, /* Back. */
                            1.0f,  1.0f, -1.0f
                          };
 /* [cubeVertices] */
+GLfloat normals[] = { 1.0f,  1.0f, -1.0f, /* Back. */
+                      -1.0f,  1.0f, -1.0f,
+                      1.0f, -1.0f, -1.0f,
+                      -1.0f, -1.0f, -1.0f,
+                      0.0f,  0.0f, -1.0f,
+                      -1.0f,  1.0f,  1.0f, /* Front. */
+                      1.0f,  1.0f,  1.0f,
+                      -1.0f, -1.0f,  1.0f,
+                      1.0f, -1.0f,  1.0f,
+                      0.0f,  0.0f,  1.0f,
+                      -1.0f,  1.0f, -1.0f, /* Left. */
+                      -1.0f,  1.0f,  1.0f,
+                      -1.0f, -1.0f, -1.0f,
+                      -1.0f, -1.0f,  1.0f,
+                      -1.0f,  0.0f,  0.0f,
+                      1.0f,  1.0f,  1.0f, /* Right. */
+                      1.0f,  1.0f, -1.0f,
+                      1.0f, -1.0f,  1.0f,
+                      1.0f, -1.0f, -1.0f,
+                      1.0f,  0.0f,  0.0f,
+                      -1.0f, -1.0f,  1.0f, /* Bottom. */
+                      1.0f, -1.0f,  1.0f,
+                      -1.0f, -1.0f, -1.0f,
+                      1.0f, -1.0f, -1.0f,
+                      0.0f, -1.0f,  0.0f,
+                      -1.0f,  1.0f, -1.0f, /* Top. */
+                      1.0f,  1.0f, -1.0f,
+                      -1.0f,  1.0f,  1.0f,
+                      1.0f,  1.0f,  1.0f,
+                      0.0f,  1.0f,  0.0f
+};
 /* [colourComponents] */
 GLfloat colour[] = {1.0f, 0.0f, 0.0f,
                     1.0f, 0.0f, 0.0f,
@@ -134,7 +165,7 @@ JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeL
         JNIEnv * env, jobject obj)
 {
     renderer.startFrame();
-    //renderer.render(cubeVertices, colour, indices, 36);
+    //renderer.render(cubeVertices, normals, colour, indices, 36);
 
     Geometry::PiecesSet sol;
     int ns = puzzle.numFoundSolutions();

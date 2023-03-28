@@ -17,7 +17,7 @@ public:
     void setSize(int width, int height);
     void startFrame();
     Camera& camera() { return camera_;}
-    void render(GLfloat* vertices, GLfloat* colors, GLushort* indices, int size);
+    void render(GLfloat* vertices, GLfloat*normals, GLfloat* colors, GLushort* indices, int size);
 private:
     GLuint loadShader(GLenum shaderType, const char* shaderSource);
     GLuint createProgram(const char* vertexSource, const char * fragmentSource);
@@ -26,6 +26,7 @@ private:
     GLuint vertexLocation;
     GLuint vertexColourLocation;
     GLuint projectionLocation;
+    GLuint vertexNormalLocation;
     GLuint modelViewLocation;
     Camera camera_;
 };
