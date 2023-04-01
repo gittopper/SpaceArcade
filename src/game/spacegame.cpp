@@ -129,7 +129,7 @@ void SpaceGame::createAsteroid() {
     asteroid->scale(size);
 
     asteroid->move(
-        Vector(asteroidPlace_(generator_), config_.scale_ * aspect_ / 1.7, 0));
+        Vector(asteroidPlace_(generator_), config_.scale_ * aspect_ * 1.7, 0));
     float angle = asteroidsSpeedAngle_(generator_);
     asteroid->getV() =
         Vector((asteroidsSpeed_(generator_) - config_.asteroidsAvgSpeed_) *

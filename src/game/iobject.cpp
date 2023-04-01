@@ -61,6 +61,11 @@ bool IObject::intersects(IObject* other) {
            other->getBBox().intersects(getBBox());
 }
 
+float IObject::distance(IObject* other) {
+    return std::max(this->getBBox().dist(other->getBBox()),
+                    other->getBBox().dist(this->getBBox()));
+}
+
 bool IObject::contains(IObject* other) {
     return getBBox().isInside(other->getBBox());
 }

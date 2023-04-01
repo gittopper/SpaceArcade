@@ -70,6 +70,7 @@ class IObject : public RegressVisitor {
     }
     void normalize();
 
+    float distance(IObject* other);
     bool intersects(IObject* other);
     bool contains(IObject* other);
     BoundingBox2D& getBBox() { return box_; }

@@ -49,6 +49,10 @@ class BoundingBox2D {
         return isInside(v.vMin_) || isInside(v.vMax_);
     }
 
+    bool dist(const BoundingBox2D& v) const {
+        return (v.vMin_ + v.vMax_).len() / (vMax_ - vMin_).len();
+    }
+
     static BoundingBox2D getCube(float s) {
         Vector v(s, s, s);
 

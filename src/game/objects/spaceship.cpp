@@ -53,7 +53,7 @@ SpaceShip::SpaceShip(float bulSpeed)
 }
 
 void SpaceShip::shoot() {
-    Vector v(0.2, 0, 0);
+    Vector v(0.3, 0, 0);
 
     IObject* bullet = new Bullet(getShift() + v, Vector(0, bulletSpeed_));
     getParent()->addChild(bullet);
