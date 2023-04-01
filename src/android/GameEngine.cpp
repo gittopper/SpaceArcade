@@ -15,21 +15,19 @@ std::shared_ptr<SpaceGame> game;
 extern "C" {
 
 JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_init(
-        JNIEnv* env, jobject obj, jint width, jint height,
-        jobject javaAssetManager) {
-    if (nullptr == game)
-    {
+    JNIEnv* env, jobject obj, jint width, jint height,
+    jobject javaAssetManager) {
+    if (nullptr == game) {
         game = std::make_shared<SpaceGame>();
         game->setRenderer(RendererFactory::getGLESRenderer());
     }
     ResourceLoader* res =
-            dynamic_cast<ResourceLoader*>(new AndroidResourceLoader(
-                    AAssetManager_fromJava(env, javaAssetManager)));
+        dynamic_cast<ResourceLoader*>(new AndroidResourceLoader(
+            AAssetManager_fromJava(env, javaAssetManager)));
     const bool ok = game->getRenderer()->initRenderer(res);
     int w, h;
     game->getRenderer()->getScreeenSize(w, h);
-    if (w != width || h != height)
-    {
+    if (w != width || h != height) {
         game->getRenderer()->setScreeenSize(width, height);
         game->setupGame();
     }
@@ -48,17 +46,17 @@ JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_tap(JNIEnv* env,
                                                                   jfloat y) {}
 
 JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_actionDown(
-        JNIEnv* env, jobject obj, jfloat x, jfloat y) {
+    JNIEnv* env, jobject obj, jfloat x, jfloat y) {
     game->tap(x, y);
 }
 
 JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_actionMove(
-        JNIEnv* env, jobject obj, jfloat x, jfloat y) {
+    JNIEnv* env, jobject obj, jfloat x, jfloat y) {
     game->drag(x, y);
 }
 
 JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_actionUp(
-        JNIEnv* env, jobject obj, jfloat x, jfloat y) {}
+    JNIEnv* env, jobject obj, jfloat x, jfloat y) {}
 
 JNIEXPORT jboolean JNICALL
 Java_com_example_arcadegame_GameEngine_stop(JNIEnv* env, jobject obj) {

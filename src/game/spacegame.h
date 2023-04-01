@@ -32,15 +32,15 @@ namespace Game
        SpaceGame();
     
         void setupGame(GameConfig conf = GameConfig());
-        GameConfig* getGameConfig(){ return &config;}
+        GameConfig* getGameConfig(){ return &config_;}
         
         void drag(int x, int y);
         
         void tap(int x, int y);
         
         void renderStep();
-        void setRenderer(SpaceGameRenderer* r) { renderer = r; }
-        Renderer* getRenderer() { return renderer;}
+        void setRenderer(SpaceGameRenderer* r) { renderer_ = r; }
+        Renderer* getRenderer() { return renderer_;}
 
         void gameOver();
         
@@ -50,37 +50,37 @@ namespace Game
 
         void resume();
         
-        GameConfig& getConfig() { return config;}
-        float getAnimationInterval() { return config.dt;}
+        GameConfig& getConfig() { return config_;}
+        float getAnimationInterval() { return config_.dt_;}
     private:
         void createAsteroid();
         
-        int w, h;
+        int w_, h_;
         
-        Scene scene;
-        SpaceShip* spaceship;
+        Scene scene_;
+        SpaceShip* spaceship_;
         
-        ObjectsSet objectsToAdd;
+        ObjectsSet objectsToAdd_;
         
-        float time;
-        float asteroidsNextTime;
+        float time_;
+        float asteroidsNextTime_;
         
-        bool gameLost;
-        bool paused;
-        float aspect;
+        bool gameLost_;
+        bool paused_;
+        float aspect_;
         
-        GameConfig config;
+        GameConfig config_;
         
-        default_random_engine generator;
-        normal_distribution<float> asteroidsDelay;
-        normal_distribution<float> asteroidsSpeed;
-        normal_distribution<float> asteroidsSize;
-        normal_distribution<float> asteroidsSpeedAngle;
-        uniform_real_distribution<float> asteroidPlace;
+        default_random_engine generator_;
+        normal_distribution<float> asteroidsDelay_;
+        normal_distribution<float> asteroidsSpeed_;
+        normal_distribution<float> asteroidsSize_;
+        normal_distribution<float> asteroidsSpeedAngle_;
+        uniform_real_distribution<float> asteroidPlace_;
         
-        SpaceGameRenderer* renderer;
-        Physics physics;
-        Collider collider;
+        SpaceGameRenderer* renderer_;
+        Physics physics_;
+        Collider collider_;
     };
 }
 #endif

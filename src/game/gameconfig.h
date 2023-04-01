@@ -13,51 +13,51 @@ namespace Game {
     struct GameConfig
     {
     	GameConfig():
-            dt(1. /60),
-            scale(10),
-            shipSize(1.),
-            asteroidsAvgPerSec(3.),
-            asteroidsSigmaPerSec(1.),
-            asteroidAvgSize(0.5),
-            asteroidAvgPartsNumber(4),
-            asteroidSigmaParts(0),
-            asteroidUnevennessSigma(0.2),
-            collideWithAsteroidParts(true),
-            markExploded(true),
-            asteroidsAvgSpeed(4.),
-            asteroidsSigmaSpeed(1.),
-            asteroidsSpeedAngleSigma(10.),
-            bulletSpeed(4),
-            maxSpaceShipSpeed(4)
+            dt_(1. /60),
+            scale_(10),
+            shipSize_(1.),
+            asteroidsAvgPerSec_(3.),
+            asteroidsSigmaPerSec_(1.),
+            asteroidAvgSize_(0.5),
+            asteroidAvgPartsNumber_(4),
+            asteroidSigmaParts_(0),
+            asteroidUnevennessSigma_(0.2),
+            collideWithAsteroidParts_(true),
+            markExploded_(true),
+            asteroidsAvgSpeed_(4.),
+            asteroidsSigmaSpeed_(1.),
+            asteroidsSpeedAngleSigma_(10.),
+            bulletSpeed_(4),
+            maxSpaceShipSpeed_(4)
     	{}
         //animation step
-        float dt;
+        float dt_;
         
         //screen width length in relative points
-        float scale;
+        float scale_;
         
-        float shipSize;
+        float shipSize_;
         
-        float asteroidsAvgPerSec;
-        float asteroidsSigmaPerSec;
-        float asteroidAvgSize;
+        float asteroidsAvgPerSec_;
+        float asteroidsSigmaPerSec_;
+        float asteroidAvgSize_;
         
-        int asteroidAvgPartsNumber;
-        int asteroidSigmaParts;
+        int asteroidAvgPartsNumber_;
+        int asteroidSigmaParts_;
 
-        float asteroidUnevennessSigma;
+        float asteroidUnevennessSigma_;
         
-        bool collideWithAsteroidParts;
-        bool markExploded;
+        bool collideWithAsteroidParts_;
+        bool markExploded_;
         
-        float asteroidsAvgSpeed;
-        float asteroidsSigmaSpeed;
+        float asteroidsAvgSpeed_;
+        float asteroidsSigmaSpeed_;
         
         //in degreees
-        float asteroidsSpeedAngleSigma;
+        float asteroidsSpeedAngleSigma_;
         
-        float bulletSpeed;
-        float maxSpaceShipSpeed;
+        float bulletSpeed_;
+        float maxSpaceShipSpeed_;
     };
 }
 #endif

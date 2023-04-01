@@ -20,48 +20,49 @@
 #include <OpenGLES/ES2/gl.h>
 #endif
 
-#include "renderer.h"
-#include "math/gamemath.h"
 #include <memory>
+
+#include "math/gamemath.h"
+#include "renderer.h"
 
 using namespace std;
 using namespace Math;
 
-class GLESRenderer:virtual public Renderer
-{
-public:
+class GLESRenderer : virtual public Renderer {
+   public:
     GLESRenderer();
-    void createFramebuffer();
-    void destroyFramebuffer();
-    bool updateInfoAboutWindow();
-    
-    void prepareFrame();
-    void showFrame();
-    
-    void getScreeenSize(int& w, int& h);
-    void setScreeenSize(int& w, int& h);
-    void setScale(float s);
-    
-    bool initRenderer(ResourceLoader* loader);
-protected:
+    void createFramebuffer() override;
+    void destroyFramebuffer() override;
+    bool updateInfoAboutWindow() override;
+
+    void prepareFrame() override;
+    void showFrame() override;
+
+    void getScreeenSize(int& w, int& h) override;
+    void setScreeenSize(int w, int h) override;
+    void setScale(float s) override;
+
+    bool initRenderer(ResourceLoader* loader) override;
+
+   protected:
     int loadShader(GLenum type, const char* source);
     bool compileShader();
-    unique_ptr<ResourceLoader> rcLoader;
-    
-    int shaderProgram;
-    int a_positionHandle;
-    int a_colorHandle;
-    int u_mvpHandle;
-    
-    float scale;
-    Mat44 proj;
+    unique_ptr<ResourceLoader> rcLoader_;
+
+    int shaderProgram_;
+    int a_positionHandle_;
+    int a_colorHandle_;
+    int u_mvpHandle_;
+
+    float scale_;
+    Mat44 proj_;
 
     /* The pixel dimensions of the backbuffer */
-    GLint backingWidth;
-    GLint backingHeight;
-    
-    GLuint viewRenderbuffer, viewFramebuffer;
-    GLuint depthRenderbuffer;
+    GLint backingWidth_;
+    GLint backingHeight_;
+
+    GLuint viewRenderbuffer_, viewFramebuffer_;
+    GLuint depthRenderbuffer_;
 };
 
 #endif

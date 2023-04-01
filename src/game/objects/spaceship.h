@@ -11,26 +11,23 @@
 
 #include "game/iobject.h"
 
+namespace Game {
 
-namespace Game
-{
-    
-    class SpaceShip: public IObject
-    {
-    public:
-        SpaceShip(float bulSpeed);
-        
-        GAME_OBJECT(SpaceShip)
-        
-        virtual void visit(class Scene&);
+class SpaceShip : public IObject {
+   public:
+    SpaceShip(float bulSpeed);
 
-        void shoot();
-        
-        virtual void accept(Visitor& visitor){ visitor.visit(*this);}
-        
-    protected:
-        float bulletSpeed;
-    };
-}
+    GAME_OBJECT(SpaceShip)
+
+    virtual void visit(class Scene&);
+
+    void shoot();
+
+    virtual void accept(Visitor& visitor) { visitor.visit(*this); }
+
+   protected:
+    float bulletSpeed_;
+};
+}  // namespace Game
 
 #endif

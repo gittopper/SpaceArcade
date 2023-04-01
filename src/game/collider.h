@@ -9,22 +9,20 @@
 #ifndef __SpaceArcade__collider__
 #define __SpaceArcade__collider__
 
-#include "regressvisitor.h"
 #include "math/gamemath.h"
+#include "regressvisitor.h"
 
 using namespace Math;
 
+namespace Game {
+class Collider : public RegressVisitor {
+   public:
+    Collider(Scene* s) : scene(s) {}
+    void visit(IObject& gameobject);
 
-namespace Game
-{
-    class Collider:virtual public RegressVisitor
-    {
-    public:
-        Collider(Scene* s):scene(s){}
-        void visit(IObject& gameobject);
-    protected:
-        Scene* scene;
-    };
-}
+   protected:
+    Scene* scene;
+};
+}  // namespace Game
 
 #endif /* defined(__SpaceArcade__collider__) */

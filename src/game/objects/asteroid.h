@@ -9,53 +9,48 @@
 #ifndef Shader_asteroid_h
 #define Shader_asteroid_h
 
+#include <cmath>
+#include <random>
 
 #include "game/iobject.h"
-#include <random>
-#include <cmath>
 using namespace std;
 
+namespace Game {
 
-namespace Game
-{
+class Asteroid : public IObject {
+   public:
+    struct AsteroidConfig {
+        AsteroidConfig() : asteroidExplosionSigma(0.2) {}
+        int asteroidExplosionSigma;
+    } conf;
 
-    class Asteroid: public IObject
-    {
-    public:
-        struct AsteroidConfig
-        {
-        	AsteroidConfig():
-        		asteroidExplosionSigma(0.2)
-        	{}
-            int asteroidExplosionSigma;
-        } conf;
-        
-        Asteroid();
-        
-        GAME_OBJECT(Asteroid)
-        
-        void visit(SpaceShip&s);
-        
-        void explode();
-        
-        virtual void accept(Visitor& visitor){ visitor.visit(*this);}
+    Asteroid();
 
-        static normal_distribution<float> partsDistrib;
-        static normal_distribution<float> unevenDistrib;
-        
-        void setParted();
-        bool isParted() { return piece;}
-    protected:
-        bool piece;
-        
-        static default_random_engine generator;
-        static normal_distribution<float> colorDistrib;
-        static uniform_real_distribution<float> explosionDistib;
-        
-        float getRandColorComponent();
-        
-        void getNormalizedRandArray(vector<float>& vals, int num);
-    };
-}
+    GAME_OBJECT(Asteroid)
+
+    void visit(SpaceShip& s);
+
+    void explode();
+
+    virtual void accept(Visitor& visitor) { visitor.visit(*this); }
+
+    static normal_distribution<float> partsDistrib;
+    static normal_distribution<float> unevenDistrib;
+
+    void setParted();
+    bool isParted() { return piece; }
+
+   protected:
+    bool piece;
+
+    static default_random_engine generator;
+    static normal_distribution<float> colorDistrib;
+    static uniform_real_distribution<float> explosionDistib;
+
+    float getRandColorComponent();
+
+    void getNormalizedRandArray(vector<float>& vals, int num);
+};
+}  // namespace Game
 
 #endif

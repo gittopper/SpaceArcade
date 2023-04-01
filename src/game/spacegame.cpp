@@ -15,122 +15,126 @@ using namespace Game;
 using namespace std;
 
 SpaceGame::SpaceGame()
-    : paused(false), collider(&scene), time(0), asteroidsNextTime(-1),
-      renderer(nullptr) {}
+    : paused_(false),
+      collider_(&scene_),
+      time_(0),
+      asteroidsNextTime_(-1),
+      renderer_(nullptr) {}
 
-void SpaceGame::pause() { paused = true; }
+void SpaceGame::pause() { paused_ = true; }
 
 void SpaceGame::resume() {
-  if (!gameLost) {
-    paused = false;
-  }
+    if (!gameLost_) {
+        paused_ = false;
+    }
 }
 
 void SpaceGame::setupGame(GameConfig conf) {
-  config = conf;
+    config_ = conf;
 
-  renderer->setScale(config.scale);
-  renderer->getScreeenSize(w, h);
-  aspect = static_cast<float>(h) / w;
-  scene.setupScene(config.scale, aspect * config.scale);
+    renderer_->setScale(config_.scale_);
+    renderer_->getScreeenSize(w_, h_);
+    aspect_ = static_cast<float>(h_) / w_;
+    scene_.setupScene(config_.scale_, aspect_ * config_.scale_);
 
-  spaceship = new SpaceShip(config.bulletSpeed * config.dt);
-  scene.addChild(spaceship);
+    spaceship_ = new SpaceShip(config_.bulletSpeed_ * config_.dt_);
+    scene_.addChild(spaceship_);
 
-  spaceship->scale(config.shipSize);
-  spaceship->move(Vector(
-      0, -aspect * config.scale / 2. +
-             (spaceship->getShift() - spaceship->getBBox().getMin())[1]));
+    spaceship_->scale(config_.shipSize_);
+    spaceship_->move(Vector(
+        0, -aspect_ * config_.scale_ / 2. +
+               (spaceship_->getShift() - spaceship_->getBBox().getMin())[1]));
 
-  asteroidsDelay = normal_distribution<float>(1 / config.asteroidsAvgPerSec,
-                                              config.asteroidsSigmaPerSec /
-                                                  config.asteroidsAvgPerSec);
+    asteroidsDelay_ = normal_distribution<float>(
+        1 / config_.asteroidsAvgPerSec_,
+        config_.asteroidsSigmaPerSec_ / config_.asteroidsAvgPerSec_);
 
-  asteroidsSpeed = normal_distribution<float>(config.asteroidsAvgSpeed,
-                                              config.asteroidsSigmaSpeed);
+    asteroidsSpeed_ = normal_distribution<float>(config_.asteroidsAvgSpeed_,
+                                                 config_.asteroidsSigmaSpeed_);
 
-  asteroidPlace = uniform_real_distribution<float>(-config.scale, config.scale);
+    asteroidPlace_ =
+        uniform_real_distribution<float>(-config_.scale_, config_.scale_);
 
-  asteroidsSpeedAngle = normal_distribution<float>(
-      0, config.asteroidsSpeedAngleSigma / 180 * (atan(1) * 4));
+    asteroidsSpeedAngle_ = normal_distribution<float>(
+        0, config_.asteroidsSpeedAngleSigma_ / 180 * (atan(1) * 4));
 
-  asteroidsSize = normal_distribution<float>(config.asteroidAvgSize,
-                                             config.asteroidAvgSize / 5);
+    asteroidsSize_ = normal_distribution<float>(config_.asteroidAvgSize_,
+                                                config_.asteroidAvgSize_ / 5);
 
-  Asteroid::partsDistrib = normal_distribution<float>(
-      config.asteroidAvgPartsNumber, config.asteroidSigmaParts);
-  Asteroid::unevenDistrib =
-      normal_distribution<float>(1, config.asteroidUnevennessSigma);
+    Asteroid::partsDistrib = normal_distribution<float>(
+        config_.asteroidAvgPartsNumber_, config_.asteroidSigmaParts_);
+    Asteroid::unevenDistrib =
+        normal_distribution<float>(1, config_.asteroidUnevennessSigma_);
 
-  IObject::game = this;
+    IObject::game = this;
 }
 
 void SpaceGame::drag(int x, int y) {
-  Vector impact =
-      Vector(x * config.scale / w, -y * config.scale / w) * config.dt;
-  if (impact.len() > config.maxSpaceShipSpeed * config.dt) {
-    impact = impact.normalized() * config.maxSpaceShipSpeed * config.dt;
-  }
-  spaceship->getV() = impact;
+    Vector impact =
+        Vector(x * config_.scale_ / w_, -y * config_.scale_ / w_) * config_.dt_;
+    if (impact.len() > config_.maxSpaceShipSpeed_ * config_.dt_) {
+        impact = impact.normalized() * config_.maxSpaceShipSpeed_ * config_.dt_;
+    }
+    spaceship_->getV() = impact;
 }
 
 void SpaceGame::tap(int x, int y) {
-  spaceship->shoot();
-  if (gameLost) {
-    gameLost = false;
-    setupGame(config);
-    resume();
-  }
+    spaceship_->shoot();
+    if (gameLost_) {
+        gameLost_ = false;
+        setupGame(config_);
+        resume();
+    }
 }
 
 void SpaceGame::gameOver() {
-  pause();
-  gameLost = true;
+    pause();
+    gameLost_ = true;
 }
 
 void SpaceGame::renderStep() {
-  renderer->prepareFrame();
+    renderer_->prepareFrame();
 
-  if (!paused) {
-    if (asteroidsNextTime < time) {
-      createAsteroid();
+    if (!paused_) {
+        if (asteroidsNextTime_ < time_) {
+            createAsteroid();
 
-      asteroidsNextTime = time + asteroidsDelay(generator);
+            asteroidsNextTime_ = time_ + asteroidsDelay_(generator_);
+        }
+
+        scene_.visitAll(collider_);
+        removePostponed(&scene_);
+
+        for (ObjectsSet::const_iterator it = objectsToAdd_.begin();
+             it != objectsToAdd_.end(); it++) {
+            scene_.addChild(*it);
+        }
+        objectsToAdd_.clear();
+
+        scene_.visitAll(physics_);
+
+        time_ += config_.dt_;
     }
+    scene_.visitAll(*renderer_);
 
-    scene.visitAll(collider);
-    removePostponed(&scene);
-
-    for (ObjectsSet::const_iterator it = objectsToAdd.begin();
-         it != objectsToAdd.end(); it++) {
-      scene.addChild(*it);
-    }
-    objectsToAdd.clear();
-
-    scene.visitAll(physics);
-
-    time += config.dt;
-  }
-  scene.visitAll(*renderer);
-
-  renderer->showFrame();
+    renderer_->showFrame();
 }
 
-void SpaceGame::addGameObject(class IObject *o) { objectsToAdd.insert(o); }
+void SpaceGame::addGameObject(class IObject *o) { objectsToAdd_.insert(o); }
 
 void SpaceGame::createAsteroid() {
-  IObject *asteroid = new Asteroid;
-  float size = asteroidsSize(generator);
-  size = size < 0.1 ? 0.1 : size;
-  asteroid->scale(size);
+    IObject *asteroid = new Asteroid;
+    float size = asteroidsSize_(generator_);
+    size = size < 0.1 ? 0.1 : size;
+    asteroid->scale(size);
 
-  asteroid->move(
-      Vector(asteroidPlace(generator), config.scale * aspect / 1.7, 0));
-  float angle = asteroidsSpeedAngle(generator);
-  asteroid->getV() =
-      Vector((asteroidsSpeed(generator) - config.asteroidsAvgSpeed) *
-                 config.dt * sin(angle),
-             -asteroidsSpeed(generator) * config.dt * cos(angle), 0);
+    asteroid->move(
+        Vector(asteroidPlace_(generator_), config_.scale_ * aspect_ / 1.7, 0));
+    float angle = asteroidsSpeedAngle_(generator_);
+    asteroid->getV() =
+        Vector((asteroidsSpeed_(generator_) - config_.asteroidsAvgSpeed_) *
+                   config_.dt_ * sin(angle),
+               -asteroidsSpeed_(generator_) * config_.dt_ * cos(angle), 0);
 
-  scene.addChild(asteroid);
+    scene_.addChild(asteroid);
 }

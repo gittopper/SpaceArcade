@@ -17,7 +17,7 @@ namespace Math
     
     struct Mat44
     {
-        float m[16];
+        float m_[16];
     };
 
     void SetOrtho(Mat44& m, float left, float right, float bottom, float top, float near, float far);

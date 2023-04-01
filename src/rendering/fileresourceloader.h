@@ -11,17 +11,13 @@
 
 #include "rendering/resourceloader.h"
 
-using namespace std;
+class FileResourceLoader : public ResourceLoader {
+   public:
+    virtual char* readFile(std::string filename);
+    virtual void setResourcesPath(std::string path);
 
-class FileResourceLoader: public ResourceLoader
-{
-public:
-    
-    virtual char* readFile(string filename);
-    virtual void setResourcesPath(string path);
-private:
-    string resourcesPath;
+   private:
+    std::string resourcesPath_;
 };
-
 
 #endif

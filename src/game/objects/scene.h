@@ -9,24 +9,20 @@
 #ifndef SpaceArcade_scene_h
 #define SpaceArcade_scene_h
 
-
 #include <game/iobject.h>
 
+namespace Game {
 
-namespace Game
-{
-    
-    class Scene: public IObject
-    {
-    public:
-        GAME_OBJECT(Scene)
-        
-        void setupScene(float w, float h);
-        
-        virtual void visit(class IObject&);
+class Scene : public IObject {
+   public:
+    GAME_OBJECT(Scene)
 
-        virtual void accept(Visitor& visitor){ visitor.visit(*this);}
-    };
-}
+    void setupScene(float w, float h);
+
+    virtual void visit(class IObject&);
+
+    virtual void accept(Visitor& visitor) { visitor.visit(*this); }
+};
+}  // namespace Game
 
 #endif

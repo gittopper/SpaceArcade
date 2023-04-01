@@ -11,14 +11,12 @@
 
 #include "spacegamerenderer.h"
 
-namespace Game
-{
-    
-    class RendererFactory
-    {
-    public:
-        static SpaceGameRenderer* getGLESRenderer();
-    };
-    
-}
+namespace Game {
+
+class RendererFactory {
+   public:
+    static SpaceGameRenderer* getGLESRenderer();
+};
+
+}  // namespace Game
 #endif /* defined(__SpaceArcade__rendererfactory__) */

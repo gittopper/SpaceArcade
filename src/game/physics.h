@@ -9,21 +9,18 @@
 #ifndef __SpaceArcade__physics__
 #define __SpaceArcade__physics__
 
-#include "regressvisitor.h"
 #include "math/gamemath.h"
+#include "regressvisitor.h"
 
 using namespace Math;
 
+namespace Game {
+class Physics : public RegressVisitor {
+   public:
+    void visit(IObject&);
+    void visit(Scene&) {}
 
-namespace Game
-{
-    class Physics:virtual public RegressVisitor
-    {
-    public:
-
-        void visit(IObject&);
-        void visit(Scene&){}
-    protected:
-    };
-}
+   protected:
+};
+}  // namespace Game
 #endif /* defined(__SpaceArcade__physics__) */

@@ -6,105 +6,97 @@
 //
 //
 
-
 #ifndef _IObject_h_
 #define _IObject_h_
 
-
-#include "math/gamemath.h"
 #include <set>
-#include "regressvisitor.h"
-#include "math/mathutils.h"
+
 #include "igame.h"
+#include "math/gamemath.h"
+#include "math/mathutils.h"
+#include "regressvisitor.h"
 
 using namespace Math;
 using namespace std;
 
-#define GAME_OBJECT(o) virtual const char* name(){return #o;}
+#define GAME_OBJECT(o) \
+    virtual const char* name() { return #o; }
 
-namespace Game
-{
-    class IObject;
-    
-    
-    typedef set<IObject*> ObjectsSet;
+namespace Game {
+class IObject;
+
+typedef set<IObject*> ObjectsSet;
 //    typedef vector<float> FArray;
-    
-    class IObject:public RegressVisitor
-    {
-    public:
-        IObject();
-        
-        virtual ~IObject();
-    
-        GAME_OBJECT(IObject)
-        
-        void move(const Vector& shift);
 
-        void rotate(const Mat& rot);
-    
-        void scale(float s);
-    
-        void addChild(IObject* child);
+class IObject : public RegressVisitor {
+   public:
+    IObject();
 
-        IObject* getParent() const { return parent;}
-        const ObjectsSet& getChildren() const { return children;}
+    virtual ~IObject();
 
-        void removeChild(IObject* child);
-        void removeChildren();
-    
-        Mat getTransform() const { return rot * radius;}
-        const Vector& getShift() const { return shift;}
-        
-        const float getMass() const { return mass;}
-        Vector& getV() { return velocity;}
-        
-        VArray& getPoints() { return points;}
-        VArray& getDrawPoints() { return drawPoints;}
-        V4Array& getColors() { return colors;}
-        //should be defined for the implementation only
-        
-        virtual void accept(Visitor& v) = 0;
-        
-        void visitAll(Visitor& v);
-        
-        void getProcessedPoints(VArray& result) { applyTransformsToPoints(result, points, getTransform(), shift);}
-        void normalize();
-        
-        bool intersects(IObject* other);
-        bool contains(IObject* other);
-        BoundingBox2D& getBBox()
-        {
-            return box;
-        }
-        
-        
-        bool shouldBeRemoved;
+    GAME_OBJECT(IObject)
 
-        
-        static IGame* game;
-        void cacheDrawPoints();
-    protected:
+    void move(const Vector& shift);
 
-        Mat rot;
-        Vector shift;
-        float radius;
-        BoundingBox2D box;
-        
-        float mass;
-        Vector velocity;
+    void rotate(const Mat& rot);
 
-        IObject* parent;
-        ObjectsSet children;
-        
-        Vector color;
-        
-        VArray points, drawPoints;
-        V4Array colors;
-        
-    };
-    
-    
-    void removePostponed(IObject* obj);
-}
+    void scale(float s);
+
+    void addChild(IObject* child);
+
+    IObject* getParent() const { return parent_; }
+    const ObjectsSet& getChildren() const { return children_; }
+
+    void removeChild(IObject* child);
+    void removeChildren();
+
+    Mat getTransform() const { return rot_ * radius_; }
+    const Vector& getShift() const { return shift_; }
+
+    const float getMass() const { return mass_; }
+    Vector& getV() { return velocity_; }
+
+    VArray& getPoints() { return points_; }
+    VArray& getDrawPoints() { return drawPoints_; }
+    V4Array& getColors() { return colors_; }
+    // should be defined for the implementation only
+
+    virtual void accept(Visitor& v) = 0;
+
+    void visitAll(Visitor& v);
+
+    void getProcessedPoints(VArray& result) {
+        applyTransformsToPoints(result, points_, getTransform(), shift_);
+    }
+    void normalize();
+
+    bool intersects(IObject* other);
+    bool contains(IObject* other);
+    BoundingBox2D& getBBox() { return box_; }
+
+    bool shouldBeRemoved;
+
+    static IGame* game;
+    void cacheDrawPoints();
+
+   protected:
+    Mat rot_;
+    Vector shift_;
+    float radius_;
+    BoundingBox2D box_;
+
+    float mass_;
+    Vector velocity_;
+
+    IObject* parent_;
+    ObjectsSet children_;
+
+    Vector color_;
+
+    VArray points_, drawPoints_;
+    V4Array colors_;
+};
+
+void removePostponed(IObject* obj);
+}  // namespace Game
 #endif

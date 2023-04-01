@@ -26,12 +26,12 @@ namespace Math
         
         const float el(int i, int j) const
         {
-            return ar[i*3 + j];
+            return ar_[i*3 + j];
         }
         
         float& el(int i, int j)
         {
-            return ar[i*3 + j];
+            return ar_[i*3 + j];
         }
         
         float det()const;
@@ -54,7 +54,7 @@ namespace Math
         
     private:
         
-        float ar[9];
+        float ar_[9];
     };
     
     inline Mat operator * (float f, const Mat& m)

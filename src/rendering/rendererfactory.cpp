@@ -7,13 +7,12 @@
 //
 
 #include "rendererfactory.h"
+
 #include "glesspacegamerenderer.h"
 
-namespace Game
-{
-    SpaceGameRenderer* RendererFactory::getGLESRenderer()
-    {
-        static GLESSpaceGameRenderer renderer;
-        return &renderer;
-    }
+namespace Game {
+SpaceGameRenderer* RendererFactory::getGLESRenderer() {
+    static GLESSpaceGameRenderer renderer_;
+    return &renderer_;
 }
+}  // namespace Game

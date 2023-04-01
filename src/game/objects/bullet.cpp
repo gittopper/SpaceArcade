@@ -7,26 +7,24 @@
 //
 
 #include "bullet.h"
-#include "gameobjects.h"
-#include "game/gameconfig.h"
 
-namespace Game
-{
-    Bullet::Bullet(Vector startPoint, Vector dir)
-    {
-        
-        points.push_back(Vector(0,0));
-        points.push_back(Vector(0,20));
-        points.push_back(Vector(1,20));
-        points.push_back(Vector(1,0));
-        points.push_back(Vector(0,0));
-        
-        normalize();
-        
-        getV() = dir;
-        scale(0.6);
-        move(startPoint);
-        //move(Vector(0,0,1.));
-    }
-    
+#include "game/gameconfig.h"
+#include "gameobjects.h"
+
+namespace Game {
+Bullet::Bullet(Vector startPoint, Vector dir) {
+    points_.push_back(Vector(0, 0));
+    points_.push_back(Vector(0, 20));
+    points_.push_back(Vector(1, 20));
+    points_.push_back(Vector(1, 0));
+    points_.push_back(Vector(0, 0));
+
+    normalize();
+
+    getV() = dir;
+    scale(0.6);
+    move(startPoint);
+    // move(Vector(0,0,1.));
 }
+
+}  // namespace Game

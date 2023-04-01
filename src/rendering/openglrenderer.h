@@ -1,31 +1,30 @@
 #pragma once
 
-#include "spacegamerenderer.h"
 #include "game/objects/gameobjects.h"
+#include "spacegamerenderer.h"
 
-namespace Game
-{
-    class OpenGLRenderer:public SpaceGameRenderer
-    {
-    public:
-        OpenGLRenderer();
-        void visit(IObject&);
-        void createFramebuffer();
-        void destroyFramebuffer();
-        bool updateInfoAboutWindow();
+namespace Game {
+class OpenGLRenderer : public SpaceGameRenderer {
+   public:
+    OpenGLRenderer();
+    void visit(IObject&) override;
+    void createFramebuffer() override;
+    void destroyFramebuffer() override;
+    bool updateInfoAboutWindow() override;
 
-        void prepareFrame();
-        void showFrame();
+    void prepareFrame() override;
+    void showFrame() override;
 
-        void getScreeenSize(int& w, int& h);
-        void setScreeenSize(int& w, int& h);
-        void setScale(float s);
+    void getScreeenSize(int& w, int& h) override;
+    void setScreeenSize(int w, int h) override;
+    void setScale(float s) override;
 
-        bool initRenderer(ResourceLoader* loader);
-    protected:
-        void drawGameObject(IObject& obj) const;
-        int width = 500;
-        int height = 500;
-        double scale;
-    };
-}
+    bool initRenderer(ResourceLoader* loader) override;
+
+   protected:
+    void drawGameObject(IObject& obj) const;
+    int width_ = 500;
+    int height_ = 500;
+    double scale_;
+};
+}  // namespace Game
