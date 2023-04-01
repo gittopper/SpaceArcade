@@ -47,9 +47,10 @@ void SpaceShip::visit(class Scene& s) {
 }
 
 void Scene::visit(class IObject& obj) {
-    if (!intersects(&obj) && Math::dot(obj.getShift(), obj.getV()) >= 0 &&
-        distance(&obj) > 1.5)  // not in scene and moving away
-    {
+    if (!intersects(&obj) && Math::dot(obj.getShift(), obj.getV()) >=
+                                 0  // not in scene and moving away
+                                    //&& distance(&obj) > 1.5
+    ) {
         obj.shouldBeRemoved = true;
     }
 }
