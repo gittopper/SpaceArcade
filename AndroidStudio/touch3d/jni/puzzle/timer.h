@@ -2,7 +2,7 @@
 #define TIMER_H
 #include <string>
 #include <time.h>
-#include "logger.hpp"
+#include <logger.hpp>
 
 class Timer
 {

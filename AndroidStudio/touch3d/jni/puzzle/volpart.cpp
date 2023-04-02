@@ -71,7 +71,8 @@ VolPart& VolPart::operator-=(const VolPart& another) {
     return *this;
 }
 bool VolPart::couldPlace(const VolPart& another) const {
-    BREAK_ON_LINE(xyz == another.xyz && another.fillInfo != VolType::Empty);
+    BREAK_ON_LINE(xyz == another.xyz);
+    BREAK_ON_LINE(another.fillInfo != VolType::Empty);
     return fillInfo == VolType::Empty ||
            fillInfo == VolType::Angle && another.fillInfo == VolType::Angle &&
                dir == -another.dir ||
