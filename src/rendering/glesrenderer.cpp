@@ -50,18 +50,28 @@ void GLESRenderer::setScreeenSize(int w, int h) {
 }
 
 bool GLESRenderer::compileShader() {
-    unique_ptr<char> vertFile(rcLoader_->readFile("vertex_shader.txt"));
-    if (!vertFile) return false;
-    const int vertexShader = loadShader(GL_VERTEX_SHADER, &(*vertFile));
-    if (vertexShader == 0) return false;
+    unique_ptr<char[]> vertFile(rcLoader_->readFile("vertex_shader.txt"));
+    if (!vertFile) {
+        return false;
+    }
+    const int vertexShader = loadShader(GL_VERTEX_SHADER, vertFile.get());
+    if (vertexShader == 0) {
+        return false;
+    }
 
-    unique_ptr<char> fragFile(rcLoader_->readFile("fragment_shader.txt"));
-    if (!fragFile) return false;
-    const int fragmentShader = loadShader(GL_FRAGMENT_SHADER, &(*fragFile));
-    if (fragmentShader == 0) return false;
+    unique_ptr<char[]> fragFile(rcLoader_->readFile("fragment_shader.txt"));
+    if (!fragFile) {
+        return false;
+    }
+    const int fragmentShader = loadShader(GL_FRAGMENT_SHADER, fragFile.get());
+    if (fragmentShader == 0) {
+        return false;
+    }
 
     shaderProgram_ = glCreateProgram();
-    if (shaderProgram_ == 0) return false;
+    if (shaderProgram_ == 0) {
+        return false;
+    }
 
     glAttachShader(shaderProgram_, vertexShader);
     glAttachShader(shaderProgram_, fragmentShader);
@@ -122,13 +132,13 @@ void GLESRenderer::prepareFrame() {
     SetOrtho(proj_, -hs, hs, -aspect * hs, aspect * hs, -scale_, scale_);
 
     glBindFramebuffer(GL_FRAMEBUFFER_OES, viewFramebuffer_);
-    glViewport(0, 0, backingWidth_, backingHeight_);
+    //glViewport(0, 0, backingWidth_, backingHeight_);
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glUseProgram(shaderProgram_);
+
 }
 
 void GLESRenderer::setScale(float s) { scale_ = s; }

@@ -33,10 +33,10 @@ import javax.microedition.khronos.opengles.GL10;
 
 class TutorialView extends GLSurfaceView
 {
-    protected int redSize = 5;
-    protected int greenSize = 6;
-    protected int blueSize = 5 ;
-    protected int alphaSize = 0;
+    protected int redSize = 8;
+    protected int greenSize = 8;
+    protected int blueSize = 8 ;
+    protected int alphaSize = 8;
     protected int depthSize = 16;
     protected int sampleSize = 4;
     protected int stencilSize = 0;
@@ -45,7 +45,9 @@ class TutorialView extends GLSurfaceView
     {
         super(context);
         setEGLContextFactory(new ContextFactory());
-        setEGLConfigChooser(new ConfigChooser());
+        //setEGLConfigChooser(new ConfigChooser());
+        setEGLContextClientVersion(2);
+        super.setEGLConfigChooser(8 , 8, 8, 8, 16, 0);
         setRenderer(new Renderer());
     }
 

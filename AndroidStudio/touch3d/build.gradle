@@ -4,17 +4,21 @@ def sample = "Native"
 println sample
 
 android {
+    namespace = "com.arm.malideveloper.openglessdk.simplecube"
     compileSdkVersion 28
 
     defaultConfig {
-        minSdkVersion 9
+        minSdkVersion 21
         targetSdkVersion 28
 
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
         }
     }
-
+    compileOptions {
+        // Flag to enable support for the new language APIs
+        coreLibraryDesugaringEnabled false
+    }
     buildTypes {
         debug {
             externalNativeBuild {

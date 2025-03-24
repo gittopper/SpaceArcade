@@ -23,6 +23,8 @@ class GLESSpaceGameRenderer : virtual public SpaceGameRenderer,
     void drawGameObject(IObject& obj) const;
     void setPosition(const Mat& m, const Vector& v) const;
     void drawArray(VArray& points, V4Array& colors) const;
+    void drawSprite(
+            int x, int y, int w, int h, int pixel_size, const RGBAPixel* sprite) override;
 };
 }  // namespace Game
 

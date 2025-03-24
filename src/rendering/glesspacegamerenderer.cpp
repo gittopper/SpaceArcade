@@ -37,4 +37,36 @@ void GLESSpaceGameRenderer::drawArray(VArray& points, V4Array& colors) const {
     glEnableVertexAttribArray(a_colorHandle_);
     glDrawArrays(GL_TRIANGLE_FAN, 0, (int)points.size());
 }
+void GLESSpaceGameRenderer::drawSprite(
+    int x, int y, int w, int h, int pixel_size, const RGBAPixel* sprite) {
+    float scale = scale_ / backingWidth_;
+    VArray points;
+    V4Array colors;
+    Mat tr{};
+    for(int i = 0; i < w; ++i) {
+        for(int j = 0; j < h; ++j) {
+            const auto& c = sprite[j * w + i];
+            if (c.a == 0) {
+                continue;
+            }
+            float pos_x = -backingWidth_ / 2.f + static_cast<float>(x + i) * pixel_size;
+            float pos_y = backingHeight_ / 2.f - static_cast<float>(y + j + 1) * pixel_size;
+            Vector4 color{static_cast<float>(c.r) / 255.0f, static_cast<float>(c.g) / 255.0f, static_cast<float>(c.b) / 255.0f,  static_cast<float>(c.a) / 255.0f};
+            colors.clear();
+            points.clear();
+            colors.push_back(color);
+            colors.push_back(color);
+            colors.push_back(color);
+            colors.push_back(color);
+            points.push_back(Vector{0, 0, 0.0});
+            points.push_back(Vector{0, scale * pixel_size, 0.0});
+            points.push_back(Vector{scale * pixel_size,  scale * pixel_size, 0.0});
+            points.push_back(Vector{scale * pixel_size, 0, 0.0});
+            Vector shift{pos_x * scale, pos_y * scale, 0.0};
+            setPosition(tr, shift);
+            drawArray(points, colors);
+        }
+    }
+}
+
 }  // namespace Game

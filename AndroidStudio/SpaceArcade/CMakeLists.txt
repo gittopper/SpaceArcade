@@ -3,6 +3,7 @@ set(SOURCES_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../../src/)
 set(TARGET GameEngine)
 set(SOURCES
         ${SOURCES_ROOT}/android/GameEngine.cpp
+        ${SOURCES_ROOT}/android/jnisoundplayer.cpp
         ${SOURCES_ROOT}/math/vector.cpp
         ${SOURCES_ROOT}/math/boundingbox.cpp
         ${SOURCES_ROOT}/math/mat.cpp
@@ -11,7 +12,6 @@ set(SOURCES
         ${SOURCES_ROOT}/math/vector4.cpp
         ${SOURCES_ROOT}/game/collider.cpp
         ${SOURCES_ROOT}/game/collisionrules.cpp
-        ${SOURCES_ROOT}/game/igame.cpp
         ${SOURCES_ROOT}/game/iobject.cpp
         ${SOURCES_ROOT}/game/physics.cpp
         ${SOURCES_ROOT}/game/regressvisitor.cpp

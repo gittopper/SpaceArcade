@@ -1,6 +1,6 @@
-#include <rendering/openglrenderer.h>
-
 #include <QtOpenGL>
+
+#include <rendering/openglrenderer.h>
 
 #include "game/objects/gameobjects.h"
 #include "math/gamemath.h"
@@ -8,9 +8,11 @@
 using namespace Math;
 
 namespace Game {
-void OpenGLRenderer::visit(IObject &a) { drawGameObject(a); }
+void OpenGLRenderer::visit(IObject& a) {
+    drawGameObject(a);
+}
 
-void OpenGLRenderer::drawGameObject(IObject &obj) const {
+void OpenGLRenderer::drawGameObject(IObject& obj) const {
     glBegin(GL_POLYGON);
     for (size_t i = 0; i < obj.getDrawPoints().size(); ++i) {
         auto c = obj.getColors()[i];
@@ -38,7 +40,7 @@ bool OpenGLRenderer::updateInfoAboutWindow() {}
 void OpenGLRenderer::prepareFrame() {
     glClear(GL_COLOR_BUFFER_BIT |
             GL_DEPTH_BUFFER_BIT);  // чистим буфер изображения и буфер глубины
-    glMatrixMode(GL_PROJECTION);  // устанавливаем матрицу
+    glMatrixMode(GL_MODELVIEW);  // устанавливаем матрицу
     glLoadIdentity();             // загружаем матрицу
     glOrtho(-width_ / 2, width_ / 2, height_ / 2, -height_ / 2, 1,
             0);  // подготавливаем плоскости для матрицы
@@ -46,9 +48,27 @@ void OpenGLRenderer::prepareFrame() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
+void OpenGLRenderer::drawSprite(
+    int x, int y, int w, int h, const RGBAPixel* sprite) {
+    for(int i = 0; i < w; ++i) {
+        for(int j = 0; j < h; ++j) {
+            double pos_x = -width_/2 + static_cast<double>((x + i));
+            double pos_y = -height_/2 + static_cast<double>((y + j));
+            const auto& c = sprite[j * w + i];
+            glColor4f(c.r / 255.0, c.g / 255.0, c.b / 255.0, c.a / 255.0);
+            glBegin(GL_QUADS);
+            glVertex2f(pos_x, pos_y);
+            glVertex2f(pos_x + 1, pos_y);
+            glVertex2f(pos_x + 1, pos_y + 1);
+            glVertex2f(pos_x, pos_y + 1);
+            glEnd();
+        }
+    }
+}
+
 void OpenGLRenderer::showFrame() {}
 
-void OpenGLRenderer::getScreeenSize(int &w, int &h) {
+void OpenGLRenderer::getScreeenSize(int& w, int& h) {
     w = width_;
     h = height_;
 }
@@ -63,8 +83,10 @@ void OpenGLRenderer::setScreeenSize(int w, int h) {
     height_ = h;
 }
 
-void OpenGLRenderer::setScale(float s) { scale_ = s; }
+void OpenGLRenderer::setScale(float s) {
+    scale_ = s;
+}
 
-bool OpenGLRenderer::initRenderer(ResourceLoader *loader) {}
+bool OpenGLRenderer::initRenderer(ResourceLoader* loader) {}
 
 }  // namespace Game

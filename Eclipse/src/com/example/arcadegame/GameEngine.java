@@ -9,7 +9,8 @@ public class GameEngine {
 	}
 	public static native void init(int width, int height, AssetManager assetManager);
 	public static native void step();
-	
+	public static native void showFrame();
+
 	public static native void tap(float x, float y);
 	public static native void actionUp(float x, float y);
 	public static native void actionDown(float x, float y);

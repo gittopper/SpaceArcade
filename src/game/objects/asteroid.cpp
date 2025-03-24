@@ -62,8 +62,10 @@ float Asteroid::getRandColorComponent() {
 void Asteroid::explode() {
     shouldBeRemoved = true;
     if (piece) {
+        game->player()->play("small_explode.ogg");
         return;
     }
+    game->player()->play("big_explode.ogg");
 
     int n = partsDistrib(generator);
 

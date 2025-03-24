@@ -21,7 +21,7 @@ class Asteroid : public IObject {
    public:
     struct AsteroidConfig {
         AsteroidConfig() : asteroidExplosionSigma(0.2) {}
-        int asteroidExplosionSigma;
+        double asteroidExplosionSigma;
     } conf;
 
     Asteroid();

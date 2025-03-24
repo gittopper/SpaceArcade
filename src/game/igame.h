@@ -9,6 +9,8 @@
 #ifndef __SpaceArcade__gameinstance__
 #define __SpaceArcade__gameinstance__
 
+#include "isoundplayer.h"
+
 namespace Game {
 
 class IGame {
@@ -17,6 +19,8 @@ class IGame {
 
     virtual class GameConfig* getGameConfig() = 0;
     virtual void addGameObject(class IObject*) = 0;
+
+    virtual ISoundPlayer* player() = 0;
 
     virtual ~IGame() {}
 };

@@ -52,5 +52,6 @@ Temporary Items
 .apdisk
 
 build
+/build*
 *.user
 *.cxx

@@ -1,20 +1,21 @@
 cmake_minimum_required(VERSION 3.18)
+set(SOURCES_ROOT ./)
 set(SOURCES
-        jni/camera.cpp
-        jni/Matrix.cpp
-        jni/Native.cpp
-        jni/renderer.cpp
-        jni/puzzle/box.cpp
-        jni/puzzle/mat.cpp
-        jni/puzzle/piece.cpp
-        jni/puzzle/solver.cpp
-        jni/puzzle/utils.cpp
-        jni/puzzle/utils3d.cpp
-        jni/puzzle/vector.cpp
-        jni/puzzle/volpart.cpp
-        jni/puzzle/volumepuzzle.cpp
-        jni/puzzle/print.cpp
-        jni/puzzle/pieceshower.cpp
+        ${SOURCES_ROOT}/jni/camera.cpp
+        ${SOURCES_ROOT}/jni/Matrix.cpp
+        ${SOURCES_ROOT}/jni/Native.cpp
+        ${SOURCES_ROOT}/jni/renderer.cpp
+        ${SOURCES_ROOT}/jni/puzzle/box.cpp
+        ${SOURCES_ROOT}/jni/puzzle/mat.cpp
+        ${SOURCES_ROOT}/jni/puzzle/piece.cpp
+        ${SOURCES_ROOT}/jni/puzzle/solver.cpp
+        ${SOURCES_ROOT}/jni/puzzle/utils.cpp
+        ${SOURCES_ROOT}/jni/puzzle/utils3d.cpp
+        ${SOURCES_ROOT}/jni/puzzle/vector.cpp
+        ${SOURCES_ROOT}/jni/puzzle/volpart.cpp
+        ${SOURCES_ROOT}/jni/puzzle/volumepuzzle.cpp
+        ${SOURCES_ROOT}/jni/puzzle/print.cpp
+        ${SOURCES_ROOT}/jni/puzzle/pieceshower.cpp
         )
 set(TARGET Native)
 add_library(${TARGET} SHARED ${SOURCES})

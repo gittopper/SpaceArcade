@@ -32,31 +32,35 @@ namespace Game
        SpaceGame();
     
         void setupGame(GameConfig conf = GameConfig());
-        GameConfig* getGameConfig(){ return &config_;}
+        GameConfig* getGameConfig() override{ return &config_;}
         
         void drag(int x, int y);
         
         void tap(int x, int y);
         
         void renderStep();
+        void showFrame();
         void setRenderer(SpaceGameRenderer* r) { renderer_ = r; }
         Renderer* getRenderer() { return renderer_;}
+        void setPlayer(std::shared_ptr<ISoundPlayer> player) { player_ = player; }
+        ISoundPlayer* player() override { return player_.get();}
 
-        void gameOver();
+        void gameOver() override;
         
-        void addGameObject(class IObject*);
+        void addGameObject(class IObject*) override;
 
         void pause();
 
         void resume();
         
         GameConfig& getConfig() { return config_;}
-        float getAnimationInterval() { return config_.dt_;}
+        float getAnimationInterval() const { return config_.dt_;}
     private:
         void createAsteroid();
         
         int w_, h_;
-        
+
+        std::vector<RGBAPixel> test_sprite_;
         Scene scene_;
         SpaceShip* spaceship_;
         
@@ -79,6 +83,7 @@ namespace Game
         uniform_real_distribution<float> asteroidPlace_;
         
         SpaceGameRenderer* renderer_;
+        std::shared_ptr<ISoundPlayer> player_;
         Physics physics_;
         Collider collider_;
     };

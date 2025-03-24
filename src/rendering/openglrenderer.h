@@ -5,7 +5,7 @@
 
 namespace Game {
 class OpenGLRenderer : public SpaceGameRenderer {
-   public:
+  public:
     OpenGLRenderer();
     void visit(IObject&) override;
     void createFramebuffer() override;
@@ -20,8 +20,10 @@ class OpenGLRenderer : public SpaceGameRenderer {
     void setScale(float s) override;
 
     bool initRenderer(ResourceLoader* loader) override;
+    void drawSprite(
+        int x, int y, int w, int h, const RGBAPixel* sprite) override;
 
-   protected:
+  protected:
     void drawGameObject(IObject& obj) const;
     int width_ = 500;
     int height_ = 500;
