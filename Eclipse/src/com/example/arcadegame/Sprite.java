@@ -58,12 +58,13 @@ public class Sprite {
         float aspect = (float)h / w;
         float hs = scale / 2;
         setOrtho(-hs, hs, -aspect * hs, aspect * hs, -scale, scale);
-        float pano_x = 5;
+        float pano_x = scale;
+        float pano_y = aspect * scale;
         float vertices[] = {
-                -pano_x/2.f, pano_x / 2.f, 0.f,
-                -pano_x/2.f, -pano_x / 2.f,0.f,
-                pano_x/2.f, pano_x / 2.f,0.f,
-                pano_x/2.f, -pano_x / 2.f,0.f,
+                -pano_x/2.f, pano_y / 2.f, 0.f,
+                -pano_x/2.f, -pano_y / 2.f,0.f,
+                pano_x/2.f, pano_y / 2.f,0.f,
+                pano_x/2.f, -pano_y / 2.f,0.f,
         };
 
         float texture[] = {

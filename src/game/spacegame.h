@@ -18,6 +18,7 @@
 #include "game/collider.h"
 #include <random>
 #include "igame.h"
+#include <memory>
 
 using namespace Math;
 using namespace std;

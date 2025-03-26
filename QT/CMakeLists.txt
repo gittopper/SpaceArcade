@@ -12,7 +12,7 @@ if(CMAKE_VERSION VERSION_LESS "3.7.0")
     set(CMAKE_INCLUDE_CURRENT_DIR ON)
 endif()
 
-find_package(Qt5 COMPONENTS Widgets OpenGL REQUIRED)
+find_package(Qt6 COMPONENTS Widgets OpenGL OpenGLWidgets Multimedia REQUIRED)
 
 set(GAME_SOURCES ${CMAKE_CURRENT_LIST_DIR}/../src)
 
@@ -36,7 +36,6 @@ set(ARCADE_SOURCES
     ${GAME_SOURCES}/game/collisionrules.cpp
     ${GAME_SOURCES}/game/collisionrules.h
     ${GAME_SOURCES}/game/gameconfig.h
-    ${GAME_SOURCES}/game/igame.cpp
     ${GAME_SOURCES}/game/igame.h
     ${GAME_SOURCES}/game/iobject.cpp
     ${GAME_SOURCES}/game/iobject.h
@@ -55,8 +54,6 @@ set(ARCADE_SOURCES
     ${GAME_SOURCES}/game/objects/scene.h
     ${GAME_SOURCES}/game/objects/spaceship.cpp
     ${GAME_SOURCES}/game/objects/spaceship.h
-    ${GAME_SOURCES}/rendering/openglrenderer.cpp
-    ${GAME_SOURCES}/rendering/openglrenderer.h
     ${GAME_SOURCES}/rendering/spacegamerenderer.cpp
     ${GAME_SOURCES}/rendering/spacegamerenderer.h
     ${GAME_SOURCES}/rendering/renderer.h
@@ -71,12 +68,20 @@ if(ANDROID_REGIME)
         ${GAME_SOURCES}/rendering/glesrenderer.h
         ${GAME_SOURCES}/rendering/glesspacegamerenderer.cpp
         ${GAME_SOURCES}/rendering/glesspacegamerenderer.h
-        ${GAME_SOURCES}/rendering/fileresourceloader.cpp
-        ${GAME_SOURCES}/rendering/fileresourceloader.h
         ${GAME_SOURCES}/rendering/androidresourceloader.cpp
         ${GAME_SOURCES}/rendering/androidresourceloader.h
         ${GAME_SOURCES}/android/GameEngine.cpp
         )
+else()
+    list(APPEND ARCADE_SOURCES
+        ${GAME_SOURCES}/rendering/fileresourceloader.cpp
+        ${GAME_SOURCES}/rendering/fileresourceloader.h
+        ${GAME_SOURCES}/rendering/openglrenderer.cpp
+        ${GAME_SOURCES}/rendering/openglrenderer.h
+        ${GAME_SOURCES}/desktop/soundplayer.cpp
+        ${GAME_SOURCES}/desktop/soundplayer.h
+        )
+    file(COPY ${GAME_SOURCES}/assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
 add_executable(SpaceArcade
@@ -97,4 +102,4 @@ target_include_directories(SpaceArcade PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/src
     ${GAME_SOURCES}
     )
-target_link_libraries(SpaceArcade Qt5::Widgets Qt5::OpenGL  -lGL)
+target_link_libraries(SpaceArcade Qt6::Widgets Qt6::OpenGL Qt6::OpenGLWidgets Qt6::Multimedia  -lGL)

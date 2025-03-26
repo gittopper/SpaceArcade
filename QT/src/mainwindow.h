@@ -1,10 +1,10 @@
 #pragma once
 
-#include <QGLWidget>
+#include <QOpenGLWidget>
 #include <QTimer>
 #include <QtOpenGL>
 
-class MainWindow : public QGLWidget {
+class MainWindow : public QOpenGLWidget {
   Q_OBJECT
 
 public:

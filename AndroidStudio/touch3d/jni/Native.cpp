@@ -152,11 +152,12 @@ Geometry::VolumePuzzle puzzle(3, 4, 2, generateWoodPuzzles());
 std::thread st(solve, &puzzle);
 std::vector<Geometry::Vector> colors;
 int found_solutions = 0;
+std::mutex m;
 
 JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_init(
         JNIEnv * env, jobject obj, jint width, jint height)
 {
-
+    std::lock_guard<std::mutex> lock(m);
     renderer.setup();
     renderer.setSize(width, height);
 }
@@ -164,6 +165,7 @@ JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeL
 JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_step(
         JNIEnv * env, jobject obj)
 {
+    std::lock_guard<std::mutex> lock(m);
     renderer.startFrame();
     //renderer.render(cubeVertices, normals, colour, indices, 36);
 
@@ -208,6 +210,7 @@ float move_start_y;
 JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_dragStart(
         JNIEnv * env, jobject obj, jint x1, jint y1, jint x2, jint y2)
 {
+    std::lock_guard<std::mutex> lock(m);
     lstart = std::sqrt((x2 - x1) * (x2 - x1)+ (y2 - y1) * (y2 - y1));
     move_start_x = (x1 + x2) * 0.5;
     move_start_y = (y1 + y2) * 0.5;
@@ -216,11 +219,13 @@ JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeL
 JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_dragStop(
         JNIEnv * env, jobject obj)
 {
+    std::lock_guard<std::mutex> lock(m);
     renderer.camera().store();
 }
 JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_drag(
         JNIEnv * env, jobject obj, jint x1, jint y1, jint x2, jint y2)
 {
+    std::lock_guard<std::mutex> lock(m);
     float l = std::sqrt((x2 - x1) * (x2 - x1)+ (y2 - y1) * (y2 - y1));
     renderer.camera().zoom((l - lstart) / 100);
     float x = (x1 + x2) * 0.5;
@@ -231,10 +236,12 @@ JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeL
 
 JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_moveStart(
         JNIEnv * env, jobject obj, jint x, jint y) {
+    std::lock_guard<std::mutex> lock(m);
     move_start_x = x;
     move_start_y = y;
 }
 JNIEXPORT void JNICALL Java_com_arm_malideveloper_openglessdk_simplecube_NativeLibrary_move(
         JNIEnv * env, jobject obj, jint x, jint y) {
+    std::lock_guard<std::mutex> lock(m);
     renderer.camera().setAngles((y - move_start_y) / 10,(x - move_start_x) / 10);
 }

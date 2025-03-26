@@ -1,14 +1,22 @@
 #include <game/spacegame.h>
 #include <mainwindow.h>
 #include <rendering/openglrenderer.h>
+#include <QtOpenGL>
+#include <desktop/soundplayer.h>
 using namespace Game;
 std::unique_ptr<SpaceGame> game;
 
-MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent) {
+MainWindow::MainWindow(QWidget *parent) : QOpenGLWidget(parent) {
 
   point = 0;
   singling = false;
-  setFormat(QGLFormat(QGL::DoubleBuffer)); // Двойная буферизация
+  QSurfaceFormat format;
+  format.setGreenBufferSize(8);
+  format.setRedBufferSize(8);
+  format.setBlueBufferSize(8);
+  format.setAlphaBufferSize(8);
+  format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
+  setFormat(format); // Двойная буферизация
   glDepthFunc(GL_LEQUAL);                  // Буфер глубины
   QTimer *timer = new QTimer(this);
   connect(timer, SIGNAL(timeout()), this, SLOT(render()));
@@ -16,13 +24,14 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent) {
 }
 
 void MainWindow::initializeGL() {
-  qglClearColor(Qt::black); // Черный цвет фона
+  //glClearColor(Qt::black); // Черный цвет фона
 }
 
 void MainWindow::resizeGL(int nWidth, int nHeight) {
   if (!game) {
     game.reset(new SpaceGame);
     game->setRenderer(new OpenGLRenderer);
+    game->setPlayer(std::make_shared<SoundPlayer>());
     GameConfig config;
     config.dt_ = 1. / 20;
     game->getRenderer()->setScreeenSize(nWidth, nHeight);
@@ -41,7 +50,7 @@ void MainWindow::paintGL() {
 
   game->renderStep();
 
-  swapBuffers();
+  //swapBuffers();
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *ke) {
@@ -49,7 +58,7 @@ void MainWindow::keyPressEvent(QKeyEvent *ke) {
   case Qt::Key_Space:
     break;
   }
-  updateGL();
+  update();
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent *me) {
@@ -68,11 +77,11 @@ void MainWindow::mousePressEvent(QMouseEvent *me) {
     singling = true;
     cbx = me->x();
     cby = me->y();
-    updateGL();
+    update();
   } else {
     singling = false;
   }
-  updateGL();
+  update();
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *me) {
@@ -80,7 +89,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *me) {
   if (singling == true && me->button() == Qt::LeftButton) {
     singling = false;
   }
-  updateGL();
+  update();
 }
 
-void MainWindow::render() { updateGL(); }
+void MainWindow::render() { update(); }

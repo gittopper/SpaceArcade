@@ -49,18 +49,18 @@ void OpenGLRenderer::prepareFrame() {
 }
 
 void OpenGLRenderer::drawSprite(
-    int x, int y, int w, int h, const RGBAPixel* sprite) {
+    int x, int y, int w, int h, int pixel_size, const RGBAPixel* sprite) {
     for(int i = 0; i < w; ++i) {
         for(int j = 0; j < h; ++j) {
-            double pos_x = -width_/2 + static_cast<double>((x + i));
-            double pos_y = -height_/2 + static_cast<double>((y + j));
+            double pos_x = -width_/2 + static_cast<double>((x + i)) * pixel_size;
+            double pos_y = -height_/2 + static_cast<double>((y + j)) * pixel_size;
             const auto& c = sprite[j * w + i];
             glColor4f(c.r / 255.0, c.g / 255.0, c.b / 255.0, c.a / 255.0);
             glBegin(GL_QUADS);
             glVertex2f(pos_x, pos_y);
-            glVertex2f(pos_x + 1, pos_y);
-            glVertex2f(pos_x + 1, pos_y + 1);
-            glVertex2f(pos_x, pos_y + 1);
+            glVertex2f(pos_x + pixel_size, pos_y);
+            glVertex2f(pos_x + pixel_size, pos_y + pixel_size);
+            glVertex2f(pos_x, pos_y + pixel_size);
             glEnd();
         }
     }

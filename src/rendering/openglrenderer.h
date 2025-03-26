@@ -21,7 +21,7 @@ class OpenGLRenderer : public SpaceGameRenderer {
 
     bool initRenderer(ResourceLoader* loader) override;
     void drawSprite(
-        int x, int y, int w, int h, const RGBAPixel* sprite) override;
+        int x, int y, int w, int h, int pixel_size, const RGBAPixel* sprite) override;
 
   protected:
     void drawGameObject(IObject& obj) const;
