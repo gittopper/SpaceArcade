@@ -11,7 +11,7 @@
 
 #include <string>
 
-#include "resourceloader.h"
+#include <game/resourceloader.h>
 
 using namespace std;
 

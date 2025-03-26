@@ -144,7 +144,7 @@ void SpaceGame::renderStep() {
     }
     scene_.visitAll(*renderer_);
 
-    renderer_->drawSprite(0, 0, 12, 16, 1, test_sprite_.data());
+    renderer_->drawSprite(0, 0, 12, 16, 3, test_sprite_.data());
     renderer_->showFrame();
 }
 

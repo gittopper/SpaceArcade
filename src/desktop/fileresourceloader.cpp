@@ -5,8 +5,8 @@
 char* FileResourceLoader::readFile(string filename) {
     string filePath = resourcesPath_ + filename;
     FILE* fin = fopen(filePath.c_str(), "ra");
-    if (fin == NULL) {
-        return NULL;
+    if (fin == nullptr) {
+        return nullptr;
     }
 
     fseek(fin, 0L, SEEK_END);

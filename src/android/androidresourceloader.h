@@ -13,7 +13,7 @@
 #include <android/asset_manager_jni.h>
 #include <jni.h>
 
-#include "rendering/resourceloader.h"
+#include "game/resourceloader.h"
 
 using namespace std;
 

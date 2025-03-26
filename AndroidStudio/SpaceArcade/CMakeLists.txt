@@ -4,6 +4,9 @@ set(TARGET GameEngine)
 set(SOURCES
         ${SOURCES_ROOT}/android/GameEngine.cpp
         ${SOURCES_ROOT}/android/jnisoundplayer.cpp
+        ${SOURCES_ROOT}/android/glesrenderer.cpp
+        ${SOURCES_ROOT}/android/glesspacegamerenderer.cpp
+        ${SOURCES_ROOT}/android/androidresourceloader.cpp
         ${SOURCES_ROOT}/math/vector.cpp
         ${SOURCES_ROOT}/math/boundingbox.cpp
         ${SOURCES_ROOT}/math/mat.cpp
@@ -20,10 +23,6 @@ set(SOURCES
         ${SOURCES_ROOT}/game/objects/bullet.cpp
         ${SOURCES_ROOT}/game/objects/scene.cpp
         ${SOURCES_ROOT}/game/objects/spaceship.cpp
-        ${SOURCES_ROOT}/rendering/glesrenderer.cpp
-        ${SOURCES_ROOT}/rendering/glesspacegamerenderer.cpp
-        ${SOURCES_ROOT}/rendering/rendererfactory.cpp
-        ${SOURCES_ROOT}/rendering/androidresourceloader.cpp
         ${SOURCES_ROOT}/rendering/spacegamerenderer.cpp
         )
 

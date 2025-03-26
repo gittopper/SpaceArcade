@@ -1,7 +1,7 @@
 #pragma once
 
-#include "game/objects/gameobjects.h"
-#include "spacegamerenderer.h"
+#include <game/objects/gameobjects.h>
+#include <rendering/spacegamerenderer.h>
 
 namespace Game {
 class OpenGLRenderer : public SpaceGameRenderer {

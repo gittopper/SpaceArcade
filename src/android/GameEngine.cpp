@@ -6,14 +6,15 @@
 #include <string>
 #include <mutex>
 
-#include "rendering/androidresourceloader.h"
+#include "android/androidresourceloader.h"
 #include <android/jnisoundplayer.h>
-#include "rendering/rendererfactory.h"
+#include "android/glesspacegamerenderer.h"
 
 using namespace Game;
 
 std::shared_ptr<SpaceGame> game;
 std::shared_ptr<EnvWrapper> env_wrapper;
+static GLESSpaceGameRenderer renderer;
 std::mutex m;
 extern "C" {
 
@@ -23,7 +24,7 @@ JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_init(
     std::lock_guard<std::mutex> lock(m);
     if (nullptr == game) {
         game = std::make_shared<SpaceGame>();
-        game->setRenderer(RendererFactory::getGLESRenderer());
+        game->setRenderer(&renderer);
         env_wrapper = std::make_shared<EnvWrapper>(env);
         game->setPlayer(std::make_shared<JNISoundPlayer>(env_wrapper));
     }

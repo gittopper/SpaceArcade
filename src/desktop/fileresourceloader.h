@@ -9,7 +9,7 @@
 #ifndef Shader_fileresourceloader_h
 #define Shader_fileresourceloader_h
 
-#include "rendering/resourceloader.h"
+#include <game/resourceloader.h>
 
 class FileResourceLoader : public ResourceLoader {
    public:

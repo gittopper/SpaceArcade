@@ -1,4 +1,4 @@
-#include "rendering/androidresourceloader.h"
+#include "android/androidresourceloader.h"
 
 AndroidResourceLoader::AndroidResourceLoader(AAssetManager* manager)
     : assetManager_(manager) {}

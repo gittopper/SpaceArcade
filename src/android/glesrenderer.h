@@ -22,8 +22,8 @@
 
 #include <memory>
 
-#include "math/gamemath.h"
-#include "renderer.h"
+#include <math/gamemath.h>
+#include <rendering/renderer.h>
 
 using namespace std;
 using namespace Math;

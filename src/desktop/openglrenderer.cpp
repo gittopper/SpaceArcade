@@ -1,6 +1,6 @@
 #include <QtOpenGL>
 
-#include <rendering/openglrenderer.h>
+#include <desktop/openglrenderer.h>
 
 #include "game/objects/gameobjects.h"
 #include "math/gamemath.h"
@@ -35,7 +35,9 @@ void OpenGLRenderer::createFramebuffer() {}
 
 void OpenGLRenderer::destroyFramebuffer() {}
 
-bool OpenGLRenderer::updateInfoAboutWindow() {}
+bool OpenGLRenderer::updateInfoAboutWindow() {
+    return true;
+}
 
 void OpenGLRenderer::prepareFrame() {
     glClear(GL_COLOR_BUFFER_BIT |
@@ -87,6 +89,8 @@ void OpenGLRenderer::setScale(float s) {
     scale_ = s;
 }
 
-bool OpenGLRenderer::initRenderer(ResourceLoader* loader) {}
+bool OpenGLRenderer::initRenderer(ResourceLoader* loader) {
+    return true;
+}
 
 }  // namespace Game

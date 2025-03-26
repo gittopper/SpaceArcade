@@ -11,13 +11,13 @@
 
 #include "game/objects/gameobjects.h"
 #include "glesrenderer.h"
-#include "spacegamerenderer.h"
+#include <rendering/spacegamerenderer.h>
 
 namespace Game {
 class GLESSpaceGameRenderer : virtual public SpaceGameRenderer,
                               virtual public GLESRenderer {
    public:
-    void visit(IObject&);
+    void visit(IObject&) override;
 
    protected:
     void drawGameObject(IObject& obj) const;

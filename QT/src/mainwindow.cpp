@@ -1,6 +1,6 @@
 #include <game/spacegame.h>
 #include <mainwindow.h>
-#include <rendering/openglrenderer.h>
+#include <desktop/openglrenderer.h>
 #include <QtOpenGL>
 #include <desktop/soundplayer.h>
 using namespace Game;
@@ -63,8 +63,8 @@ void MainWindow::keyPressEvent(QKeyEvent *ke) {
 
 void MainWindow::mouseMoveEvent(QMouseEvent *me) {
   // Получаем координаты курсора
-  cax = me->x();
-  cay = me->y();
+  cax = me->position().x();
+  cay = me->position().y();
   if (singling) {
     game->drag(cax - cbx, cby - cay);
   }
@@ -73,10 +73,10 @@ void MainWindow::mouseMoveEvent(QMouseEvent *me) {
 
 void MainWindow::mousePressEvent(QMouseEvent *me) {
   if (me->button() == Qt::LeftButton) {
-    game->tap(me->x(), me->y());
+    game->tap(me->position().x(), me->position().y());
     singling = true;
-    cbx = me->x();
-    cby = me->y();
+    cbx = me->position().x();
+    cby = me->position().y();
     update();
   } else {
     singling = false;

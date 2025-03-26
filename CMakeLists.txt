@@ -14,7 +14,9 @@ endif()
 
 find_package(Qt6 COMPONENTS Widgets OpenGL OpenGLWidgets Multimedia REQUIRED)
 
-set(GAME_SOURCES ${CMAKE_CURRENT_LIST_DIR}/../src)
+set(GAME_SOURCES ${CMAKE_CURRENT_LIST_DIR}/src)
+
+add_subdirectory(${GAME_SOURCES}/3rd_party)
 
 set(ANDROID_REGIME OFF CACHE BOOL "" FORCE)
 
@@ -54,30 +56,30 @@ set(ARCADE_SOURCES
     ${GAME_SOURCES}/game/objects/scene.h
     ${GAME_SOURCES}/game/objects/spaceship.cpp
     ${GAME_SOURCES}/game/objects/spaceship.h
+    ${GAME_SOURCES}/game/resourceloader.h
     ${GAME_SOURCES}/rendering/spacegamerenderer.cpp
     ${GAME_SOURCES}/rendering/spacegamerenderer.h
     ${GAME_SOURCES}/rendering/renderer.h
-    ${GAME_SOURCES}/rendering/resourceloader.h
     )
 
 if(ANDROID_REGIME)
     list(APPEND ARCADE_SOURCES
-        ${GAME_SOURCES}/rendering/rendererfactory.cpp
-        ${GAME_SOURCES}/rendering/rendererfactory.h
-        ${GAME_SOURCES}/rendering/glesrenderer.cpp
-        ${GAME_SOURCES}/rendering/glesrenderer.h
-        ${GAME_SOURCES}/rendering/glesspacegamerenderer.cpp
-        ${GAME_SOURCES}/rendering/glesspacegamerenderer.h
-        ${GAME_SOURCES}/rendering/androidresourceloader.cpp
-        ${GAME_SOURCES}/rendering/androidresourceloader.h
+        ${GAME_SOURCES}/android/rendererfactory.cpp
+        ${GAME_SOURCES}/android/rendererfactory.h
+        ${GAME_SOURCES}/android/glesrenderer.cpp
+        ${GAME_SOURCES}/android/glesrenderer.h
+        ${GAME_SOURCES}/android/glesspacegamerenderer.cpp
+        ${GAME_SOURCES}/android/glesspacegamerenderer.h
+        ${GAME_SOURCES}/android/androidresourceloader.cpp
+        ${GAME_SOURCES}/android/androidresourceloader.h
         ${GAME_SOURCES}/android/GameEngine.cpp
         )
 else()
     list(APPEND ARCADE_SOURCES
-        ${GAME_SOURCES}/rendering/fileresourceloader.cpp
-        ${GAME_SOURCES}/rendering/fileresourceloader.h
-        ${GAME_SOURCES}/rendering/openglrenderer.cpp
-        ${GAME_SOURCES}/rendering/openglrenderer.h
+        ${GAME_SOURCES}/desktop/fileresourceloader.cpp
+        ${GAME_SOURCES}/desktop/fileresourceloader.h
+        ${GAME_SOURCES}/desktop/openglrenderer.cpp
+        ${GAME_SOURCES}/desktop/openglrenderer.h
         ${GAME_SOURCES}/desktop/soundplayer.cpp
         ${GAME_SOURCES}/desktop/soundplayer.h
         )
@@ -85,9 +87,9 @@ else()
 endif()
 
 add_executable(SpaceArcade
-    src/main.cpp
-    src/mainwindow.h
-    src/mainwindow.cpp
+    QT/src/main.cpp
+    QT/src/mainwindow.h
+    QT/src/mainwindow.cpp
     ${ARCADE_SOURCES}
     )
 
@@ -99,7 +101,8 @@ if(ANDROID_REGIME)
 endif()
 
 target_include_directories(SpaceArcade PUBLIC
-    ${CMAKE_CURRENT_LIST_DIR}/src
+    ${CMAKE_CURRENT_LIST_DIR}/QT/src
     ${GAME_SOURCES}
     )
-target_link_libraries(SpaceArcade Qt6::Widgets Qt6::OpenGL Qt6::OpenGLWidgets Qt6::Multimedia  -lGL)
+target_link_libraries(SpaceArcade Qt6::Widgets Qt6::OpenGL Qt6::OpenGLWidgets Qt6::Multimedia  -lGL -lpng)
+
