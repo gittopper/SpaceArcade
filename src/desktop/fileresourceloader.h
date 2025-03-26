@@ -13,7 +13,7 @@
 
 class FileResourceLoader : public ResourceLoader {
    public:
-    virtual char* readFile(std::string filename);
+    virtual std::vector<char> readFile(std::string filename);
     virtual void setResourcesPath(std::string path);
 
    private:

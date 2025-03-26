@@ -50,20 +50,24 @@ void GLESRenderer::setScreeenSize(int w, int h) {
 }
 
 bool GLESRenderer::compileShader() {
-    unique_ptr<char[]> vertFile(rcLoader_->readFile("vertex_shader.txt"));
-    if (!vertFile) {
+    auto vertex_shader_txt = rcLoader_->readFile("vertex_shader.txt");
+    if (vertex_shader_txt.empty()) {
         return false;
     }
-    const int vertexShader = loadShader(GL_VERTEX_SHADER, vertFile.get());
+    vertex_shader_txt.resize(vertex_shader_txt.size() + 1);
+    vertex_shader_txt[vertex_shader_txt.size() - 1] = '\0';
+    const int vertexShader = loadShader(GL_VERTEX_SHADER, vertex_shader_txt.data());
     if (vertexShader == 0) {
         return false;
     }
 
-    unique_ptr<char[]> fragFile(rcLoader_->readFile("fragment_shader.txt"));
-    if (!fragFile) {
+    auto fragment_shader_txt = rcLoader_->readFile("fragment_shader.txt");
+    if (fragment_shader_txt.empty()) {
         return false;
     }
-    const int fragmentShader = loadShader(GL_FRAGMENT_SHADER, fragFile.get());
+    fragment_shader_txt.resize(fragment_shader_txt.size() + 1);
+    fragment_shader_txt[fragment_shader_txt.size() - 1] = '\0';
+    const int fragmentShader = loadShader(GL_FRAGMENT_SHADER, fragment_shader_txt.data());
     if (fragmentShader == 0) {
         return false;
     }

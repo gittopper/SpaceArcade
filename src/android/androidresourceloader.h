@@ -20,7 +20,7 @@ using namespace std;
 class AndroidResourceLoader : public ResourceLoader {
    public:
     AndroidResourceLoader(AAssetManager* manager);
-    virtual char* readFile(string filename);
+    virtual std::vector<char> readFile(string filename);
     virtual void setResourcesPath(string path);
 
    private:

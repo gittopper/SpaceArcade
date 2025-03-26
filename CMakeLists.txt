@@ -103,6 +103,7 @@ endif()
 target_include_directories(SpaceArcade PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/QT/src
     ${GAME_SOURCES}
+    ${GAME_SOURCES}/3rd_party/libpng
     )
 target_link_libraries(SpaceArcade Qt6::Widgets Qt6::OpenGL Qt6::OpenGLWidgets Qt6::Multimedia  -lGL -lpng)
 

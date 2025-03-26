@@ -10,12 +10,13 @@
 #define Shader_resourceloader_h
 
 #include <string>
+#include <vector>
 
 using namespace std;
 
 class ResourceLoader {
    public:
-    virtual char* readFile(string filename) = 0;
+    virtual std::vector<char> readFile(string filename) = 0;
     virtual void setResourcesPath(string path) = 0;
 
     virtual ~ResourceLoader() {}
