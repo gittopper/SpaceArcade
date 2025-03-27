@@ -19,6 +19,8 @@
 #include <random>
 #include "igame.h"
 #include <memory>
+#include <game/sprite.h>
+#include <game/resourceloader.h>
 
 using namespace Math;
 using namespace std;
@@ -44,6 +46,8 @@ namespace Game
         void setRenderer(SpaceGameRenderer* r) { renderer_ = r; }
         Renderer* getRenderer() { return renderer_;}
         void setPlayer(std::shared_ptr<ISoundPlayer> player) { player_ = player; }
+        ResourceLoader* getResourceLoader() { return resource_loader_.get();}
+        void setResourceLoader(std::shared_ptr<ResourceLoader> resource_loader) { resource_loader_ = resource_loader; }
         ISoundPlayer* player() override { return player_.get();}
 
         void gameOver() override;
@@ -87,6 +91,8 @@ namespace Game
         std::shared_ptr<ISoundPlayer> player_;
         Physics physics_;
         Collider collider_;
+        std::shared_ptr<ResourceLoader> resource_loader_;
+        std::shared_ptr<Sprite> overlay_;
     };
 }
 #endif

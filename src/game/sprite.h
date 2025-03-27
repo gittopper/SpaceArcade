@@ -25,6 +25,12 @@ public:
     std::size_t height() const {
         return height_;
     }
+    std::size_t glWidth() const {
+        return gl_width_;
+    }
+    std::size_t glHeight() const {
+        return gl_height_;
+    }
     const char* data() const {
         return data_.data();
     }

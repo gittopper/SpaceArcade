@@ -12,6 +12,7 @@
 #include <string>
 
 #include <game/resourceloader.h>
+#include <game/sprite.h>
 
 using namespace std;
 
@@ -49,6 +50,8 @@ class Renderer {
     virtual void prepareFrame() = 0;
     virtual void drawSprite(
         int x, int y, int w, int h, int pixel_size, const RGBAPixel* sprite) = 0;
+    virtual void drawOverlay(const Sprite& sprite) = 0;
+
     virtual void showFrame() = 0;
 
     virtual void getScreeenSize(int& w, int& h) = 0;

@@ -22,11 +22,13 @@ class OpenGLRenderer : public SpaceGameRenderer {
     bool initRenderer(ResourceLoader* loader) override;
     void drawSprite(
         int x, int y, int w, int h, int pixel_size, const RGBAPixel* sprite) override;
+    void drawOverlay(const Sprite& sprite) override;
 
   protected:
     void drawGameObject(IObject& obj) const;
     int width_ = 500;
     int height_ = 500;
     double scale_;
+    GLuint overlay_id_;
 };
 }  // namespace Game

@@ -3,6 +3,9 @@
 #include <desktop/openglrenderer.h>
 #include <QtOpenGL>
 #include <desktop/soundplayer.h>
+#include <desktop/fileresourceloader.h>
+#include <QApplication>
+
 using namespace Game;
 std::unique_ptr<SpaceGame> game;
 
@@ -32,6 +35,9 @@ void MainWindow::resizeGL(int nWidth, int nHeight) {
     game.reset(new SpaceGame);
     game->setRenderer(new OpenGLRenderer);
     game->setPlayer(std::make_shared<SoundPlayer>());
+    auto rloader = std::make_shared<FileResourceLoader>();
+    rloader->setResourcesPath(QApplication::applicationDirPath().toStdString()  + "/assets/");
+    game->setResourceLoader(rloader);
     GameConfig config;
     config.dt_ = 1. / 20;
     game->getRenderer()->setScreeenSize(nWidth, nHeight);

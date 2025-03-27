@@ -9,78 +9,11 @@
 #include "spacegame.h"
 
 #include <math.h>
-#include <png.h>
+#include <game/pngreader.h>
 
 using namespace Game;
 
 using namespace std;
-
-struct image {
-    png_uint_32 imWidth, imHeight; //реальный размер картинки
-    png_uint_32 glWidth, glHeight; //размер который подойдет для OpenGL
-    int bit_depth, color_type;
-    char* data; //данные RGB/RGBA
-};
-static int reNpot(int w) {
-    //поддерживает ли OpenGL текстуры размера не кратным двум
-    //эту переменную конечно надо определять один раз при старте проги с помощью
-    //String s = gl.glGetString(GL10.GL_EXTENSIONS);
-    //NON_POWER_OF_TWO_SUPPORTED = s.contains("texture_2D_limited_npot") || s.contains("texture_npot") || s.contains("texture_non_power_of_two");
-    bool NON_POWER_OF_TWO_SUPPORTED = false;
-    if (NON_POWER_OF_TWO_SUPPORTED) {
-        if (w % 2) w++;
-    } else {
-        if (w <= 4) w = 4;
-        else if (w <= 8) w = 8;
-        else if (w <= 16) w = 16;
-        else if (w <= 32) w = 32;
-        else if (w <= 64) w = 64;
-        else if (w <= 128) w = 128;
-        else if (w <= 256) w = 256;
-        else if (w <= 512) w = 512;
-        else if (w <= 1024) w = 1024;
-        else if (w <= 2048) w = 2048;
-        else if (w <= 4096) w = 4096;
-    }
-    return w;
-}
-static image readPng(const char* fileName) {
-    image im;
-    FILE* file = fopen(fileName, "rb");
-    //пропускаем заголовок, хотя именно сюда можно добавить проверку PNG это или JPEG, чтобы ф-ция сама определяла как грузить картинку
-    fseek(file, 8, SEEK_CUR);
-
-    png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
-    png_infop info_ptr = png_create_info_struct(png_ptr);
-
-    png_init_io(png_ptr, file);
-    png_set_sig_bytes(png_ptr, 8);
-    png_read_info(png_ptr, info_ptr);
-
-    //читаем данные о картинке
-    png_get_IHDR(png_ptr, info_ptr, &im.imWidth, &im.imHeight, &im.bit_depth, &im.color_type, nullptr, nullptr, nullptr);
-
-    //определяем размер картинки подходящий для OpenGL
-    im.glWidth = reNpot(im.imWidth);
-    im.glHeight = reNpot(im.imHeight);
-
-    //если картинка содержит прозрачность то на каждый пиксель 4 байта (RGBA), иначе 3 (RGB)
-    int row = im.glWidth * (im.color_type == PNG_COLOR_TYPE_RGBA ? 4 : 3);
-    im.data = new char[row * im.glHeight];
-
-    //в этом массиве содержатся указатели на начало каждой строки
-    png_bytep * row_pointers = new png_bytep[im.imHeight];
-    for(int i = 0; i < im.imHeight; ++i)
-        row_pointers[i] = (png_bytep) (im.data + i * row);
-
-    //читаем картинку
-    png_read_image(png_ptr, row_pointers);
-    png_destroy_read_struct(&png_ptr, &info_ptr, 0);
-    delete[] row_pointers;
-
-    return im;
-}
-
 
 SpaceGame::SpaceGame() :
     paused_(false),
@@ -89,8 +22,6 @@ SpaceGame::SpaceGame() :
     asteroidsNextTime_(-1),
     renderer_(nullptr) {
 
-    //auto png = readPng("/assets/daco2.png");
-    auto t = true;
 }
 
 void SpaceGame::pause() {
@@ -110,6 +41,9 @@ void SpaceGame::setupGame(GameConfig conf) {
     renderer_->getScreeenSize(w_, h_);
     aspect_ = static_cast<float>(h_) / w_;
     scene_.setupScene(config_.scale_, aspect_ * config_.scale_);
+
+    auto png_image = getResourceLoader()->readFile("daco2.png");
+    overlay_ = std::make_shared<Sprite>(PngReader::read(png_image, true));
 
     spaceship_ = new SpaceShip(config_.bulletSpeed_ * config_.dt_);
     scene_.addChild(spaceship_);
@@ -217,6 +151,7 @@ void SpaceGame::renderStep() {
     scene_.visitAll(*renderer_);
 
     renderer_->drawSprite(0, 0, 12, 16, 3, test_sprite_.data());
+    renderer_->drawOverlay(*overlay_);
     renderer_->showFrame();
 }
 
