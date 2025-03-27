@@ -16,6 +16,7 @@ set(SOURCES
         ${SOURCES_ROOT}/game/collider.cpp
         ${SOURCES_ROOT}/game/collisionrules.cpp
         ${SOURCES_ROOT}/game/iobject.cpp
+        ${SOURCES_ROOT}/game/pngreader.cpp
         ${SOURCES_ROOT}/game/physics.cpp
         ${SOURCES_ROOT}/game/regressvisitor.cpp
         ${SOURCES_ROOT}/game/spacegame.cpp
@@ -27,6 +28,6 @@ set(SOURCES
         )
 
 add_library(${TARGET} SHARED ${SOURCES})
-target_link_libraries(${TARGET} log android EGL GLESv2 OpenSLES  dl  GLESv1_CM)
+target_link_libraries(${TARGET} log android EGL GLESv2 OpenSLES  dl  GLESv1_CM png_static zlibstatic)
 set_target_properties(${TARGET} PROPERTIES LIBRARY_OUTPUT_NAME ${TARGET})
 target_include_directories(${TARGET} PRIVATE ${SOURCES_ROOT})
