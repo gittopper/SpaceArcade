@@ -98,8 +98,10 @@ image readPng(const char* data, unsigned int length, bool gl_arrange) {
 
 Sprite PngReader::read(const std::vector<char>& buffer, bool gl_arrange) {
     image img = readPng(buffer.data(), buffer.size(), gl_arrange);
-    std::vector<char> data(img.data, img.data + img.glHeight * img.glWidth);
-    Sprite sprite(img.imWidth, img.imHeight, img.glWidth, img.glHeight, (img.color_type == PNG_COLOR_TYPE_RGBA ? Sprite::RGBA: Sprite::RGB), std::move(data));
+    bool is_4b = img.color_type == PNG_COLOR_TYPE_RGBA;
+    std::size_t bytes_per_pixel = is_4b ? 4 : 3;
+    std::vector<char> data(img.data, img.data + img.glHeight * img.glWidth * bytes_per_pixel);
+    Sprite sprite(img.imWidth, img.imHeight, img.glWidth, img.glHeight, (is_4b ? Sprite::RGBA: Sprite::RGB), std::move(data));
     delete[] img.data;
     return sprite;
 }

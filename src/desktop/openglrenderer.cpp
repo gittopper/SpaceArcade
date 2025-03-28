@@ -96,31 +96,35 @@ bool OpenGLRenderer::initRenderer(ResourceLoader* loader) {
 
 void OpenGLRenderer::drawOverlay(const Sprite& sprite) {
     assert(sprite.type() == Sprite::RGBA);
+    glEnable(GL_TEXTURE_2D);
+    glActiveTexture(GL_TEXTURE0);
     glDeleteTextures(1, &overlay_id_);
     glGenTextures(1, &overlay_id_);
-    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, overlay_id_);
 
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sprite.glWidth(), sprite.glHeight(), 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, sprite.data());
+
+    glColor4f(1., 1., 1., 0.5);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sprite.glWidth(), sprite.glHeight(), sprite.glWidth(),
-            GL_RGBA, GL_UNSIGNED_BYTE, sprite.data());
     //glGenerateMipmap(GL_TEXTURE_2D);
     float width = width_ / 2;
+    float height = height_ / 2;
     GLfloat verts3[] = {
-        -width, -width, 0.0f,
-        width, -width, 0.0f,
-        -width, width, 0.0f,
-        width, width, 0.0f,
+        -width, -height, 0.0f,
+        width, -height, 0.0f,
+        width, height, 0.0f,
+        -width, height, 0.0f,
     };
     GLfloat texCoords[] = {
         0.0f, 0.0f,
         1.0f, 0.0f,
-        0.0f, 1.0f,
         1.0f, 1.0f,
+        0.0f, 1.0f,
     };
     GLuint indices3[] = {
         0, 1, 2, 3
@@ -133,14 +137,13 @@ void OpenGLRenderer::drawOverlay(const Sprite& sprite) {
     glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //glDrawArrays(GL_TRIANGLES, 0, 3);
-    glDrawElements(GL_TRIANGLE_STRIP, 3, GL_UNSIGNED_INT, indices3);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glDisable(GL_TEXTURE_2D);
+    glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, indices3);
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_INDEX_ARRAY);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    //glDisable(GL_TEXTURE_2D);
 }
 
 
