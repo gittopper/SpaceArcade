@@ -25,6 +25,7 @@ class GLESSpaceGameRenderer : virtual public SpaceGameRenderer,
     void drawArray(VArray& points, V4Array& colors) const;
     void drawSprite(
             int x, int y, int w, int h, int pixel_size, const RGBAPixel* sprite) override;
+    void drawOverlay(const Sprite& sprite) override;
 };
 }  // namespace Game
 

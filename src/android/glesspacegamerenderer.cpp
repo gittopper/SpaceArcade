@@ -68,5 +68,54 @@ void GLESSpaceGameRenderer::drawSprite(
         }
     }
 }
+ void GLESSpaceGameRenderer::drawOverlay(const Sprite& sprite) {
+     GLuint texture_id;
+     glGenTextures(1, &texture_id);
+     glActiveTexture(GL_TEXTURE0);
+     glBindTexture(GL_TEXTURE_2D, texture_id);
+
+     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, sprite.glWidth(), sprite.glHeight(), 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, sprite.data());
+
+    float aspect = static_cast<float>(backingHeight_) / backingWidth_;
+     float pano_x = scale_;
+     float pano_y = aspect * scale_;
+     float vertices[] = {
+             -pano_x/2.f, pano_y / 2.f, 0.f,
+             -pano_x/2.f, -pano_y / 2.f,0.f,
+             pano_x/2.f, pano_y / 2.f,0.f,
+             pano_x/2.f, -pano_y / 2.f,0.f,
+     };
+
+     float texture[] = {
+             0.0f, 0.0f,
+             0.0f, 1.0f,
+             1.0f, 0.0f,
+             1.0f, 1.0f
+     };
+
+     glUseProgram(program_overlay_id_);
+     glVertexAttribPointer(overlay_vert_loc_, 3, GL_FLOAT, false, 0, vertices);
+     glEnableVertexAttribArray(overlay_vert_loc_);
+
+     glVertexAttribPointer(overlay_tex_loc_, 2, GL_FLOAT, false, 0, texture);
+     glEnableVertexAttribArray(overlay_tex_loc_);
+
+     glEnable(GL_TEXTURE_2D);
+     glEnable(GL_BLEND);
+     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+     glUniformMatrix4fv(overlay_mat_loc_, 1, GL_FALSE, (GLfloat*)&proj_.m_[0]);
+     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+     glDisable(GL_BLEND);
+
+    glBindTexture( GL_TEXTURE_2D, 0);
+    glDeleteTextures(1, &texture_id);
+}
+
 
 }  // namespace Game

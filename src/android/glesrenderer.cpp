@@ -10,33 +10,86 @@
 
 #define USE_DEPTH_BUFFER 0
 
-GLESRenderer::GLESRenderer() : scale_(1) {}
+namespace {
+    std::uint32_t loadShader(GLenum type, const char* source) {
+        auto shader = glCreateShader(type);
+        if (shader == 0) {
+            throw std::runtime_error("cannot create shader");
+        }
 
-int GLESRenderer::loadShader(GLenum type, const char* source) {
-    const unsigned int shader = glCreateShader(type);
-    if (shader == 0) return 0;
+        glShaderSource(shader, 1, (const GLchar**)&source, NULL);
+        glCompileShader(shader);
 
-    glShaderSource(shader, 1, (const GLchar**)&source, NULL);
-    glCompileShader(shader);
+        int success;
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+        if (success == 0) {
+            char errorMsg[2048];
+            glGetShaderInfoLog(shader, sizeof(errorMsg), NULL, errorMsg);
+            glDeleteShader(shader);
+            throw std::runtime_error(std::string("cannot create shader, error message is ") + errorMsg);
+        }
 
-    int success;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if (success == 0) {
-        char errorMsg[2048];
-        glGetShaderInfoLog(shader, sizeof(errorMsg), NULL, errorMsg);
-        printf("Compile error: %s\n", errorMsg);
-        glDeleteShader(shader);
-        return 0;
+        return shader;
     }
 
-    return shader;
+    std::uint32_t compileProgram(ResourceLoader* loader, const std::string& vertex_shader_name, const
+        std::string& fragment_shader_name) {
+        auto vertex_shader_txt = loader->readFile(vertex_shader_name);
+        if (vertex_shader_txt.empty()) {
+            throw std::runtime_error("cannot read vertex shader");
+        }
+        vertex_shader_txt.resize(vertex_shader_txt.size() + 1);
+        vertex_shader_txt[vertex_shader_txt.size() - 1] = '\0';
+        const int vertexShader = loadShader(GL_VERTEX_SHADER, vertex_shader_txt.data());
+        if (vertexShader == 0) {
+            throw std::runtime_error("cannot load vertex shader");
+        }
+
+        auto fragment_shader_txt = loader->readFile(fragment_shader_name);
+        if (fragment_shader_txt.empty()) {
+            throw std::runtime_error("cannot read fragment shader");
+        }
+        fragment_shader_txt.resize(fragment_shader_txt.size() + 1);
+        fragment_shader_txt[fragment_shader_txt.size() - 1] = '\0';
+        const int fragmentShader = loadShader(GL_FRAGMENT_SHADER, fragment_shader_txt.data());
+        if (fragmentShader == 0) {
+            throw std::runtime_error("cannot load fragment shader");
+        }
+
+        auto program_id = glCreateProgram();
+        if (program_id == 0) {
+            throw std::runtime_error("cannot create program");
+        }
+        glAttachShader(program_id, vertexShader);
+        glAttachShader(program_id, fragmentShader);
+        glLinkProgram(program_id);
+        int linked;
+        glGetProgramiv(program_id, GL_LINK_STATUS, &linked);
+        if (linked == 0) {
+            glDeleteProgram(program_id);
+            throw std::runtime_error("cannot link program");
+        }
+
+        return program_id;
+    }
 }
 
+GLESRenderer::GLESRenderer() : scale_(1) {}
+
 bool GLESRenderer::initRenderer(ResourceLoader* loader) {
-    unique_ptr<ResourceLoader> tmpLoader(loader);
-    rcLoader_ = std::move(tmpLoader);
-    if (!compileShader()) return false;
-    glUseProgram(shaderProgram_);
+    program_overlay_id_ = compileProgram(loader, "sprite_vs.txt", "sprite_fs.txt");
+    glUseProgram(program_overlay_id_);
+    overlay_vert_loc_ = glGetAttribLocation(program_overlay_id_, "a_Position");
+    overlay_tex_loc_ = glGetAttribLocation(program_overlay_id_, "a_Texture"); //texture
+    overlay_mat_loc_ = glGetUniformLocation(program_overlay_id_, "u_mvpMatrix"); //texture
+
+    program_id_ = compileProgram(loader, "vertex_shader.txt", "fragment_shader.txt");
+    glUseProgram(program_id_);
+    a_positionHandle_ = glGetAttribLocation(program_id_, "a_position");
+    a_colorHandle_ = glGetAttribLocation(program_id_, "a_color");
+
+    u_mvpHandle_ = glGetUniformLocation(program_id_, "u_mvpMatrix");
+
     return true;
 }
 
@@ -47,52 +100,6 @@ void GLESRenderer::getScreeenSize(int& w, int& h) {
 void GLESRenderer::setScreeenSize(int w, int h) {
     backingWidth_ = w;
     backingHeight_ = h;
-}
-
-bool GLESRenderer::compileShader() {
-    auto vertex_shader_txt = rcLoader_->readFile("vertex_shader.txt");
-    if (vertex_shader_txt.empty()) {
-        return false;
-    }
-    vertex_shader_txt.resize(vertex_shader_txt.size() + 1);
-    vertex_shader_txt[vertex_shader_txt.size() - 1] = '\0';
-    const int vertexShader = loadShader(GL_VERTEX_SHADER, vertex_shader_txt.data());
-    if (vertexShader == 0) {
-        return false;
-    }
-
-    auto fragment_shader_txt = rcLoader_->readFile("fragment_shader.txt");
-    if (fragment_shader_txt.empty()) {
-        return false;
-    }
-    fragment_shader_txt.resize(fragment_shader_txt.size() + 1);
-    fragment_shader_txt[fragment_shader_txt.size() - 1] = '\0';
-    const int fragmentShader = loadShader(GL_FRAGMENT_SHADER, fragment_shader_txt.data());
-    if (fragmentShader == 0) {
-        return false;
-    }
-
-    shaderProgram_ = glCreateProgram();
-    if (shaderProgram_ == 0) {
-        return false;
-    }
-
-    glAttachShader(shaderProgram_, vertexShader);
-    glAttachShader(shaderProgram_, fragmentShader);
-    glLinkProgram(shaderProgram_);
-    int linked;
-    glGetProgramiv(shaderProgram_, GL_LINK_STATUS, &linked);
-    if (linked == 0) {
-        glDeleteProgram(shaderProgram_);
-        return false;
-    }
-
-    a_positionHandle_ = glGetAttribLocation(shaderProgram_, "a_position");
-    a_colorHandle_ = glGetAttribLocation(shaderProgram_, "a_color");
-
-    u_mvpHandle_ = glGetUniformLocation(shaderProgram_, "u_mvpMatrix");
-
-    return true;
 }
 
 void GLESRenderer::createFramebuffer() {
@@ -141,7 +148,7 @@ void GLESRenderer::prepareFrame() {
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(shaderProgram_);
+    glUseProgram(program_id_);
 
 }
 

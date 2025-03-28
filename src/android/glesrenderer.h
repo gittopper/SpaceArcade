@@ -45,14 +45,16 @@ class GLESRenderer : virtual public Renderer {
     bool initRenderer(ResourceLoader* loader) override;
 
    protected:
-    int loadShader(GLenum type, const char* source);
-    bool compileShader();
-    unique_ptr<ResourceLoader> rcLoader_;
 
-    int shaderProgram_;
-    int a_positionHandle_;
-    int a_colorHandle_;
-    int u_mvpHandle_;
+    std::uint32_t program_overlay_id_;
+    std::uint32_t overlay_vert_loc_;
+    std::uint32_t overlay_tex_loc_;
+    std::uint32_t overlay_mat_loc_;
+
+    std::uint32_t program_id_;
+    std::uint32_t a_positionHandle_;
+    std::uint32_t a_colorHandle_;
+    std::uint32_t u_mvpHandle_;
 
     float scale_;
     Mat44 proj_;

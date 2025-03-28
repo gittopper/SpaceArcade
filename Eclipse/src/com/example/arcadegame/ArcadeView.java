@@ -106,7 +106,7 @@ public class ArcadeView extends GLSurfaceView {
         }
 	    public void onDrawFrame(GL10 unused) {
             arcade_view.step();
-            sprite.draw();
+            //sprite.draw();
             GameEngine.showFrame();
 	    }
 

@@ -42,7 +42,7 @@ void SpaceGame::setupGame(GameConfig conf) {
     aspect_ = static_cast<float>(h_) / w_;
     scene_.setupScene(config_.scale_, aspect_ * config_.scale_);
 
-    auto png_image = getResourceLoader()->readFile("daco2.png");
+    auto png_image = getResourceLoader()->readFile("daco.png");
     overlay_ = std::make_shared<Sprite>(PngReader::read(png_image, false));
 
     spaceship_ = new SpaceShip(config_.bulletSpeed_ * config_.dt_);

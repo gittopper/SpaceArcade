@@ -28,10 +28,10 @@ JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_init(
         env_wrapper = std::make_shared<EnvWrapper>(env);
         game->setPlayer(std::make_shared<JNISoundPlayer>(env_wrapper));
     }
-    ResourceLoader* res =
-        dynamic_cast<ResourceLoader*>(new AndroidResourceLoader(
+    std::shared_ptr<ResourceLoader> res(new AndroidResourceLoader(
             AAssetManager_fromJava(env, javaAssetManager)));
-    const bool ok = game->getRenderer()->initRenderer(res);
+    game->setResourceLoader(res);
+    game->getRenderer()->initRenderer(res.get());
     int w, h;
     game->getRenderer()->getScreeenSize(w, h);
     if (w != width || h != height) {
