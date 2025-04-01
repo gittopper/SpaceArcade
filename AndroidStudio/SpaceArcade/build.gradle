@@ -21,7 +21,8 @@ android {
         debug {
             externalNativeBuild {
                 cmake {
-                    arguments "-DANDROID_TOOLCHAIN=clang",
+                    arguments "-DANDROID_REGIME=ON",
+                            "-DANDROID_TOOLCHAIN=clang",
                             "-DANDROID_STL=c++_static",
                             "-DANDROID_ARM_MODE=arm",
                             "-DANDROID_NATIVE_API_LEVEL=23",
@@ -36,7 +37,8 @@ android {
         release {
             externalNativeBuild {
                 cmake {
-                    arguments "-DANDROID_TOOLCHAIN=clang",
+                    arguments "-DANDROID_REGIME=ON",
+                            "-DANDROID_TOOLCHAIN=clang",
                             "-DANDROID_STL=c++_static",
                             "-DANDROID_ARM_MODE=arm",
                             "-DANDROID_NATIVE_API_LEVEL=23",

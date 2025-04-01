@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.18)
 
-option(ANDROID_REGIME "android regime" ON)
+option(ANDROID_REGIME "android regime" OFF)
 
 project(SpaceArcade VERSION 1.0.0 LANGUAGES CXX)
 
