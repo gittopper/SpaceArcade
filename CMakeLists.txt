@@ -7,28 +7,12 @@ project(SpaceArcade VERSION 1.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if(ANDROID_REGIME)
-    add_subdirectory(src/3rd_party/zlib)
-    add_subdirectory(src/3rd_party/libpng)
-    add_subdirectory(AndroidStudio/SpaceArcade)
-else()
+set(GAME_SOURCES ${CMAKE_CURRENT_LIST_DIR}/src)
 
-    set(CMAKE_AUTOMOC ON)
-    set(CMAKE_AUTORCC ON)
-    set(CMAKE_AUTOUIC ON)
-
-    if(CMAKE_VERSION VERSION_LESS "3.7.0")
-        set(CMAKE_INCLUDE_CURRENT_DIR ON)
-    endif()
-
-    find_package(Qt6 COMPONENTS Widgets OpenGL OpenGLWidgets Multimedia REQUIRED)
-
-    set(GAME_SOURCES ${CMAKE_CURRENT_LIST_DIR}/src)
-
-    add_subdirectory(${GAME_SOURCES}/3rd_party)
+add_subdirectory(${GAME_SOURCES}/3rd_party)
 
 
-    set(ARCADE_SOURCES
+set(ARCADE_SOURCES
         ${GAME_SOURCES}/math/vector.cpp
         ${GAME_SOURCES}/math/vector.h
         ${GAME_SOURCES}/math/boundingbox.cpp
@@ -69,42 +53,51 @@ else()
         ${GAME_SOURCES}/rendering/spacegamerenderer.cpp
         ${GAME_SOURCES}/rendering/spacegamerenderer.h
         ${GAME_SOURCES}/rendering/renderer.h
-        )
+)
 
-    if(ANDROID_REGIME)
-        list(APPEND ARCADE_SOURCES
-            ${GAME_SOURCES}/android/rendererfactory.cpp
-            ${GAME_SOURCES}/android/rendererfactory.h
-            ${GAME_SOURCES}/android/glesrenderer.cpp
-            ${GAME_SOURCES}/android/glesrenderer.h
-            ${GAME_SOURCES}/android/glesspacegamerenderer.cpp
-            ${GAME_SOURCES}/android/glesspacegamerenderer.h
-            ${GAME_SOURCES}/android/androidresourceloader.cpp
-            ${GAME_SOURCES}/android/androidresourceloader.h
+if(ANDROID_REGIME)
+
+    list(APPEND ARCADE_SOURCES
             ${GAME_SOURCES}/android/GameEngine.cpp
-            )
-    else()
-        list(APPEND ARCADE_SOURCES
-            ${GAME_SOURCES}/desktop/fileresourceloader.cpp
-            ${GAME_SOURCES}/desktop/fileresourceloader.h
-            ${GAME_SOURCES}/desktop/openglrenderer.cpp
-            ${GAME_SOURCES}/desktop/openglrenderer.h
-            ${GAME_SOURCES}/desktop/soundplayer.cpp
-            ${GAME_SOURCES}/desktop/soundplayer.h
-            )
-        file(COPY ${GAME_SOURCES}/assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-    endif()
+            ${GAME_SOURCES}/android/jnisoundplayer.cpp
+            ${GAME_SOURCES}/android/glesrenderer.cpp
+            ${GAME_SOURCES}/android/glesspacegamerenderer.cpp
+            ${GAME_SOURCES}/android/androidresourceloader.cpp
+    )
+    set(TARGET GameEngine)
+    add_library(${TARGET} SHARED ${ARCADE_SOURCES})
+    target_link_libraries(${TARGET} log android EGL GLESv2 OpenSLES  dl  GLESv1_CM png_static zlibstatic)
+    set_target_properties(${TARGET} PROPERTIES LIBRARY_OUTPUT_NAME ${TARGET})
+    target_include_directories(${TARGET} PRIVATE ${GAME_SOURCES})
+
+else()
+
+    list(APPEND ARCADE_SOURCES
+        ${GAME_SOURCES}/desktop/fileresourceloader.cpp
+        ${GAME_SOURCES}/desktop/fileresourceloader.h
+        ${GAME_SOURCES}/desktop/openglrenderer.cpp
+        ${GAME_SOURCES}/desktop/openglrenderer.h
+        ${GAME_SOURCES}/desktop/soundplayer.cpp
+        ${GAME_SOURCES}/desktop/soundplayer.h
+        )
+    file(COPY ${GAME_SOURCES}/assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_AUTORCC ON)
+    set(CMAKE_AUTOUIC ON)
+
+    find_package(Qt6 COMPONENTS Widgets OpenGL OpenGLWidgets Multimedia REQUIRED)
 
     add_executable(SpaceArcade
-        QT/src/main.cpp
-        QT/src/mainwindow.h
-        QT/src/mainwindow.cpp
-        ${ARCADE_SOURCES}
-        )
+            QT/src/main.cpp
+            QT/src/mainwindow.h
+            QT/src/mainwindow.cpp
+            ${ARCADE_SOURCES}
+    )
 
     target_include_directories(SpaceArcade PUBLIC
-        ${CMAKE_CURRENT_LIST_DIR}/QT/src
-        ${GAME_SOURCES}
+            ${CMAKE_CURRENT_LIST_DIR}/QT/src
+            ${GAME_SOURCES}
         )
 
     target_link_libraries(SpaceArcade Qt6::Widgets Qt6::OpenGL
