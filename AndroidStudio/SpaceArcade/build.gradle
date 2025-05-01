@@ -6,7 +6,7 @@ android {
     namespace = "com.example.arcadegame"
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 33
 
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
@@ -54,11 +54,11 @@ android {
     }
     sourceSets {
         main {
-            manifest.srcFile '../../Eclipse/AndroidManifest.xml'
-            resources.srcDirs = ['../../Eclipse/src']
-            res.srcDirs = ['../../Eclipse/res']
+            manifest.srcFile './AndroidManifest.xml'
+            resources.srcDirs = ['./src']
+            res.srcDirs = ['./res']
             assets.srcDirs = ['../../src/assets']
-            java.srcDirs = ['../../Eclipse/src']
+            java.srcDirs = ['./src']
         }
 
     }
@@ -68,10 +68,4 @@ android {
             path "./../../CMakeLists.txt"
         }
     }
-}
-
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation 'junit:junit:4.12'
-    implementation 'com.android.support:appcompat-v7:28.0.0'
 }
