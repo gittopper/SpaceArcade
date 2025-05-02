@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 echo SCRIPT_DIR=$SCRIPT_DIR
-NDK_PATH=/home/stanislav/Android/Sdk/ndk/27.0.12077973/
+NDK_PATH=/home/stanislav/Android/Sdk/ndk/29.0.13113456/
 THRD_PARTY_INSTALL_DIR=$SCRIPT_DIR/../../build/install/android/
-mkdir -p $THRD_PARTY_INSTALL_DIR/Debug
-mkdir -p $THRD_PARTY_INSTALL_DIR/Release
 
 #sudo apt-get install libudev-dev libvorbis-dev libflac-dev
 
@@ -36,13 +34,15 @@ function buildABI() {
     cmake --install . --prefix $THRD_PARTY_INSTALL_DIR/$build_type/$abi
 }
 
-mkdir -p $SCRIPT_DIR/SFML/build/Debug
-mkdir -p $SCRIPT_DIR/SFML/build/Release
-#abis=(x86 armeabi-v7a arm64-v8a x86_64)
-buildABI 'x86_64' Debug
-buildABI 'armeabi-v7a' Debug
-buildABI 'arm64-v8a' Debug
+function builFlavours() {
+    flavour=$1
+    mkdir -p $THRD_PARTY_INSTALL_DIR/$flavour
+    mkdir -p $SCRIPT_DIR/SFML/build/$flavour
+    buildABI 'x86_64' $flavour
+    buildABI 'armeabi-v7a' $flavour
+    buildABI 'arm64-v8a' $flavour
+}
 
-buildABI 'x86_64' Release
-buildABI 'armeabi-v7a' Release
-buildABI 'arm64-v8a' Release
+builFlavours Debug
+builFlavours Release
+builFlavours RelWithDebInfo

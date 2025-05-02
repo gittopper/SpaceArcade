@@ -12,9 +12,13 @@ function buildSFML() {
     cd $SCRIPT_DIR/SFML
     mkdir -p build/$build_type/desktop
     cd build/$build_type/desktop
-    cmake ../../.. -DCMAKE_INSTALL_PREFIX=$THRD_PARTY_INSTALL_DIR/$build_type
+    cmake ../../.. \
+    -DCMAKE_C_COMPILER=clang-15 \
+    -DCMAKE_CXX_FLAGS=-g \
+    -DCMAKE_CXX_COMPILER=clang++-15 \
+    -DCMAKE_INSTALL_PREFIX=$THRD_PARTY_INSTALL_DIR/$build_type
     make -j
-    make install
+    cmake --install . --prefix $THRD_PARTY_INSTALL_DIR/$build_type
 }
 
 buildSFML Debug
