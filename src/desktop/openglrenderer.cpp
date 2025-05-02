@@ -29,8 +29,7 @@ void OpenGLRenderer::drawGameObject(IObject& obj) const {
     glEnd();
 }
 
-OpenGLRenderer::OpenGLRenderer() {
-}
+OpenGLRenderer::OpenGLRenderer() {}
 
 void OpenGLRenderer::createFramebuffer() {}
 
@@ -44,7 +43,7 @@ void OpenGLRenderer::prepareFrame() {
     glClear(GL_COLOR_BUFFER_BIT |
             GL_DEPTH_BUFFER_BIT);  // чистим буфер изображения и буфер глубины
     glMatrixMode(GL_MODELVIEW);  // устанавливаем матрицу
-    glLoadIdentity();             // загружаем матрицу
+    glLoadIdentity();            // загружаем матрицу
     glOrtho(-width_ / 2, width_ / 2, height_ / 2, -height_ / 2, 1,
             0);  // подготавливаем плоскости для матрицы
     glEnable(GL_BLEND);
@@ -53,10 +52,12 @@ void OpenGLRenderer::prepareFrame() {
 
 void OpenGLRenderer::drawSprite(
     int x, int y, int w, int h, int pixel_size, const RGBAPixel* sprite) {
-    for(int i = 0; i < w; ++i) {
-        for(int j = 0; j < h; ++j) {
-            double pos_x = -width_/2 + static_cast<double>((x + i)) * pixel_size;
-            double pos_y = -height_/2 + static_cast<double>((y + j)) * pixel_size;
+    for (int i = 0; i < w; ++i) {
+        for (int j = 0; j < h; ++j) {
+            double pos_x =
+                -width_ / 2 + static_cast<double>((x + i)) * pixel_size;
+            double pos_y =
+                -height_ / 2 + static_cast<double>((y + j)) * pixel_size;
             const auto& c = sprite[j * w + i];
             glColor4f(c.r / 255.0, c.g / 255.0, c.b / 255.0, c.a / 255.0);
             glBegin(GL_QUADS);
@@ -93,17 +94,28 @@ void OpenGLRenderer::setScale(float s) {
 bool OpenGLRenderer::initRenderer(ResourceLoader* loader) {
     return true;
 }
-
 void OpenGLRenderer::drawOverlay(const Sprite& sprite) {
     assert(sprite.type() == Sprite::RGBA);
+    drawOverlayRGBA(sprite.data(), sprite.glWidth(), sprite.glHeight());
+}
+
+void OpenGLRenderer::drawOverlay(const sf::Image& sprite) {
+    const auto size = sprite.getSize();
+    drawOverlayRGBA(reinterpret_cast<const char*>(sprite.getPixelsPtr()),
+                    size.x, size.y);
+}
+
+void OpenGLRenderer::drawOverlayRGBA(const char* data,
+                                     int data_width,
+                                     int data_height) {
     glEnable(GL_TEXTURE_2D);
     glActiveTexture(GL_TEXTURE0);
     glDeleteTextures(1, &overlay_id_);
     glGenTextures(1, &overlay_id_);
     glBindTexture(GL_TEXTURE_2D, overlay_id_);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sprite.glWidth(), sprite.glHeight(), 0,
-            GL_RGBA, GL_UNSIGNED_BYTE, sprite.data());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, data_width, data_height, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, data);
 
     glColor4f(1., 1., 1., 0.5);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -111,29 +123,22 @@ void OpenGLRenderer::drawOverlay(const Sprite& sprite) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    //glGenerateMipmap(GL_TEXTURE_2D);
+    // glGenerateMipmap(GL_TEXTURE_2D);
     float width = width_ / 2;
     float height = height_ / 2;
     GLfloat verts3[] = {
-        -width, -height, 0.0f,
-        width, -height, 0.0f,
-        width, height, 0.0f,
-        -width, height, 0.0f,
+        -width, -height, 0.0f, width,  -height, 0.0f,
+        width,  height,  0.0f, -width, height,  0.0f,
     };
     GLfloat texCoords[] = {
-        0.0f, 0.0f,
-        1.0f, 0.0f,
-        1.0f, 1.0f,
-        0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
     };
-    GLuint indices3[] = {
-        0, 1, 2, 3
-    };
+    GLuint indices3[] = {0, 1, 2, 3};
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glEnableClientState(GL_INDEX_ARRAY);
 
-    glVertexPointer  (3, GL_FLOAT, 0, verts3);
+    glVertexPointer(3, GL_FLOAT, 0, verts3);
     glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -143,8 +148,7 @@ void OpenGLRenderer::drawOverlay(const Sprite& sprite) {
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_INDEX_ARRAY);
     glBindTexture(GL_TEXTURE_2D, 0);
-    //glDisable(GL_TEXTURE_2D);
+    // glDisable(GL_TEXTURE_2D);
 }
-
 
 }  // namespace Game

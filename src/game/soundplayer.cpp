@@ -6,7 +6,9 @@ SoundPlayer::SoundPlayer(ResourceLoaderPtr resource_loader) {
                       &resource_loader](const std::string sound_file_name) {
         auto msound = resource_loader->readFile(sound_file_name);
         sf::SoundBuffer buffer;
-        buffer.loadFromMemory(msound.data(), msound.size());
+        if (!buffer.loadFromMemory(msound.data(), msound.size())) {
+            throw std::runtime_error("cannot load sound file");
+        }
         sounds_.emplace(sound_file_name, std::move(buffer));
     };
     add_sound("shoot.ogg");

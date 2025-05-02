@@ -20,11 +20,18 @@ class OpenGLRenderer : public SpaceGameRenderer {
     void setScale(float s) override;
 
     bool initRenderer(ResourceLoader* loader) override;
-    void drawSprite(
-        int x, int y, int w, int h, int pixel_size, const RGBAPixel* sprite) override;
+    void drawSprite(int x,
+                    int y,
+                    int w,
+                    int h,
+                    int pixel_size,
+                    const RGBAPixel* sprite) override;
     void drawOverlay(const Sprite& sprite) override;
+    void drawOverlay(const sf::Image& sprite) override;
 
   protected:
+    void drawOverlayRGBA(const char* data, int data_width, int data_height);
+
     void drawGameObject(IObject& obj) const;
     int width_ = 500;
     int height_ = 500;

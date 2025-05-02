@@ -12,11 +12,7 @@
 
 #include <math.h>
 
-#include <SFML/Graphics.hpp>
-
-using namespace Game;
-
-using namespace std;
+namespace Game {
 
 SpaceGame::SpaceGame() :
     paused_(false),
@@ -45,10 +41,8 @@ void SpaceGame::setupGame(GameConfig conf) {
 
     auto png_image = getResourceLoader()->readFile("daco.png");
     overlay_ = std::make_shared<Sprite>(PngReader::read(png_image, false));
-    sf::Image sprite;
-    if (!sprite.loadFromMemory(png_image.data(), png_image.size())) {
-        throw std::runtime_error("cannot load sprite");
-    }
+    image_overlay_ =
+        std::make_shared<sf::Image>(png_image.data(), png_image.size());
 
     spaceship_ = new SpaceShip(config_.bulletSpeed_ * config_.dt_);
     scene_.addChild(spaceship_);
@@ -153,8 +147,10 @@ void SpaceGame::renderStep() {
     }
     scene_.visitAll(*renderer_);
 
-    renderer_->drawSprite(0, 0, 12, 16, 3, test_sprite_.data());
-    renderer_->drawOverlay(*overlay_);
+    // renderer_->drawSprite(0, 0, 12, 16, 3, test_sprite_.data());
+    if (image_overlay_) {
+        renderer_->drawOverlay(*image_overlay_);
+    }
     renderer_->showFrame();
 }
 
@@ -181,3 +177,4 @@ void SpaceGame::createAsteroid() {
 
     scene_.addChild(asteroid);
 }
+}  // namespace Game
