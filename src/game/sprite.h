@@ -1,8 +1,9 @@
 #pragma once
 
+#include <cassert>
 #include <cstdint>
+#include <cstring>
 #include <vector>
-
 #pragma pack(push, 1)
 
 struct RGBAPixel {
@@ -18,10 +19,10 @@ struct RGBAPixel {
         g = (c >> 16) % 256;
         r = (c >> 24) % 256;
     }
-    std::uint8_t a;
-    std::uint8_t b;
-    std::uint8_t g;
     std::uint8_t r;
+    std::uint8_t g;
+    std::uint8_t b;
+    std::uint8_t a;
 };
 
 #pragma pack(pop)
@@ -29,6 +30,18 @@ struct RGBAPixel {
 class Sprite {
   public:
     enum Type { RGBA, RGB };
+    Sprite(std::size_t width, std::size_t height, const RGBAPixel& color) :
+        width_(width),
+        height_(height),
+        gl_width_(width),
+        gl_height_(height),
+        type_(RGBA),
+        data_(width * height * 4) {
+        auto* pixel = reinterpret_cast<RGBAPixel*>(data_.data());
+        for (auto i = 0UL; i < width * height; ++i) {
+            *(pixel++) = color;
+        }
+    }
     Sprite(std::size_t width,
            std::size_t height,
            std::size_t gl_width,
@@ -52,6 +65,14 @@ class Sprite {
     }
     std::size_t glHeight() const {
         return gl_height_;
+    }
+    void copy(const Sprite& other) {
+        assert(glWidth() == other.glWidth());
+        assert(glHeight() == other.glHeight());
+        assert(type() == other.type());
+        assert(type() == RGBA);
+        std::memcpy(data_.data(), other.data_.data(),
+                    glWidth() * glHeight() * 4);
     }
     const char* data() const {
         return data_.data();

@@ -41,8 +41,6 @@ JNIEXPORT void JNICALL
         game->getRenderer()->setScreeenSize(width, height);
         game->setupGame();
     }
-    // game->getRenderer()->createFramebuffer();
-    // game->getRenderer()->updateInfoAboutWindow();
 }
 
 JNIEXPORT void JNICALL
@@ -90,7 +88,6 @@ JNIEXPORT jboolean JNICALL
 
 JNIEXPORT jboolean JNICALL
     Java_com_example_arcadegame_GameEngine_free(JNIEnv* env, jobject obj) {
-    // game->getRenderer()->destroyFramebuffer();
     return true;
 }
 }

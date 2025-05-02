@@ -14,6 +14,8 @@
 #include <random>
 #include <string>
 
+#include <SFML/Graphics/Font.hpp>
+
 namespace Game {
 
 class SpaceGame : public IGame {
@@ -67,37 +69,38 @@ class SpaceGame : public IGame {
 
   private:
     void createAsteroid();
+    void renderOverlay();
 
-    int w_, h_;
+    int width_, height_;
 
-    std::vector<RGBAPixel> test_sprite_;
     Scene scene_;
     SpaceShip* spaceship_;
 
-    ObjectsSet objectsToAdd_;
+    ObjectsSet objects_to_add_;
 
     float time_;
-    float asteroidsNextTime_;
+    float asteroids_next_time_;
 
-    bool gameLost_;
+    bool game_lost_;
     bool paused_;
     float aspect_;
 
     GameConfig config_;
 
     default_random_engine generator_;
-    normal_distribution<float> asteroidsDelay_;
-    normal_distribution<float> asteroidsSpeed_;
-    normal_distribution<float> asteroidsSize_;
-    normal_distribution<float> asteroidsSpeedAngle_;
-    uniform_real_distribution<float> asteroidPlace_;
+    normal_distribution<float> asteroids_delay_;
+    normal_distribution<float> asteroids_speed_;
+    normal_distribution<float> asteroids_size_;
+    normal_distribution<float> asteroids_speed_angle_;
+    uniform_real_distribution<float> asteroid_place_;
 
     SpaceGameRenderer* renderer_;
     std::shared_ptr<ISoundPlayer> player_;
     Physics physics_;
     Collider collider_;
     std::shared_ptr<ResourceLoader> resource_loader_;
+    std::shared_ptr<Sprite> overlay_transparent_;
+    std::shared_ptr<Sprite> overlay_dark_;
     std::shared_ptr<Sprite> overlay_;
-    std::shared_ptr<sf::Image> image_overlay_;
 };
 }  // namespace Game

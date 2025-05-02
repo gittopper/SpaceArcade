@@ -120,7 +120,7 @@ void GLESSpaceGameRenderer::drawOverlay(const void* data,
 
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA, GL_DST_ALPHA);
     glUniformMatrix4fv(overlay_mat_loc_, 1, GL_FALSE, (GLfloat*)&proj_.m_[0]);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glDisable(GL_BLEND);

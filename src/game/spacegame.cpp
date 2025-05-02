@@ -12,21 +12,24 @@
 
 #include <math.h>
 
+#include <SFML/Graphics/Text.hpp>
+
 namespace Game {
 
 SpaceGame::SpaceGame() :
     paused_(false),
     collider_(&scene_),
     time_(0),
-    asteroidsNextTime_(-1),
-    renderer_(nullptr) {}
+    asteroids_next_time_(-1),
+    renderer_(nullptr),
+    game_lost_(false) {}
 
 void SpaceGame::pause() {
     paused_ = true;
 }
 
 void SpaceGame::resume() {
-    if (!gameLost_) {
+    if (!game_lost_) {
         paused_ = false;
     }
 }
@@ -35,14 +38,13 @@ void SpaceGame::setupGame(GameConfig conf) {
     config_ = conf;
 
     renderer_->setScale(config_.scale_);
-    renderer_->getScreeenSize(w_, h_);
-    aspect_ = static_cast<float>(h_) / w_;
+    renderer_->getScreeenSize(width_, height_);
+    aspect_ = static_cast<float>(height_) / width_;
     scene_.setupScene(config_.scale_, aspect_ * config_.scale_);
 
     auto png_image = getResourceLoader()->readFile("daco.png");
     overlay_ = std::make_shared<Sprite>(PngReader::read(png_image, false));
-    image_overlay_ =
-        std::make_shared<sf::Image>(png_image.data(), png_image.size());
+    auto font_mem_file = getResourceLoader()->readFile("XI20.ttf");
 
     spaceship_ = new SpaceShip(config_.bulletSpeed_ * config_.dt_);
     scene_.addChild(spaceship_);
@@ -52,56 +54,47 @@ void SpaceGame::setupGame(GameConfig conf) {
         0, -aspect_ * config_.scale_ / 2. +
                (spaceship_->getShift() - spaceship_->getBBox().getMin())[1]));
 
-    asteroidsDelay_ = normal_distribution<float>(
+    asteroids_delay_ = normal_distribution<float>(
         1 / config_.asteroidsAvgPerSec_,
         config_.asteroidsSigmaPerSec_ / config_.asteroidsAvgPerSec_);
 
-    asteroidsSpeed_ = normal_distribution<float>(config_.asteroidsAvgSpeed_,
-                                                 config_.asteroidsSigmaSpeed_);
+    asteroids_speed_ = normal_distribution<float>(config_.asteroidsAvgSpeed_,
+                                                  config_.asteroidsSigmaSpeed_);
 
-    asteroidPlace_ =
+    asteroid_place_ =
         uniform_real_distribution<float>(-config_.scale_, config_.scale_);
 
-    asteroidsSpeedAngle_ = normal_distribution<float>(
+    asteroids_speed_angle_ = normal_distribution<float>(
         0, config_.asteroidsSpeedAngleSigma_ / 180 * (atan(1) * 4));
 
-    asteroidsSize_ = normal_distribution<float>(config_.asteroidAvgSize_,
-                                                config_.asteroidAvgSize_ / 5);
+    asteroids_size_ = normal_distribution<float>(config_.asteroidAvgSize_,
+                                                 config_.asteroidAvgSize_ / 5);
 
     Asteroid::partsDistrib = normal_distribution<float>(
         config_.asteroidAvgPartsNumber_, config_.asteroidSigmaParts_);
     Asteroid::unevenDistrib =
         normal_distribution<float>(1, config_.asteroidUnevennessSigma_);
 
-    RGBAPixel gre{0, 255, 0, 100};
-    RGBAPixel yel{255, 255, 0, 100};
-    RGBAPixel red{255, 0, 0, 100};
-    RGBAPixel tra{0, 0, 0, 0};
-    std::vector<RGBAPixel> mario{
-        tra, tra, tra, red, red, red, red, red, tra, tra, tra, tra, tra, tra,
-        red, red, red, red, red, red, red, red, red, tra, tra, tra, gre, gre,
-        gre, yel, yel, gre, yel, tra, tra, tra, tra, gre, yel, gre, yel, yel,
-        yel, gre, yel, yel, yel, tra, tra, gre, yel, gre, gre, yel, yel, gre,
-        gre, yel, yel, yel, tra, gre, gre, yel, yel, yel, yel, gre, gre, gre,
-        gre, tra, tra, tra, tra, yel, yel, yel, yel, yel, yel, yel, tra, tra,
-        tra, tra, gre, gre, red, gre, gre, red, tra, tra, tra, tra, tra, gre,
-        gre, gre, red, gre, gre, red, gre, gre, gre, tra, gre, gre, gre, gre,
-        red, red, red, red, gre, gre, gre, gre, yel, yel, gre, red, yel, red,
-        red, yel, red, gre, yel, yel, yel, yel, yel, red, red, red, red, red,
-        red, yel, yel, yel, yel, yel, red, red, red, red, red, red, red, red,
-        yel, yel, tra, tra, red, red, red, tra, tra, red, red, red, tra, tra,
-        tra, gre, gre, gre, tra, tra, tra, tra, gre, gre, gre, tra, gre, gre,
-        gre, gre, tra, tra, tra, tra, gre, gre, gre, gre,
-    };
-
-    test_sprite_ = mario;
-
     IObject::game = this;
+}
+
+void SpaceGame::renderOverlay() {
+    if (nullptr == overlay_ || overlay_->width() != width_ ||
+        overlay_->height() != height_) {
+        overlay_transparent_ =
+            std::make_shared<Sprite>(width_, height_, RGBAPixel(0, 0, 0, 0));
+        overlay_dark_ =
+            std::make_shared<Sprite>(width_, height_, RGBAPixel(0, 0, 0, 150));
+        overlay_ =
+            std::make_shared<Sprite>(width_, height_, RGBAPixel(0, 0, 0, 0));
+    }
+    overlay_->copy(game_lost_ ? *overlay_dark_ : *overlay_transparent_);
 }
 
 void SpaceGame::drag(int x, int y) {
     Vector impact =
-        Vector(x * config_.scale_ / w_, -y * config_.scale_ / w_) * config_.dt_;
+        Vector(x * config_.scale_ / width_, -y * config_.scale_ / width_) *
+        config_.dt_;
     if (impact.len() > config_.maxSpaceShipSpeed_ * config_.dt_) {
         impact = impact.normalized() * config_.maxSpaceShipSpeed_ * config_.dt_;
     }
@@ -110,8 +103,8 @@ void SpaceGame::drag(int x, int y) {
 
 void SpaceGame::tap(int x, int y) {
     spaceship_->shoot();
-    if (gameLost_) {
-        gameLost_ = false;
+    if (game_lost_) {
+        game_lost_ = false;
         setupGame(config_);
         resume();
     }
@@ -119,27 +112,28 @@ void SpaceGame::tap(int x, int y) {
 
 void SpaceGame::gameOver() {
     pause();
-    gameLost_ = true;
+    player()->play("ship_crash.ogg");
+    game_lost_ = true;
 }
 
 void SpaceGame::renderStep() {
     renderer_->prepareFrame();
 
     if (!paused_) {
-        if (asteroidsNextTime_ < time_) {
+        if (asteroids_next_time_ < time_) {
             createAsteroid();
 
-            asteroidsNextTime_ = time_ + asteroidsDelay_(generator_);
+            asteroids_next_time_ = time_ + asteroids_delay_(generator_);
         }
 
         scene_.visitAll(collider_);
         removePostponed(&scene_);
 
-        for (ObjectsSet::const_iterator it = objectsToAdd_.begin();
-             it != objectsToAdd_.end(); it++) {
+        for (ObjectsSet::const_iterator it = objects_to_add_.begin();
+             it != objects_to_add_.end(); it++) {
             scene_.addChild(*it);
         }
-        objectsToAdd_.clear();
+        objects_to_add_.clear();
 
         scene_.visitAll(physics_);
 
@@ -147,9 +141,9 @@ void SpaceGame::renderStep() {
     }
     scene_.visitAll(*renderer_);
 
-    // renderer_->drawSprite(0, 0, 12, 16, 3, test_sprite_.data());
-    if (image_overlay_) {
-        renderer_->drawOverlay(*image_overlay_);
+    renderOverlay();
+    if (overlay_) {
+        renderer_->drawOverlay(*overlay_);
     }
     renderer_->showFrame();
 }
@@ -158,22 +152,22 @@ void SpaceGame::showFrame() {
     renderer_->showFrame();
 }
 void SpaceGame::addGameObject(class IObject* o) {
-    objectsToAdd_.insert(o);
+    objects_to_add_.insert(o);
 }
 
 void SpaceGame::createAsteroid() {
     IObject* asteroid = new Asteroid;
-    float size = asteroidsSize_(generator_);
+    float size = asteroids_size_(generator_);
     size = size < 0.1 ? 0.1 : size;
     asteroid->scale(size);
 
     asteroid->move(
-        Vector(asteroidPlace_(generator_), config_.scale_ * aspect_ * 1.7, 0));
-    float angle = asteroidsSpeedAngle_(generator_);
+        Vector(asteroid_place_(generator_), config_.scale_ * aspect_ * 1.7, 0));
+    float angle = asteroids_speed_angle_(generator_);
     asteroid->getV() =
-        Vector((asteroidsSpeed_(generator_) - config_.asteroidsAvgSpeed_) *
+        Vector((asteroids_speed_(generator_) - config_.asteroidsAvgSpeed_) *
                    config_.dt_ * sin(angle),
-               -asteroidsSpeed_(generator_) * config_.dt_ * cos(angle), 0);
+               -asteroids_speed_(generator_) * config_.dt_ * cos(angle), 0);
 
     scene_.addChild(asteroid);
 }

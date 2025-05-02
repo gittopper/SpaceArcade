@@ -76,7 +76,9 @@ void Asteroid::visit(SpaceShip& s) {
                     p->cacheDrawPoints();
                     game->addGameObject(p);
         */
-        if (advancedInsideCheck(apoints, spoints)) game->gameOver();
+        if (advancedInsideCheck(apoints, spoints)) {
+            game->gameOver();
+        }
     }
 }
 // this is algorithm to determine whether is the point inside the unconvex hull

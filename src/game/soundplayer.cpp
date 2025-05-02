@@ -14,6 +14,7 @@ SoundPlayer::SoundPlayer(ResourceLoaderPtr resource_loader) {
     add_sound("shoot.ogg");
     add_sound("small_explode.ogg");
     add_sound("big_explode.ogg");
+    add_sound("ship_crash.ogg");
 }
 
 void SoundPlayer::play(const std::string& sound_file_name) {
