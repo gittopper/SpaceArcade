@@ -8,8 +8,11 @@
 
 #include "spacegame.h"
 
-#include <math.h>
 #include <game/pngreader.h>
+
+#include <math.h>
+
+#include <SFML/Graphics.hpp>
 
 using namespace Game;
 
@@ -20,9 +23,7 @@ SpaceGame::SpaceGame() :
     collider_(&scene_),
     time_(0),
     asteroidsNextTime_(-1),
-    renderer_(nullptr) {
-
-}
+    renderer_(nullptr) {}
 
 void SpaceGame::pause() {
     paused_ = true;
@@ -44,6 +45,10 @@ void SpaceGame::setupGame(GameConfig conf) {
 
     auto png_image = getResourceLoader()->readFile("daco.png");
     overlay_ = std::make_shared<Sprite>(PngReader::read(png_image, false));
+    sf::Image sprite;
+    if (!sprite.loadFromMemory(png_image.data(), png_image.size())) {
+        throw std::runtime_error("cannot load sprite");
+    }
 
     spaceship_ = new SpaceShip(config_.bulletSpeed_ * config_.dt_);
     scene_.addChild(spaceship_);
@@ -79,22 +84,20 @@ void SpaceGame::setupGame(GameConfig conf) {
     RGBAPixel red{255, 0, 0, 100};
     RGBAPixel tra{0, 0, 0, 0};
     std::vector<RGBAPixel> mario{
-            tra, tra, tra, red, red, red, red, red, tra, tra, tra, tra,
-            tra, tra, red, red, red, red, red, red, red, red, red, tra,
-            tra, tra, gre, gre, gre, yel, yel, gre, yel, tra, tra, tra,
-            tra, gre, yel, gre, yel, yel, yel, gre, yel, yel, yel, tra,
-            tra, gre, yel, gre, gre, yel, yel, gre, gre, yel, yel, yel,
-            tra, gre, gre, yel, yel, yel, yel, gre, gre, gre, gre, tra,
-            tra, tra, tra, yel, yel, yel, yel, yel, yel, yel, tra, tra,
-            tra, tra, gre, gre, red, gre, gre, red, tra, tra, tra, tra,
-            tra, gre, gre, gre, red, gre, gre, red, gre, gre, gre, tra,
-            gre, gre, gre, gre, red, red, red, red, gre, gre, gre, gre,
-            yel, yel, gre, red, yel, red, red, yel, red, gre, yel, yel,
-            yel, yel, yel, red, red, red, red, red, red, yel, yel, yel,
-            yel, yel, red, red, red, red, red, red, red, red, yel, yel,
-            tra, tra, red, red, red, tra, tra, red, red, red, tra, tra,
-            tra, gre, gre, gre, tra, tra, tra, tra, gre, gre, gre, tra,
-            gre, gre, gre, gre, tra, tra, tra, tra, gre, gre, gre, gre,
+        tra, tra, tra, red, red, red, red, red, tra, tra, tra, tra, tra, tra,
+        red, red, red, red, red, red, red, red, red, tra, tra, tra, gre, gre,
+        gre, yel, yel, gre, yel, tra, tra, tra, tra, gre, yel, gre, yel, yel,
+        yel, gre, yel, yel, yel, tra, tra, gre, yel, gre, gre, yel, yel, gre,
+        gre, yel, yel, yel, tra, gre, gre, yel, yel, yel, yel, gre, gre, gre,
+        gre, tra, tra, tra, tra, yel, yel, yel, yel, yel, yel, yel, tra, tra,
+        tra, tra, gre, gre, red, gre, gre, red, tra, tra, tra, tra, tra, gre,
+        gre, gre, red, gre, gre, red, gre, gre, gre, tra, gre, gre, gre, gre,
+        red, red, red, red, gre, gre, gre, gre, yel, yel, gre, red, yel, red,
+        red, yel, red, gre, yel, yel, yel, yel, yel, red, red, red, red, red,
+        red, yel, yel, yel, yel, yel, red, red, red, red, red, red, red, red,
+        yel, yel, tra, tra, red, red, red, tra, tra, red, red, red, tra, tra,
+        tra, gre, gre, gre, tra, tra, tra, tra, gre, gre, gre, tra, gre, gre,
+        gre, gre, tra, tra, tra, tra, gre, gre, gre, gre,
     };
 
     test_sprite_ = mario;
@@ -150,12 +153,12 @@ void SpaceGame::renderStep() {
     }
     scene_.visitAll(*renderer_);
 
-    //renderer_->drawSprite(0, 0, 12, 16, 3, test_sprite_.data());
-    //renderer_->drawOverlay(*overlay_);
+    renderer_->drawSprite(0, 0, 12, 16, 3, test_sprite_.data());
+    renderer_->drawOverlay(*overlay_);
     renderer_->showFrame();
 }
 
-void SpaceGame::showFrame()  {
+void SpaceGame::showFrame() {
     renderer_->showFrame();
 }
 void SpaceGame::addGameObject(class IObject* o) {

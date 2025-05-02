@@ -50,6 +50,8 @@ set(ARCADE_SOURCES
         ${GAME_SOURCES}/game/objects/spaceship.cpp
         ${GAME_SOURCES}/game/objects/spaceship.h
         ${GAME_SOURCES}/game/resourceloader.h
+        ${GAME_SOURCES}/game/soundplayer.h
+        ${GAME_SOURCES}/game/soundplayer.cpp
         ${GAME_SOURCES}/rendering/spacegamerenderer.cpp
         ${GAME_SOURCES}/rendering/spacegamerenderer.h
         ${GAME_SOURCES}/rendering/renderer.h
@@ -59,14 +61,18 @@ if(ANDROID_REGIME)
 
     list(APPEND ARCADE_SOURCES
             ${GAME_SOURCES}/android/GameEngine.cpp
-            ${GAME_SOURCES}/android/jnisoundplayer.cpp
             ${GAME_SOURCES}/android/glesrenderer.cpp
             ${GAME_SOURCES}/android/glesspacegamerenderer.cpp
             ${GAME_SOURCES}/android/androidresourceloader.cpp
     )
     set(TARGET GameEngine)
+    message(ANDROID_ABI=${ANDROID_ABI})
+    set(SFML_DIR ${CMAKE_CURRENT_LIST_DIR}/build/install/android/${CMAKE_BUILD_TYPE}/${ANDROID_ABI}/lib/${ANDROID_ABI}/cmake/SFML/)
+    message(SFML_DIR=${SFML_DIR})
+    find_package (SFML COMPONENTS Graphics Audio Window Network System)
     add_library(${TARGET} SHARED ${ARCADE_SOURCES})
-    target_link_libraries(${TARGET} log android EGL GLESv2 OpenSLES  dl  GLESv1_CM png_static zlibstatic)
+    target_link_libraries(${TARGET} log android EGL GLESv2 OpenSLES
+        dl  GLESv1_CM png_static zlibstatic SFML::Graphics SFML::Audio)
     set_target_properties(${TARGET} PROPERTIES LIBRARY_OUTPUT_NAME ${TARGET})
     target_include_directories(${TARGET} PRIVATE ${GAME_SOURCES})
 
@@ -77,8 +83,6 @@ else()
         ${GAME_SOURCES}/desktop/fileresourceloader.h
         ${GAME_SOURCES}/desktop/openglrenderer.cpp
         ${GAME_SOURCES}/desktop/openglrenderer.h
-        ${GAME_SOURCES}/desktop/soundplayer.cpp
-        ${GAME_SOURCES}/desktop/soundplayer.h
         )
     file(COPY ${GAME_SOURCES}/assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -99,8 +103,11 @@ else()
             ${CMAKE_CURRENT_LIST_DIR}/QT/src
             ${GAME_SOURCES}
         )
+    set(SFML_STATIC_LIBRARIES TRUE)
+    find_package (SFML COMPONENTS Graphics Audio Window Network System
+        REQUIRED PATHS ${CMAKE_CURRENT_LIST_DIR}/build/install/desktop/${CMAKE_BUILD_TYPE}/lib/cmake NO_DEFAULT_PATH )
 
     target_link_libraries(SpaceArcade Qt6::Widgets Qt6::OpenGL
-        Qt6::OpenGLWidgets Qt6::Multimedia  -lGL png_static zlibstatic)
+        Qt6::OpenGLWidgets Qt6::Multimedia -lGL png_static zlibstatic SFML::Graphics SFML::Audio)
 
 endif()

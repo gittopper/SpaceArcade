@@ -1,14 +1,14 @@
+#include <android/androidresourceloader.h>
+#include <android/envwrapper.h>
+#include <android/glesspacegamerenderer.h>
+#include <game/soundplayer.h>
 #include <game/spacegame.h>
-#include <jni.h>
 
+#include <jni.h>
 #include <list>
 #include <memory>
-#include <string>
 #include <mutex>
-
-#include "android/androidresourceloader.h"
-#include <android/jnisoundplayer.h>
-#include "android/glesspacegamerenderer.h"
+#include <string>
 
 using namespace Game;
 
@@ -18,20 +18,23 @@ static GLESSpaceGameRenderer renderer;
 std::mutex m;
 extern "C" {
 
-JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_init(
-    JNIEnv* env, jobject obj, jint width, jint height,
-    jobject javaAssetManager) {
+JNIEXPORT void JNICALL
+    Java_com_example_arcadegame_GameEngine_init(JNIEnv* env,
+                                                jobject obj,
+                                                jint width,
+                                                jint height,
+                                                jobject javaAssetManager) {
     std::lock_guard<std::mutex> lock(m);
+    std::shared_ptr<ResourceLoader> res_loader(new AndroidResourceLoader(
+        AAssetManager_fromJava(env, javaAssetManager)));
     if (nullptr == game) {
         game = std::make_shared<SpaceGame>();
         game->setRenderer(&renderer);
         env_wrapper = std::make_shared<EnvWrapper>(env);
-        game->setPlayer(std::make_shared<JNISoundPlayer>(env_wrapper));
+        game->setPlayer(std::make_shared<SoundPlayer>(res_loader));
     }
-    std::shared_ptr<ResourceLoader> res(new AndroidResourceLoader(
-            AAssetManager_fromJava(env, javaAssetManager)));
-    game->setResourceLoader(res);
-    game->getRenderer()->initRenderer(res.get());
+    game->setResourceLoader(res_loader);
+    game->getRenderer()->initRenderer(res_loader.get());
     int w, h;
     game->getRenderer()->getScreeenSize(w, h);
     if (w != width || h != height) {
@@ -43,22 +46,21 @@ JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_init(
 }
 
 JNIEXPORT void JNICALL
-Java_com_example_arcadegame_GameEngine_step(JNIEnv* env, jobject obj) {
+    Java_com_example_arcadegame_GameEngine_step(JNIEnv* env, jobject obj) {
     std::lock_guard<std::mutex> lock(m);
     env_wrapper->setEnv(env);
     game->renderStep();
 }
 
 JNIEXPORT void JNICALL
-Java_com_example_arcadegame_GameEngine_showFrame(JNIEnv* env, jobject obj) {
+    Java_com_example_arcadegame_GameEngine_showFrame(JNIEnv* env, jobject obj) {
     std::lock_guard<std::mutex> lock(m);
     env_wrapper->setEnv(env);
     game->showFrame();
 }
 
 JNIEXPORT void JNICALL
-Java_com_example_arcadegame_GameEngine_setup(JNIEnv* env, jobject obj) {
-}
+    Java_com_example_arcadegame_GameEngine_setup(JNIEnv* env, jobject obj) {}
 JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_tap(JNIEnv* env,
                                                                   jobject obj,
                                                                   jfloat x,
@@ -82,12 +84,12 @@ JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_actionUp(
     JNIEnv* env, jobject obj, jfloat x, jfloat y) {}
 
 JNIEXPORT jboolean JNICALL
-Java_com_example_arcadegame_GameEngine_stop(JNIEnv* env, jobject obj) {
+    Java_com_example_arcadegame_GameEngine_stop(JNIEnv* env, jobject obj) {
     return true;
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_example_arcadegame_GameEngine_free(JNIEnv* env, jobject obj) {
+    Java_com_example_arcadegame_GameEngine_free(JNIEnv* env, jobject obj) {
     // game->getRenderer()->destroyFramebuffer();
     return true;
 }
