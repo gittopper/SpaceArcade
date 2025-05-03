@@ -2,10 +2,9 @@
 #define PNGREADER_H
 #include <game/sprite.h>
 
-class PngReader
-{
-public:
+class PngReader {
+  public:
     static Sprite read(const std::vector<char>& buffer, bool gl_arrange);
 };
 
-#endif // PNGREADER_H
+#endif  // PNGREADER_H

@@ -1,18 +1,7 @@
-//
-//  spacegame.cpp
-//  SpaceArcade
-//
-//  Created by Stanislav Fedorov on 19/10/14.
-//
-//
-
-#include "spacegame.h"
-
 #include <game/pngreader.h>
+#include <game/spacegame.h>
 
 #include <math.h>
-
-#include <SFML/Graphics/Text.hpp>
 
 namespace Game {
 
@@ -22,7 +11,8 @@ SpaceGame::SpaceGame() :
     time_(0),
     asteroids_next_time_(-1),
     renderer_(nullptr),
-    game_lost_(false) {}
+    game_lost_(false),
+    num_lives_(5) {}
 
 void SpaceGame::pause() {
     paused_ = true;
@@ -45,6 +35,7 @@ void SpaceGame::setupGame(GameConfig conf) {
     auto png_image = getResourceLoader()->readFile("daco.png");
     overlay_ = std::make_shared<Sprite>(PngReader::read(png_image, false));
     auto font_mem_file = getResourceLoader()->readFile("XI20.ttf");
+    font_ = std::make_shared<Font>(font_mem_file);
 
     spaceship_ = new SpaceShip(config_.bulletSpeed_ * config_.dt_);
     scene_.addChild(spaceship_);
@@ -82,13 +73,28 @@ void SpaceGame::renderOverlay() {
     if (nullptr == overlay_ || overlay_->width() != width_ ||
         overlay_->height() != height_) {
         overlay_transparent_ =
-            std::make_shared<Sprite>(width_, height_, RGBAPixel(0, 0, 0, 0));
+            std::make_shared<Sprite>(width_, height_, Color(0, 0, 0, 0));
         overlay_dark_ =
-            std::make_shared<Sprite>(width_, height_, RGBAPixel(0, 0, 0, 150));
-        overlay_ =
-            std::make_shared<Sprite>(width_, height_, RGBAPixel(0, 0, 0, 0));
+            std::make_shared<Sprite>(width_, height_, Color(0, 0, 0, 150));
+        overlay_ = std::make_shared<Sprite>(width_, height_, Color(0, 0, 0, 0));
     }
     overlay_->copy(game_lost_ ? *overlay_dark_ : *overlay_transparent_);
+    if (game_lost_) {
+        auto text =
+            Font::convertToUtf32(num_lives_ > 0 ? "TRY AGAIN" : "GAME LOST");
+        font_->setFontSize(100);
+        font_->setColor(num_lives_ > 0 ? Color{0, 255, 0, 155}
+                                       : Color{255, 0, 0, 155});
+        auto rect = font_->getTextRect(text);
+        auto text_y = height_ / 2 - rect.height / 2;
+        auto text_x = width_ / 2 - rect.width / 2;
+        font_->renderText(*overlay_, text_x, text_y, text);
+    }
+    auto text =
+        Font::convertToUtf32("num lives: " + std::to_string(num_lives_));
+    font_->setFontSize(40);
+    font_->setColor(Color{0, 0, 0, 255});
+    font_->renderText(*overlay_, 10, 10, text);
 }
 
 void SpaceGame::drag(int x, int y) {
@@ -105,6 +111,9 @@ void SpaceGame::tap(int x, int y) {
     spaceship_->shoot();
     if (game_lost_) {
         game_lost_ = false;
+        if (num_lives_ == 0) {
+            num_lives_ = 5;
+        }
         setupGame(config_);
         resume();
     }
@@ -114,6 +123,7 @@ void SpaceGame::gameOver() {
     pause();
     player()->play("ship_crash.ogg");
     game_lost_ = true;
+    num_lives_ = num_lives_ > 0 ? num_lives_ - 1 : 0;
 }
 
 void SpaceGame::renderStep() {

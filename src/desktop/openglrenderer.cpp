@@ -51,7 +51,7 @@ void OpenGLRenderer::prepareFrame() {
 }
 
 void OpenGLRenderer::drawSprite(
-    int x, int y, int w, int h, int pixel_size, const RGBAPixel* sprite) {
+    int x, int y, int w, int h, int pixel_size, const Color* sprite) {
     for (int i = 0; i < w; ++i) {
         for (int j = 0; j < h; ++j) {
             double pos_x =

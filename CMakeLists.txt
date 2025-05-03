@@ -25,6 +25,8 @@ set(ARCADE_SOURCES
         ${GAME_SOURCES}/math/mathutils.h
         ${GAME_SOURCES}/math/vector4.cpp
         ${GAME_SOURCES}/math/vector4.h
+        ${GAME_SOURCES}/game/font.cpp
+        ${GAME_SOURCES}/game/font.h
         ${GAME_SOURCES}/game/collider.cpp
         ${GAME_SOURCES}/game/collider.h
         ${GAME_SOURCES}/game/collisionrules.cpp
@@ -72,7 +74,7 @@ if(ANDROID_REGIME)
     find_package (SFML COMPONENTS Graphics Audio Window Network System)
     add_library(${TARGET} SHARED ${ARCADE_SOURCES})
     target_link_libraries(${TARGET} log android EGL GLESv2 OpenSLES
-        dl  GLESv1_CM png_static zlibstatic SFML::Graphics SFML::Audio)
+        dl  GLESv1_CM png_static zlibstatic SFML::Graphics SFML::Audio freetype)
     set_target_properties(${TARGET} PROPERTIES LIBRARY_OUTPUT_NAME ${TARGET})
     target_include_directories(${TARGET} PRIVATE ${GAME_SOURCES})
 
@@ -108,6 +110,6 @@ else()
         REQUIRED PATHS ${CMAKE_CURRENT_LIST_DIR}/build/install/desktop/${CMAKE_BUILD_TYPE}/lib/cmake NO_DEFAULT_PATH )
 
     target_link_libraries(SpaceArcade Qt6::Widgets Qt6::OpenGL
-        Qt6::OpenGLWidgets Qt6::Multimedia -lGL png_static zlibstatic SFML::Graphics SFML::Audio)
+        Qt6::OpenGLWidgets Qt6::Multimedia -lGL png_static zlibstatic SFML::Graphics SFML::Audio freetype)
 
 endif()

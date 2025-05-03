@@ -21,7 +21,7 @@ class Renderer {
                             int w,
                             int h,
                             int pixel_size,
-                            const RGBAPixel* sprite) = 0;
+                            const Color* sprite) = 0;
     virtual void drawOverlay(const Sprite& sprite) = 0;
     virtual void drawOverlay(const sf::Image& sprite) = 0;
 

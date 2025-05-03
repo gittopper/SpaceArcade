@@ -3,14 +3,15 @@
 #include <cassert>
 #include <cstdint>
 #include <cstring>
+#include <stdexcept>
 #include <vector>
 #pragma pack(push, 1)
 
-struct RGBAPixel {
-    RGBAPixel() : r(0), g(0), b(0), a(0) {}
-    RGBAPixel(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a) :
+struct Color {
+    Color() : r(0), g(0), b(0), a(0) {}
+    Color(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a) :
         r(r), g(g), b(b), a(a) {}
-    RGBAPixel(std::uint32_t c) {
+    Color(std::uint32_t c) {
         setColor(c);
     }
     void setColor(std::uint32_t c) {
@@ -18,6 +19,17 @@ struct RGBAPixel {
         b = (c >> 8) % 256;
         g = (c >> 16) % 256;
         r = (c >> 24) % 256;
+    }
+    void blend(const Color& color) {
+        if (a == 255) {
+            return;
+        }
+        auto alpha = float(a) / color.a;
+        alpha = alpha > 1 ? 1 : alpha;
+        r = r * alpha + color.r * (1 - alpha);
+        g = g * alpha + color.g * (1 - alpha);
+        b = b * alpha + color.b * (1 - alpha);
+        a = std::max(a, color.a);
     }
     std::uint8_t r;
     std::uint8_t g;
@@ -30,14 +42,14 @@ struct RGBAPixel {
 class Sprite {
   public:
     enum Type { RGBA, RGB };
-    Sprite(std::size_t width, std::size_t height, const RGBAPixel& color) :
+    Sprite(std::size_t width, std::size_t height, const Color& color) :
         width_(width),
         height_(height),
         gl_width_(width),
         gl_height_(height),
         type_(RGBA),
         data_(width * height * 4) {
-        auto* pixel = reinterpret_cast<RGBAPixel*>(data_.data());
+        auto* pixel = reinterpret_cast<Color*>(data_.data());
         for (auto i = 0UL; i < width * height; ++i) {
             *(pixel++) = color;
         }
@@ -79,6 +91,36 @@ class Sprite {
     }
     Type type() const {
         return type_;
+    }
+    Color getPixel(std::size_t x, std::size_t y) const {
+        if (x >= glWidth() || y >= glHeight()) {
+            throw std::runtime_error("wrong pixel");
+        }
+        auto shift = (y * glWidth() + x) * (type_ == RGBA ? 4 : 3);
+        return *reinterpret_cast<const Color*>(&data_[shift]);
+    }
+    void setPixel(std::size_t x, std::size_t y, const Color& color) {
+        if (x >= glWidth() || y >= glHeight()) {
+            return;
+        }
+        auto shift = (y * glWidth() + x) * (type_ == RGBA ? 4 : 3);
+        data_[shift] = color.r;
+        data_[shift + 1] = color.g;
+        data_[shift + 2] = color.b;
+        if (type_ == RGBA) {
+            data_[shift + 3] = color.a;
+        }
+    }
+    void drawRect(std::size_t x,
+                  std::size_t y,
+                  std::size_t width,
+                  std::size_t height,
+                  const Color& color) {
+        for (auto i = x; i < x + width; ++i) {
+            for (auto j = y; j < y + height; ++j) {
+                setPixel(i, j, color);
+            }
+        }
     }
 
   private:

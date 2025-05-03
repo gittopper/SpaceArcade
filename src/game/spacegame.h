@@ -1,6 +1,7 @@
 #pragma once
 
 #include <game/collider.h>
+#include <game/font.h>
 #include <game/gameconfig.h>
 #include <game/igame.h>
 #include <game/objects/gameobjects.h>
@@ -72,7 +73,7 @@ class SpaceGame : public IGame {
     void renderOverlay();
 
     int width_, height_;
-
+    int num_lives_;
     Scene scene_;
     SpaceShip* spaceship_;
 
@@ -102,5 +103,6 @@ class SpaceGame : public IGame {
     std::shared_ptr<Sprite> overlay_transparent_;
     std::shared_ptr<Sprite> overlay_dark_;
     std::shared_ptr<Sprite> overlay_;
+    std::shared_ptr<Font> font_;
 };
 }  // namespace Game
