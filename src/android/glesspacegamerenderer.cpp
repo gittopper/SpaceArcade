@@ -40,7 +40,7 @@ void GLESSpaceGameRenderer::drawArray(VArray& points, V4Array& colors) const {
     glDrawArrays(GL_TRIANGLE_FAN, 0, (int)points.size());
 }
 void GLESSpaceGameRenderer::drawSprite(
-    int x, int y, int w, int h, int pixel_size, const RGBAPixel* sprite) {
+    int x, int y, int w, int h, int pixel_size, const Color* sprite) {
     float scale = scale_ / backingWidth_;
     VArray points;
     V4Array colors;

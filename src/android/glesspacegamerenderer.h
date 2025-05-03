@@ -23,7 +23,7 @@ class GLESSpaceGameRenderer :
                     int w,
                     int h,
                     int pixel_size,
-                    const RGBAPixel* sprite) override;
+                    const Color* sprite) override;
     void drawOverlay(const Sprite& sprite) override;
     void drawOverlay(const sf::Image& sprite) override;
     void drawOverlay(const void* data, int data_width, int data_height);
