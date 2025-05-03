@@ -27,7 +27,7 @@ void Font::renderText(Sprite& sprite,
                       const UString& text) {
     auto cur_x = x;
     auto ascender = face_->size->metrics.ascender >> 6;
-    const auto transparency = color_.a / 255.;
+    const auto transparency = color_.a / 255.f;
     for (auto& symbol : text) {
         FT_UInt glyph_index = FT_Get_Char_Index(face_, symbol);
         if (FT_Load_Glyph(face_, glyph_index, FT_LOAD_RENDER)) {
@@ -36,9 +36,12 @@ void Font::renderText(Sprite& sprite,
         FT_Bitmap* bitmap = &(face_->glyph->bitmap);
         auto glyph_x = cur_x + face_->glyph->bitmap_left;
         auto glyph_y = y + ascender - face_->glyph->bitmap_top;
-        for (auto c = 0; c < bitmap->width; ++c) {
-            for (auto r = 0; r < bitmap->rows; ++r) {
+        for (auto r = 0; r < bitmap->rows; ++r) {
+            for (auto c = 0; c < bitmap->width; ++c) {
                 auto gray = bitmap->buffer[r * bitmap->pitch + c];
+                if (gray == 0) {
+                    continue;
+                }
                 auto color = color_;
                 color.a = gray * transparency;
                 if (color.a < 255) {
@@ -46,9 +49,7 @@ void Font::renderText(Sprite& sprite,
                         sprite.getPixel(glyph_x + c, glyph_y + r);
                     color.blend(sprite_color);
                 }
-                if (gray > 0) {
-                    sprite.setPixel(glyph_x + c, glyph_y + r, color);
-                }
+                sprite.setPixel(glyph_x + c, glyph_y + r, color);
             }
         }
         cur_x += (face_->glyph->advance.x >> 6);

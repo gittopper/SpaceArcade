@@ -1,21 +1,12 @@
-//
-//  spaceship.h
-//  SpaceArcade
-//
-//  Created by Stanislav Fedorov on 20/10/14.
-//
-//
-
-#ifndef Shader_spaceship_h
-#define Shader_spaceship_h
+#pragma once
 
 #include "game/iobject.h"
 
 namespace Game {
 
 class SpaceShip : public IObject {
-   public:
-    SpaceShip(float bulSpeed);
+  public:
+    SpaceShip(float bul_speed);
 
     GAME_OBJECT(SpaceShip)
 
@@ -23,11 +14,11 @@ class SpaceShip : public IObject {
 
     void shoot();
 
-    virtual void accept(Visitor& visitor) { visitor.visit(*this); }
+    virtual void accept(Visitor& visitor) {
+        visitor.visit(*this);
+    }
 
-   protected:
-    float bulletSpeed_;
+  protected:
+    float bullet_speed_;
 };
 }  // namespace Game
-
-#endif

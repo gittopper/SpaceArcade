@@ -1,10 +1,3 @@
-//
-//  spaceship.cpp
-//  SpaceArcade
-//
-//  Created by Stanislav Fedorov on 21/10/14.
-//
-//
 
 #include "spaceship.h"
 
@@ -14,10 +7,10 @@
 using namespace Math;
 
 namespace Game {
-SpaceShip::SpaceShip(float bulSpeed)
+SpaceShip::SpaceShip(float bul_speed)
 
 {
-    bulletSpeed_ = bulSpeed;
+    bullet_speed_ = bul_speed;
 
     points_.push_back(Vector(0., -1.));
     points_.push_back(Vector(-1.5, 0.));
@@ -56,10 +49,10 @@ void SpaceShip::shoot() {
     game->player()->play("shoot.ogg");
     Vector v(0.3, 0, 0);
 
-    IObject* bullet = new Bullet(getShift() + v, Vector(0, bulletSpeed_));
+    IObject* bullet = new Bullet(getShift() + v, Vector(0, bullet_speed_));
     getParent()->addChild(bullet);
 
-    bullet = new Bullet(getShift() - v, Vector(0, bulletSpeed_));
+    bullet = new Bullet(getShift() - v, Vector(0, bullet_speed_));
     getParent()->addChild(bullet);
 }
 }  // namespace Game

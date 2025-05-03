@@ -1,13 +1,4 @@
-//
-//  physics.h
-//  SpaceArcade
-//
-//  Created by Stanislav Fedorov on 21/10/14.
-//
-//
-
-#ifndef __SpaceArcade__physics__
-#define __SpaceArcade__physics__
+#pragma once
 
 #include "math/gamemath.h"
 #include "regressvisitor.h"
@@ -16,11 +7,14 @@ using namespace Math;
 
 namespace Game {
 class Physics : public RegressVisitor {
-   public:
+  public:
+    void setDt(float dt) {
+        dt_ = dt;
+    }
     void visit(IObject&);
     void visit(Scene&) {}
 
-   protected:
+  protected:
+    float dt_;
 };
 }  // namespace Game
-#endif /* defined(__SpaceArcade__physics__) */

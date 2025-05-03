@@ -116,7 +116,7 @@ Sprite PngReader::read(const std::vector<char>& buffer, bool gl_arrange) {
     image img = readPng(buffer.data(), buffer.size(), gl_arrange);
     bool is_4b = img.color_type == PNG_COLOR_TYPE_RGBA;
     std::size_t bytes_per_pixel = is_4b ? 4 : 3;
-    std::vector<char> data(
+    std::vector<std::uint8_t> data(
         img.data, img.data + img.glHeight * img.glWidth * bytes_per_pixel);
     Sprite sprite(img.imWidth, img.imHeight, img.glWidth, img.glHeight,
                   (is_4b ? Sprite::RGBA : Sprite::RGB), std::move(data));

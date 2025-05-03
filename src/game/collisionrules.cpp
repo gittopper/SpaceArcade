@@ -1,14 +1,5 @@
-//
-//  collisionrules.cpp
-//  SpaceArcade
-//
-//  Created by Admin on 22/10/14.
-//
-//
-
-#include "collisionrules.h"
-
-#include "gameconfig.h"
+#include <game/collisionrules.h>
+#include <game/gameconfig.h>
 
 namespace {
 void cutShift(BoundingBox2D& box, BoundingBox2D& envelopBox, Vector& shift) {
@@ -56,7 +47,7 @@ void Scene::visit(class IObject& obj) {
 }
 
 void Bullet::visit(Asteroid& a) {
-    bool collide = game->getGameConfig()->collideWithAsteroidParts_;
+    bool collide = game->getGameConfig()->collide_with_asteroid_parts_;
     if (a.intersects(this) && (collide || !a.isParted())) {
         a.explode();
         shouldBeRemoved = true;
@@ -64,7 +55,7 @@ void Bullet::visit(Asteroid& a) {
 }
 
 void Asteroid::visit(SpaceShip& s) {
-    bool collide = game->getGameConfig()->collideWithAsteroidParts_;
+    bool collide = game->getGameConfig()->collide_with_asteroid_parts_;
     if (this->intersects(&s) && (collide || !piece)) {
         VArray apoints, spoints;
         getProcessedPoints(apoints);

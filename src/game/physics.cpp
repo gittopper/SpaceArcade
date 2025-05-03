@@ -14,5 +14,7 @@
 using namespace Math;
 
 namespace Game {
-void Physics::visit(IObject& a) { a.move(a.getV()); }
+void Physics::visit(IObject& a) {
+    a.move(a.getV() * dt_);
+}
 }  // namespace Game

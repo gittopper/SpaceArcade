@@ -1,27 +1,18 @@
-//
-//  bullet.h
-//  SpaceArcade
-//
-//  Created by Stanislav Fedorov on 20/10/14.
-//
-//
-
-#ifndef Shader_bullet_h
-#define Shader_bullet_h
+#pragma once
 
 #include "game/iobject.h"
 
 namespace Game {
 
 class Bullet : public IObject {
-   public:
+  public:
     GAME_OBJECT(Bullet)
-    Bullet(Vector startPoint, Vector dir);
+    Bullet(Vector startPoint, Vector speed);
 
     void visit(Asteroid&);
 
-    virtual void accept(Visitor& visitor) { visitor.visit(*this); }
+    virtual void accept(Visitor& visitor) {
+        visitor.visit(*this);
+    }
 };
 }  // namespace Game
-
-#endif

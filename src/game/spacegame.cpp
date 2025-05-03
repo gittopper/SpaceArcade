@@ -8,7 +8,6 @@ namespace Game {
 SpaceGame::SpaceGame() :
     paused_(false),
     collider_(&scene_),
-    time_(0),
     asteroids_next_time_(-1),
     renderer_(nullptr),
     game_lost_(false),
@@ -26,45 +25,46 @@ void SpaceGame::resume() {
 
 void SpaceGame::setupGame(GameConfig conf) {
     config_ = conf;
-
+    timer_.start();
     renderer_->setScale(config_.scale_);
     renderer_->getScreeenSize(width_, height_);
     aspect_ = static_cast<float>(height_) / width_;
     scene_.setupScene(config_.scale_, aspect_ * config_.scale_);
+    scene_.removeChildren();
 
-    auto png_image = getResourceLoader()->readFile("daco.png");
-    overlay_ = std::make_shared<Sprite>(PngReader::read(png_image, false));
-    auto font_mem_file = getResourceLoader()->readFile("XI20.ttf");
-    font_ = std::make_shared<Font>(font_mem_file);
+    if (nullptr == font_) {
+        auto font_mem_file = getResourceLoader()->readFile("XI20.ttf");
+        font_ = std::make_shared<Font>(font_mem_file);
+    }
 
-    spaceship_ = new SpaceShip(config_.bulletSpeed_ * config_.dt_);
+    spaceship_ = new SpaceShip(config_.bullet_speed_);
     scene_.addChild(spaceship_);
 
-    spaceship_->scale(config_.shipSize_);
+    spaceship_->scale(config_.ship_size_);
     spaceship_->move(Vector(
         0, -aspect_ * config_.scale_ / 2. +
                (spaceship_->getShift() - spaceship_->getBBox().getMin())[1]));
 
     asteroids_delay_ = normal_distribution<float>(
-        1 / config_.asteroidsAvgPerSec_,
-        config_.asteroidsSigmaPerSec_ / config_.asteroidsAvgPerSec_);
+        1 / config_.asteroids_avg_per_sec_,
+        config_.asteroids_sigma_per_sec_ / config_.asteroids_avg_per_sec_);
 
-    asteroids_speed_ = normal_distribution<float>(config_.asteroidsAvgSpeed_,
-                                                  config_.asteroidsSigmaSpeed_);
+    asteroids_speed_ = normal_distribution<float>(
+        config_.asteroids_avg_speed_, config_.asteroids_sigma_speed_);
 
     asteroid_place_ =
         uniform_real_distribution<float>(-config_.scale_, config_.scale_);
 
     asteroids_speed_angle_ = normal_distribution<float>(
-        0, config_.asteroidsSpeedAngleSigma_ / 180 * (atan(1) * 4));
+        0, config_.asteroids_speed_angle_sigma_ / 180 * (atan(1) * 4));
 
-    asteroids_size_ = normal_distribution<float>(config_.asteroidAvgSize_,
-                                                 config_.asteroidAvgSize_ / 5);
+    asteroids_size_ = normal_distribution<float>(
+        config_.asteroid_avg_size_, config_.asteroid_avg_size_ / 5);
 
-    Asteroid::partsDistrib = normal_distribution<float>(
-        config_.asteroidAvgPartsNumber_, config_.asteroidSigmaParts_);
-    Asteroid::unevenDistrib =
-        normal_distribution<float>(1, config_.asteroidUnevennessSigma_);
+    Asteroid::parts_distrib = normal_distribution<float>(
+        config_.asteroid_avg_parts_number_, config_.asteroid_sigma_parts_);
+    Asteroid::uneven_distrib =
+        normal_distribution<float>(1, config_.asteroid_unevenness_sigma_);
 
     IObject::game = this;
 }
@@ -83,26 +83,44 @@ void SpaceGame::renderOverlay() {
         auto text =
             Font::convertToUtf32(num_lives_ > 0 ? "TRY AGAIN" : "GAME LOST");
         font_->setFontSize(100);
-        font_->setColor(num_lives_ > 0 ? Color{0, 255, 0, 155}
-                                       : Color{255, 0, 0, 155});
+        font_->setColor(num_lives_ > 0 ? Color{0, 255, 0, 255}
+                                       : Color{255, 0, 0, 255});
         auto rect = font_->getTextRect(text);
         auto text_y = height_ / 2 - rect.height / 2;
         auto text_x = width_ / 2 - rect.width / 2;
         font_->renderText(*overlay_, text_x, text_y, text);
     }
-    auto text =
-        Font::convertToUtf32("num lives: " + std::to_string(num_lives_));
     font_->setFontSize(40);
     font_->setColor(Color{0, 0, 0, 255});
-    font_->renderText(*overlay_, 10, 10, text);
+    auto text_y = 10;
+    auto num_lives =
+        Font::convertToUtf32("num lives: " + std::to_string(num_lives_));
+    font_->renderText(*overlay_, 10, text_y, num_lives);
+    auto font_shift = font_->getTextRect(num_lives).height + 10;
+    text_y += font_shift;
+    auto elapsed_time =
+        Font::convertToUtf32("elapsed time: " + timer_.elapsedAsString(false));
+    font_->renderText(*overlay_, 10, text_y, elapsed_time);
+    text_y += font_shift;
+    auto num_exploded_asteroids =
+        Font::convertToUtf32("num shooted asteroids: " +
+                             std::to_string(stats.num_exploded_asteroids));
+    font_->renderText(*overlay_, 10, text_y, num_exploded_asteroids);
+    text_y += font_shift;
+    auto num_shoots =
+        Font::convertToUtf32("num shoots: " + std::to_string(stats.num_shoots));
+    font_->renderText(*overlay_, 10, text_y, num_shoots);
+    text_y += font_shift;
+    auto num_asteroids = Font::convertToUtf32(
+        "num asteroids: " + std::to_string(stats.num_asteroids));
+    font_->renderText(*overlay_, 10, text_y, num_asteroids);
 }
 
 void SpaceGame::drag(int x, int y) {
     Vector impact =
-        Vector(x * config_.scale_ / width_, -y * config_.scale_ / width_) *
-        config_.dt_;
-    if (impact.len() > config_.maxSpaceShipSpeed_ * config_.dt_) {
-        impact = impact.normalized() * config_.maxSpaceShipSpeed_ * config_.dt_;
+        Vector(x * config_.scale_ / width_, -y * config_.scale_ / width_);
+    if (impact.len() > config_.max_space_ship_speed_) {
+        impact = impact.normalized() * config_.max_space_ship_speed_;
     }
     spaceship_->getV() = impact;
 }
@@ -127,13 +145,21 @@ void SpaceGame::gameOver() {
 }
 
 void SpaceGame::renderStep() {
+    int w, h;
+    renderer_->getScreeenSize(w, h);
+    if (w != width_ || h != height_) {
+        width_ = w;
+        height_ = h;
+        aspect_ = static_cast<float>(height_) / width_;
+        scene_.setupScene(config_.scale_, aspect_ * config_.scale_);
+    }
     renderer_->prepareFrame();
 
     if (!paused_) {
-        if (asteroids_next_time_ < time_) {
+        if (asteroids_next_time_ < time_.time()) {
             createAsteroid();
 
-            asteroids_next_time_ = time_ + asteroids_delay_(generator_);
+            asteroids_next_time_ = time_.time() + asteroids_delay_(generator_);
         }
 
         scene_.visitAll(collider_);
@@ -144,10 +170,11 @@ void SpaceGame::renderStep() {
             scene_.addChild(*it);
         }
         objects_to_add_.clear();
-
+        auto cur_time = time_.time();
+        auto dt = cur_time - last_update_time_;
+        last_update_time_ = cur_time;
+        physics_.setDt(dt > 1 ? 0 : dt);
         scene_.visitAll(physics_);
-
-        time_ += config_.dt_;
     }
     scene_.visitAll(*renderer_);
 
@@ -175,9 +202,9 @@ void SpaceGame::createAsteroid() {
         Vector(asteroid_place_(generator_), config_.scale_ * aspect_ * 1.7, 0));
     float angle = asteroids_speed_angle_(generator_);
     asteroid->getV() =
-        Vector((asteroids_speed_(generator_) - config_.asteroidsAvgSpeed_) *
-                   config_.dt_ * sin(angle),
-               -asteroids_speed_(generator_) * config_.dt_ * cos(angle), 0);
+        Vector((asteroids_speed_(generator_) - config_.asteroids_avg_speed_) *
+                   sin(angle),
+               -asteroids_speed_(generator_) * cos(angle), 0);
 
     scene_.addChild(asteroid);
 }

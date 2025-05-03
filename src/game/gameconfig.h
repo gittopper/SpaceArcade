@@ -1,61 +1,48 @@
-//
-//  gameconfig.h
-//  SpaceArcade
-//
-//  Created by Stanislav Fedorov on 21/10/14.
-//
-//
-
-#ifndef Shader_gameconfig_h
-#define Shader_gameconfig_h
+#pragma once
 
 namespace Game {
 struct GameConfig {
-    GameConfig()
-        : dt_(1. / 60),
-          scale_(10),
-          shipSize_(1.),
-          asteroidsAvgPerSec_(3.),
-          asteroidsSigmaPerSec_(1.),
-          asteroidAvgSize_(0.5),
-          asteroidAvgPartsNumber_(4),
-          asteroidSigmaParts_(0),
-          asteroidUnevennessSigma_(0.2),
-          collideWithAsteroidParts_(true),
-          markExploded_(true),
-          asteroidsAvgSpeed_(4.),
-          asteroidsSigmaSpeed_(1.),
-          asteroidsSpeedAngleSigma_(10.),
-          bulletSpeed_(4),
-          maxSpaceShipSpeed_(4) {}
-    // animation step
-    float dt_;
+    GameConfig() :
+        scale_(10),
+        ship_size_(1.),
+        asteroids_avg_per_sec_(3.),
+        asteroids_sigma_per_sec_(1.),
+        asteroid_avg_size_(0.5),
+        asteroid_avg_parts_number_(4),
+        asteroid_sigma_parts_(0),
+        asteroid_unevenness_sigma_(0.2),
+        collide_with_asteroid_parts_(true),
+        mark_exploded_(true),
+        asteroids_avg_speed_(4.),
+        asteroids_sigma_speed_(1.),
+        asteroids_speed_angle_sigma_(10.),
+        bullet_speed_(4),
+        max_space_ship_speed_(4) {}
 
     // screen width length in relative points
     float scale_;
 
-    float shipSize_;
+    float ship_size_;
 
-    float asteroidsAvgPerSec_;
-    float asteroidsSigmaPerSec_;
-    float asteroidAvgSize_;
+    float asteroids_avg_per_sec_;
+    float asteroids_sigma_per_sec_;
+    float asteroid_avg_size_;
 
-    int asteroidAvgPartsNumber_;
-    int asteroidSigmaParts_;
+    int asteroid_avg_parts_number_;
+    int asteroid_sigma_parts_;
 
-    float asteroidUnevennessSigma_;
+    float asteroid_unevenness_sigma_;
 
-    bool collideWithAsteroidParts_;
-    bool markExploded_;
+    bool collide_with_asteroid_parts_;
+    bool mark_exploded_;
 
-    float asteroidsAvgSpeed_;
-    float asteroidsSigmaSpeed_;
+    float asteroids_avg_speed_;
+    float asteroids_sigma_speed_;
 
     // in degreees
-    float asteroidsSpeedAngleSigma_;
+    float asteroids_speed_angle_sigma_;
 
-    float bulletSpeed_;
-    float maxSpaceShipSpeed_;
+    float bullet_speed_;
+    float max_space_ship_speed_;
 };
 }  // namespace Game
-#endif

@@ -24,8 +24,7 @@ struct Color {
         if (a == 255) {
             return;
         }
-        auto alpha = float(a) / color.a;
-        alpha = alpha > 1 ? 1 : alpha;
+        auto alpha = float(a) / (a + color.a);
         r = r * alpha + color.r * (1 - alpha);
         g = g * alpha + color.g * (1 - alpha);
         b = b * alpha + color.b * (1 - alpha);
@@ -59,7 +58,7 @@ class Sprite {
            std::size_t gl_width,
            std::size_t gl_height,
            Type type,
-           std::vector<char>&& data) :
+           std::vector<std::uint8_t>&& data) :
         width_(width),
         height_(height),
         gl_width_(gl_width),
@@ -86,7 +85,7 @@ class Sprite {
         std::memcpy(data_.data(), other.data_.data(),
                     glWidth() * glHeight() * 4);
     }
-    const char* data() const {
+    const std::uint8_t* data() const {
         return data_.data();
     }
     Type type() const {
@@ -104,11 +103,12 @@ class Sprite {
             return;
         }
         auto shift = (y * glWidth() + x) * (type_ == RGBA ? 4 : 3);
-        data_[shift] = color.r;
-        data_[shift + 1] = color.g;
-        data_[shift + 2] = color.b;
         if (type_ == RGBA) {
-            data_[shift + 3] = color.a;
+            *reinterpret_cast<Color*>((data_.data() + shift)) = color;
+        } else {
+            data_[shift] = color.r;
+            data_[shift + 1] = color.g;
+            data_[shift + 2] = color.b;
         }
     }
     void drawRect(std::size_t x,
@@ -129,5 +129,5 @@ class Sprite {
     std::size_t gl_width_;
     std::size_t gl_height_;
     Type type_;
-    std::vector<char> data_;
+    std::vector<std::uint8_t> data_;
 };

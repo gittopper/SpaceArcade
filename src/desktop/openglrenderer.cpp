@@ -1,10 +1,8 @@
-#include <QtOpenGL>
-
 #include <desktop/openglrenderer.h>
 
 #include "game/objects/gameobjects.h"
 #include "math/gamemath.h"
-
+#include <GL/gl.h>
 using namespace Math;
 
 namespace Game {
@@ -105,14 +103,13 @@ void OpenGLRenderer::drawOverlay(const sf::Image& sprite) {
                     size.x, size.y);
 }
 
-void OpenGLRenderer::drawOverlayRGBA(const char* data,
+void OpenGLRenderer::drawOverlayRGBA(const void* data,
                                      int data_width,
                                      int data_height) {
     glEnable(GL_TEXTURE_2D);
-    glActiveTexture(GL_TEXTURE0);
-    glDeleteTextures(1, &overlay_id_);
-    glGenTextures(1, &overlay_id_);
-    glBindTexture(GL_TEXTURE_2D, overlay_id_);
+    GLuint overlay_id;
+    glGenTextures(1, &overlay_id);
+    glBindTexture(GL_TEXTURE_2D, overlay_id);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, data_width, data_height, 0, GL_RGBA,
                  GL_UNSIGNED_BYTE, data);
@@ -146,8 +143,9 @@ void OpenGLRenderer::drawOverlayRGBA(const char* data,
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_INDEX_ARRAY);
+    glDeleteTextures(1, &overlay_id);
     glBindTexture(GL_TEXTURE_2D, 0);
-    // glDisable(GL_TEXTURE_2D);
+    glDisable(GL_TEXTURE_2D);
 }
 
 }  // namespace Game

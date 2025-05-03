@@ -41,7 +41,6 @@ void MainWindow::resizeGL(int nWidth, int nHeight) {
         game->setPlayer(std::make_shared<SoundPlayer>(rloader));
         game->setResourceLoader(rloader);
         GameConfig config;
-        config.dt_ = 1. / 20;
         game->getRenderer()->setScreeenSize(nWidth, nHeight);
         game->setupGame(config);
     }

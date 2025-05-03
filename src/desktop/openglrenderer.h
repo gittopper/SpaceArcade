@@ -30,12 +30,11 @@ class OpenGLRenderer : public SpaceGameRenderer {
     void drawOverlay(const sf::Image& sprite) override;
 
   protected:
-    void drawOverlayRGBA(const char* data, int data_width, int data_height);
+    void drawOverlayRGBA(const void* data, int data_width, int data_height);
 
     void drawGameObject(IObject& obj) const;
     int width_ = 500;
     int height_ = 500;
     double scale_;
-    GLuint overlay_id_;
 };
 }  // namespace Game

@@ -14,7 +14,12 @@
 namespace Game {
 
 class IGame {
-   public:
+  public:
+    struct Stats {
+        int num_exploded_asteroids = 0;
+        int num_shoots = 0;
+        int num_asteroids = 0;
+    };
     virtual void gameOver() = 0;
 
     virtual class GameConfig* getGameConfig() = 0;
@@ -23,6 +28,7 @@ class IGame {
     virtual ISoundPlayer* player() = 0;
 
     virtual ~IGame() {}
+    Stats stats;
 };
 
 }  // namespace Game

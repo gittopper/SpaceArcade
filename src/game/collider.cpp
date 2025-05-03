@@ -1,16 +1,7 @@
-//
-//  collider.cpp
-//  SpaceArcade
-//
-//  Created by Admin on 22/10/14.
-//
-//
-
-#include "collider.h"
-
-#include "game/objects/gameobjects.h"
-#include "math/gamemath.h"
-#include "spacegame.h"
+#include <game/collider.h>
+#include <game/objects/gameobjects.h>
+#include <game/spacegame.h>
+#include <math/gamemath.h>
 
 using namespace Math;
 

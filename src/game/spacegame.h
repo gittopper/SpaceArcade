@@ -8,6 +8,7 @@
 #include <game/physics.h>
 #include <game/resourceloader.h>
 #include <game/sprite.h>
+#include <game/timer.h>
 #include <math/gamemath.h>
 #include <rendering/spacegamerenderer.h>
 
@@ -64,9 +65,6 @@ class SpaceGame : public IGame {
     GameConfig& getConfig() {
         return config_;
     }
-    float getAnimationInterval() const {
-        return config_.dt_;
-    }
 
   private:
     void createAsteroid();
@@ -79,7 +77,7 @@ class SpaceGame : public IGame {
 
     ObjectsSet objects_to_add_;
 
-    float time_;
+    Timer time_;
     float asteroids_next_time_;
 
     bool game_lost_;
@@ -97,6 +95,7 @@ class SpaceGame : public IGame {
 
     SpaceGameRenderer* renderer_;
     std::shared_ptr<ISoundPlayer> player_;
+    double last_update_time_ = 0;
     Physics physics_;
     Collider collider_;
     std::shared_ptr<ResourceLoader> resource_loader_;
@@ -104,5 +103,6 @@ class SpaceGame : public IGame {
     std::shared_ptr<Sprite> overlay_dark_;
     std::shared_ptr<Sprite> overlay_;
     std::shared_ptr<Font> font_;
+    Timer timer_;
 };
 }  // namespace Game

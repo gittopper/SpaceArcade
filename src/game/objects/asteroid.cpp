@@ -17,20 +17,21 @@ using namespace Math;
 namespace Game {
 normal_distribution<float> Asteroid::colorDistrib(0.5, 0.25);
 uniform_real_distribution<float> Asteroid::explosionDistib(0., 1.);
-normal_distribution<float> Asteroid::partsDistrib(0.5, 0.25);
+normal_distribution<float> Asteroid::parts_distrib(0.5, 0.25);
 
-normal_distribution<float> Asteroid::unevenDistrib;
+normal_distribution<float> Asteroid::uneven_distrib;
 
 default_random_engine Asteroid::generator;
 
 Asteroid::Asteroid() : piece(false) {
+    ++game->stats.num_asteroids;
     float PI2 = (atan(1) * 8);
 
     int n = 7;
 
     for (int i = 0; i < n; i++) {
         float angle = PI2 / n * i;
-        float radius = unevenDistrib(generator);
+        float radius = uneven_distrib(generator);
         radius = radius < 0 ? 0.1 : radius;
 
         points_.push_back(Vector(radius * cos(angle), radius * sin(angle)));
@@ -61,13 +62,14 @@ float Asteroid::getRandColorComponent() {
 
 void Asteroid::explode() {
     shouldBeRemoved = true;
+    ++game->stats.num_exploded_asteroids;
     if (piece) {
         game->player()->play("small_explode.ogg");
         return;
     }
     game->player()->play("big_explode.ogg");
 
-    int n = partsDistrib(generator);
+    int n = parts_distrib(generator);
 
     vector<float> masses, angles, energy;
 

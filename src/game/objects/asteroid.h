@@ -34,8 +34,8 @@ class Asteroid : public IObject {
 
     virtual void accept(Visitor& visitor) { visitor.visit(*this); }
 
-    static normal_distribution<float> partsDistrib;
-    static normal_distribution<float> unevenDistrib;
+    static normal_distribution<float> parts_distrib;
+    static normal_distribution<float> uneven_distrib;
 
     void setParted();
     bool isParted() { return piece; }
