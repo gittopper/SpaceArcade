@@ -17,7 +17,9 @@ struct GameConfig {
         asteroids_sigma_speed_(1.),
         asteroids_speed_angle_sigma_(10.),
         bullet_speed_(4),
-        max_space_ship_speed_(4) {}
+        max_space_ship_speed_(4),
+        level_presentation_time_(3),
+        level_pass_time_(60) {}
 
     // screen width length in relative points
     float scale_;
@@ -44,5 +46,7 @@ struct GameConfig {
 
     float bullet_speed_;
     float max_space_ship_speed_;
+    float level_presentation_time_;
+    float level_pass_time_;
 };
 }  // namespace Game

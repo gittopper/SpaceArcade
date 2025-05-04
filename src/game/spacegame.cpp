@@ -11,7 +11,9 @@ SpaceGame::SpaceGame() :
     asteroids_next_time_(-1),
     renderer_(nullptr),
     game_lost_(false),
-    num_lives_(5) {}
+    num_lives_(5) {
+    time_.start();
+}
 
 void SpaceGame::pause() {
     paused_ = true;
@@ -23,16 +25,27 @@ void SpaceGame::resume() {
     }
 }
 
+void SpaceGame::clearScene() {
+    scene_.removeChildren();
+    spaceship_ = nullptr;
+}
+
 void SpaceGame::initLevel() {
     game_lost_ = false;
+    clearScene();
     if (num_lives_ == 0) {
         num_lives_ = 5;
-        timer_.reset();
+        num_level_ = 1;
+        game_timer_.reset();
+        level_timer_.reset();
         stats = {};
+        config_ = GameConfig();
+        level_presentation_timer_.reset();
+        return;
     }
-    timer_.start();
+    level_pass_timer_.start();
+    game_timer_.start();
     paused_ = false;
-    scene_.removeChildren();
     spaceship_ = new SpaceShip(config_.bullet_speed_);
     scene_.addChild(spaceship_);
 
@@ -79,7 +92,7 @@ void SpaceGame::setupGame(int w, int h) {
     font_ = std::make_shared<Font>(font_mem_file);
 
     IObject::game = this;
-    initLevel();
+    level_presentation_timer_.start();
 }
 
 void SpaceGame::renderOverlay() {
@@ -91,10 +104,15 @@ void SpaceGame::renderOverlay() {
             std::make_shared<Sprite>(width_, height_, Color(0, 0, 0, 150));
         overlay_ = std::make_shared<Sprite>(width_, height_, Color(0, 0, 0, 0));
     }
-    overlay_->copy(game_lost_ ? *overlay_dark_ : *overlay_transparent_);
-    if (game_lost_) {
-        auto text =
-            Font::convertToUtf32(num_lives_ > 0 ? "TRY AGAIN" : "GAME LOST");
+    overlay_->copy(game_lost_ || level_presentation_timer_.isRunning()
+                       ? *overlay_dark_
+                       : *overlay_transparent_);
+    if (game_lost_ || level_presentation_timer_.isRunning()) {
+        std::string str = num_lives_ > 0 ? "TRY AGAIN" : "GAME LOST";
+        if (level_presentation_timer_.isRunning()) {
+            str = "LEVEL " + std::to_string(num_level_);
+        }
+        auto text = Font::convertToUtf32(str);
         font_->setFontSize(100);
         Color green{0, 255, 0, 255};
         Color red{255, 0, 0, 255};
@@ -104,33 +122,38 @@ void SpaceGame::renderOverlay() {
         auto text_x = width_ / 2 - rect.width / 2;
         font_->renderText(*overlay_, text_x, text_y, text);
     }
-    font_->setFontSize(40);
-    font_->setColor(Color{0, 0, 0, 255});
-    auto text_y = 10;
-    auto num_lives =
-        Font::convertToUtf32("num lives: " + std::to_string(num_lives_));
-    font_->renderText(*overlay_, 10, text_y, num_lives);
-    auto font_shift = font_->getTextRect(num_lives).height + 10;
-    text_y += font_shift;
-    auto elapsed_time =
-        Font::convertToUtf32("elapsed time: " + timer_.elapsedAsString(false));
-    font_->renderText(*overlay_, 10, text_y, elapsed_time);
-    text_y += font_shift;
-    auto num_exploded_asteroids =
-        Font::convertToUtf32("num shooted asteroids: " +
-                             std::to_string(stats.num_exploded_asteroids));
-    font_->renderText(*overlay_, 10, text_y, num_exploded_asteroids);
-    text_y += font_shift;
-    auto num_shoots =
-        Font::convertToUtf32("num shoots: " + std::to_string(stats.num_shoots));
-    font_->renderText(*overlay_, 10, text_y, num_shoots);
-    text_y += font_shift;
-    auto num_asteroids = Font::convertToUtf32(
-        "num asteroids: " + std::to_string(stats.num_asteroids));
-    font_->renderText(*overlay_, 10, text_y, num_asteroids);
+    if (!level_presentation_timer_.isRunning()) {
+        font_->setFontSize(40);
+        font_->setColor(Color{0, 0, 0, 255});
+        auto text_y = 10;
+        auto num_lives =
+            Font::convertToUtf32("num lives: " + std::to_string(num_lives_));
+        font_->renderText(*overlay_, 10, text_y, num_lives);
+        auto font_shift = font_->getTextRect(num_lives).height + 10;
+        text_y += font_shift;
+        auto elapsed_time = Font::convertToUtf32(
+            "elapsed time: " + game_timer_.elapsedAsString(false));
+        font_->renderText(*overlay_, 10, text_y, elapsed_time);
+        text_y += font_shift;
+        auto num_exploded_asteroids =
+            Font::convertToUtf32("num shooted asteroids: " +
+                                 std::to_string(stats.num_exploded_asteroids));
+        font_->renderText(*overlay_, 10, text_y, num_exploded_asteroids);
+        text_y += font_shift;
+        auto num_shoots = Font::convertToUtf32(
+            "num shoots: " + std::to_string(stats.num_shoots));
+        font_->renderText(*overlay_, 10, text_y, num_shoots);
+        text_y += font_shift;
+        auto num_asteroids = Font::convertToUtf32(
+            "num asteroids: " + std::to_string(stats.num_asteroids));
+        font_->renderText(*overlay_, 10, text_y, num_asteroids);
+    }
 }
 
 void SpaceGame::drag(int x, int y) {
+    if (nullptr == spaceship_) {
+        return;
+    }
     Vector impact =
         Vector(x * config_.scale_ / width_, -y * config_.scale_ / width_);
     if (impact.len() > config_.max_space_ship_speed_) {
@@ -140,9 +163,12 @@ void SpaceGame::drag(int x, int y) {
 }
 
 void SpaceGame::tap(int x, int y) {
-    spaceship_->shoot();
     if (game_lost_) {
         initLevel();
+    } else {
+        if (nullptr != spaceship_) {
+            spaceship_->shoot();
+        }
     }
 }
 
@@ -150,9 +176,9 @@ void SpaceGame::gameOver() {
     pause();
     player()->play("ship_crash.ogg");
     game_lost_ = true;
-    timer_.stop();
-    if (num_lives_ == 0) {
-    } else {
+    game_timer_.stop();
+    level_pass_timer_.stop();
+    if (num_lives_ != 0) {
         --num_lives_;
     }
 }
@@ -162,13 +188,34 @@ void SpaceGame::resize(int w, int h) {
     height_ = h;
     getRenderer()->setScreeenSize(width_, height_);
     scene_.setupScene(config_.scale_, aspect() * config_.scale_);
-    spaceship_->getShift() =
-        spaceship_->getShift() + spaceship_->getBBox().clamp(scene_.getBBox());
+    if (spaceship_) {
+        spaceship_->getShift() = spaceship_->getShift() +
+                                 spaceship_->getBBox().clamp(scene_.getBBox());
+    }
 }
-
-void SpaceGame::renderStep() {
-    renderer_->prepareFrame();
-
+void SpaceGame::step() {
+    if (level_pass_timer_.isRunning() &&
+        level_pass_timer_.time() > config_.level_pass_time_) {
+        level_pass_timer_.stop();
+        game_timer_.stop();
+        ++num_level_;
+        ++config_.asteroid_avg_parts_number_;
+        ++config_.asteroids_avg_per_sec_;
+        ++config_.asteroids_avg_speed_;
+        ++config_.max_space_ship_speed_;
+        ++config_.bullet_speed_;
+        level_presentation_timer_.reset();
+        level_presentation_timer_.start();
+        clearScene();
+        paused_ = true;
+        level_pass_timer_.reset();
+    }
+    if (level_presentation_timer_.isRunning() &&
+        level_presentation_timer_.time() > config_.level_presentation_time_) {
+        level_presentation_timer_.stop();
+        initLevel();
+        paused_ = false;
+    }
     if (!paused_) {
         if (asteroids_next_time_ < time_.time()) {
             createAsteroid();
@@ -179,9 +226,8 @@ void SpaceGame::renderStep() {
         scene_.visitAll(collider_);
         removePostponed(&scene_);
 
-        for (ObjectsSet::const_iterator it = objects_to_add_.begin();
-             it != objects_to_add_.end(); it++) {
-            scene_.addChild(*it);
+        for (auto& object_to_add : objects_to_add_) {
+            scene_.addChild(object_to_add);
         }
         objects_to_add_.clear();
         auto cur_time = time_.time();
@@ -191,7 +237,11 @@ void SpaceGame::renderStep() {
         scene_.visitAll(physics_);
     }
     scene_.visitAll(*renderer_);
+}
 
+void SpaceGame::renderStep() {
+    renderer_->prepareFrame();
+    step();
     renderOverlay();
     if (overlay_) {
         renderer_->drawOverlay(*overlay_);

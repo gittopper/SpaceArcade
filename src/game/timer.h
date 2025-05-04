@@ -9,9 +9,7 @@ using Clock = std::chrono::system_clock;
 
 class Timer {
   public:
-    Timer() {
-        start();
-    }
+    Timer() {}
 
     double totalTime() const {
         return total_time_;
@@ -49,8 +47,12 @@ class Timer {
         total_time_ = 0;
         elapsed_time_ = 0;
         n_ = 0;
-        start();
     }
+
+    bool isRunning() const {
+        return is_running_;
+    }
+
     static std::string asString(float t, bool with_ms = true) {
         int ms = int(t * 1000) % 1000;
         auto time_int = static_cast<int>(t);

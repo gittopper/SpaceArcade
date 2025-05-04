@@ -66,6 +66,8 @@ class SpaceGame : public IGame {
 
     void resume();
 
+    void step();
+
     GameConfig& getConfig() {
         return config_;
     }
@@ -75,11 +77,12 @@ class SpaceGame : public IGame {
     void renderOverlay();
     void initLevel();
     float aspect() const;
+    void clearScene();
 
     int width_, height_;
 
     Scene scene_;
-    SpaceShip* spaceship_;
+    SpaceShip* spaceship_ = nullptr;
 
     ObjectsSet objects_to_add_;
 
@@ -90,6 +93,11 @@ class SpaceGame : public IGame {
     int num_lives_;
     float asteroids_next_time_;
     GameConfig config_;
+    Timer game_timer_;
+    Timer level_timer_;
+    Timer level_presentation_timer_;
+    Timer level_pass_timer_;
+    int num_level_ = 1;
 
     default_random_engine generator_;
     normal_distribution<float> asteroids_delay_;
@@ -107,6 +115,5 @@ class SpaceGame : public IGame {
     std::shared_ptr<Sprite> overlay_dark_;
     std::shared_ptr<Sprite> overlay_;
     std::shared_ptr<Font> font_;
-    Timer timer_;
 };
 }  // namespace Game
