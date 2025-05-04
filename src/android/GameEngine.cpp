@@ -32,14 +32,16 @@ JNIEXPORT void JNICALL
         game->setRenderer(&renderer);
         env_wrapper = std::make_shared<EnvWrapper>(env);
         game->setPlayer(std::make_shared<SoundPlayer>(res_loader));
+        game->setResourceLoader(res_loader);
+        game->getRenderer()->initRenderer(res_loader.get());
+        game->setupGame(width, height);
     }
     game->setResourceLoader(res_loader);
     game->getRenderer()->initRenderer(res_loader.get());
     int w, h;
     game->getRenderer()->getScreeenSize(w, h);
     if (w != width || h != height) {
-        game->getRenderer()->setScreeenSize(width, height);
-        game->setupGame();
+        game->resize(width, height);
     }
 }
 
