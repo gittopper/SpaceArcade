@@ -1,13 +1,4 @@
-//
-//  resourceloader.h
-//  SpaceArcade
-//
-//  Created by Stanislav Fedorov on 08/12/14.
-//
-//
-
-#ifndef Shader_resourceloader_h
-#define Shader_resourceloader_h
+#pragma once
 
 #include <memory>
 #include <string>
@@ -23,5 +14,3 @@ class ResourceLoader {
     virtual ~ResourceLoader() {}
 };
 using ResourceLoaderPtr = std::shared_ptr<ResourceLoader>;
-
-#endif

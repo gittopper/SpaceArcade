@@ -1,23 +1,12 @@
-//
-//  fileresourceloader.h
-//  SpaceArcade
-//
-//  Created by Stanislav Fedorov on 08/12/14.
-//
-//
-
-#ifndef Shader_fileresourceloader_h
-#define Shader_fileresourceloader_h
+#pragma once
 
 #include <game/resourceloader.h>
 
 class FileResourceLoader : public ResourceLoader {
-   public:
+  public:
     virtual std::vector<char> readFile(std::string filename);
     virtual void setResourcesPath(std::string path);
 
-   private:
+  private:
     std::string resourcesPath_;
 };
-
-#endif

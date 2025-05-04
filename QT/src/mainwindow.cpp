@@ -31,7 +31,7 @@ void MainWindow::initializeGL() {
     // glClearColor(Qt::black); // Черный цвет фона
 }
 
-void MainWindow::resizeGL(int nWidth, int nHeight) {
+void MainWindow::resizeGL(int w, int h) {
     if (!game) {
         game.reset(new SpaceGame);
         game->setRenderer(new OpenGLRenderer);
@@ -41,10 +41,9 @@ void MainWindow::resizeGL(int nWidth, int nHeight) {
         game->setPlayer(std::make_shared<SoundPlayer>(rloader));
         game->setResourceLoader(rloader);
         GameConfig config;
-        game->getRenderer()->setScreeenSize(nWidth, nHeight);
-        game->setupGame(config);
+        game->setupGame(w, h);
     }
-    game->getRenderer()->setScreeenSize(nWidth, nHeight);
+    game->resize(w, h);
     render();
 }
 

@@ -1,17 +1,6 @@
-//
-//  gameobjects.h
-//  SpaceArcade
-//
-//  Created by Stanislav Fedorov on 21/10/14.
-//
-//
-
-#ifndef Shader_gameobjects_h
-#define Shader_gameobjects_h
+#pragma once
 
 #include "asteroid.h"
-#include "spaceship.h"
 #include "bullet.h"
 #include "scene.h"
-
-#endif
+#include "spaceship.h"

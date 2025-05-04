@@ -1,14 +1,4 @@
-//
-//  regressvisitor.h
-//  SpaceArcade
-//
-//  Created by Admin on 21/10/14.
-//
-//
-
-#ifndef __SpaceArcade__regressvisitor__
-#define __SpaceArcade__regressvisitor__
-
+#pragma once
 #include "math/gamemath.h"
 #include "visitor.h"
 
@@ -16,7 +6,7 @@ namespace Game {
 // this derived visitor provides ability to not obligate definition of all
 // interactions
 class RegressVisitor : public Visitor {
-   public:
+  public:
     virtual void visit(class IObject&) {}
 
     void visit(Asteroid&);
@@ -25,4 +15,3 @@ class RegressVisitor : public Visitor {
     void visit(Scene&);
 };
 }  // namespace Game
-#endif /* defined(__SpaceArcade__regressvisitor__) */

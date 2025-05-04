@@ -93,7 +93,7 @@ class Sprite {
     }
     Color getPixel(std::size_t x, std::size_t y) const {
         if (x >= glWidth() || y >= glHeight()) {
-            throw std::runtime_error("wrong pixel");
+            return {};
         }
         auto shift = (y * glWidth() + x) * (type_ == RGBA ? 4 : 3);
         return *reinterpret_cast<const Color*>(&data_[shift]);

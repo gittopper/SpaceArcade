@@ -1,18 +1,12 @@
-//
-//  mathutils.cpp
-//  SpaceArcade
-//
-//  Created by Admin on 22/10/14.
-//
-//
 
-#include "mathutils.h"
+#include <math/mathutils.h>
 
-void applyTransformsToPoints(VArray& out, const VArray& in, const Mat& m, const Vector& v)
-{
+void applyTransformsToPoints(Math::VArray& out,
+                             const Math::VArray& in,
+                             const Math::Mat& m,
+                             const Math::Vector& v) {
     out.clear();
-    for(VArray::const_iterator it = in.begin(); it != in.end(); it ++)
-    {
-        out.push_back(m * (*it) + v);
+    for (auto& vv : in) {
+        out.push_back(m * vv + v);
     }
 }

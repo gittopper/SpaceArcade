@@ -1,22 +1,13 @@
-//
-//  asteroid.cpp
-//  SpaceArcade
-//
-//  Created by Stanislav Fedorov on 21/10/14.
-//
-//
 
-#include "asteroid.h"
+#include <game/gameconfig.h>
+#include <game/objects/asteroid.h>
+#include <game/objects/spaceship.h>
 
 #include <algorithm>
 
-#include "spaceship.h"
-using namespace Math;
-#include "game/gameconfig.h"
-
 namespace Game {
-normal_distribution<float> Asteroid::colorDistrib(0.5, 0.25);
-uniform_real_distribution<float> Asteroid::explosionDistib(0., 1.);
+normal_distribution<float> Asteroid::color_distrib(0.5, 0.25);
+uniform_real_distribution<float> Asteroid::explosion_distib(0., 1.);
 normal_distribution<float> Asteroid::parts_distrib(0.5, 0.25);
 
 normal_distribution<float> Asteroid::uneven_distrib;
@@ -54,7 +45,7 @@ Asteroid::Asteroid() : piece(false) {
 }
 
 float Asteroid::getRandColorComponent() {
-    float r = colorDistrib(generator);
+    float r = color_distrib(generator);
     r = fmax(r, 0.);
     r = fmin(r, 1.);
     return r;
@@ -107,7 +98,7 @@ void Asteroid::getNormalizedRandArray(vector<float>& vals, int num) {
     vals.clear();
     float sum = 0;
     for (int i = 0; i < num; i++) {
-        float cur = explosionDistib(generator);
+        float cur = explosion_distib(generator);
         vals.push_back(cur);
         sum += cur;
     }

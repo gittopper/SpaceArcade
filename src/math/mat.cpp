@@ -1,10 +1,4 @@
-//
-//  mat.cpp
-//  SpaceArcade
-//
-//  Created by Stanislav Fedorov on 20/10/14.
-//
-//
+
 
 #include "mat.h"
 
@@ -24,8 +18,15 @@ Mat::Mat(Vector v1, Vector v2, Vector v3) {
     el(1, 2) = v3[1];
     el(2, 2) = v3[2];
 }
-Mat::Mat(float a00, float a01, float a02, float a10, float a11, float a12,
-         float a20, float a21, float a22) {
+Mat::Mat(float a00,
+         float a01,
+         float a02,
+         float a10,
+         float a11,
+         float a12,
+         float a20,
+         float a21,
+         float a22) {
     el(0, 0) = a00;
     el(0, 1) = a01;
     el(0, 2) = a02;

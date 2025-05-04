@@ -23,26 +23,17 @@ void SpaceGame::resume() {
     }
 }
 
-void SpaceGame::setupGame(GameConfig conf) {
-    config_ = conf;
+void SpaceGame::initLevel() {
+    game_lost_ = false;
+    paused_ = false;
     timer_.start();
-    renderer_->setScale(config_.scale_);
-    renderer_->getScreeenSize(width_, height_);
-    aspect_ = static_cast<float>(height_) / width_;
-    scene_.setupScene(config_.scale_, aspect_ * config_.scale_);
     scene_.removeChildren();
-
-    if (nullptr == font_) {
-        auto font_mem_file = getResourceLoader()->readFile("XI20.ttf");
-        font_ = std::make_shared<Font>(font_mem_file);
-    }
-
     spaceship_ = new SpaceShip(config_.bullet_speed_);
     scene_.addChild(spaceship_);
 
     spaceship_->scale(config_.ship_size_);
     spaceship_->move(Vector(
-        0, -aspect_ * config_.scale_ / 2. +
+        0, -aspect() * config_.scale_ / 2. +
                (spaceship_->getShift() - spaceship_->getBBox().getMin())[1]));
 
     asteroids_delay_ = normal_distribution<float>(
@@ -65,8 +56,25 @@ void SpaceGame::setupGame(GameConfig conf) {
         config_.asteroid_avg_parts_number_, config_.asteroid_sigma_parts_);
     Asteroid::uneven_distrib =
         normal_distribution<float>(1, config_.asteroid_unevenness_sigma_);
+}
+
+float SpaceGame::aspect() const {
+    return static_cast<float>(height_) / width_;
+}
+
+void SpaceGame::setupGame(int w, int h) {
+    config_ = GameConfig();
+    getRenderer()->setScreeenSize(w, h);
+    renderer_->setScale(config_.scale_);
+    width_ = w;
+    height_ = h;
+    scene_.setupScene(config_.scale_, aspect() * config_.scale_);
+
+    auto font_mem_file = getResourceLoader()->readFile("XI20.ttf");
+    font_ = std::make_shared<Font>(font_mem_file);
 
     IObject::game = this;
+    initLevel();
 }
 
 void SpaceGame::renderOverlay() {
@@ -83,8 +91,9 @@ void SpaceGame::renderOverlay() {
         auto text =
             Font::convertToUtf32(num_lives_ > 0 ? "TRY AGAIN" : "GAME LOST");
         font_->setFontSize(100);
-        font_->setColor(num_lives_ > 0 ? Color{0, 255, 0, 255}
-                                       : Color{255, 0, 0, 255});
+        Color green{0, 255, 0, 255};
+        Color red{255, 0, 0, 255};
+        font_->setColor(num_lives_ > 0 ? green : red);
         auto rect = font_->getTextRect(text);
         auto text_y = height_ / 2 - rect.height / 2;
         auto text_x = width_ / 2 - rect.width / 2;
@@ -132,8 +141,7 @@ void SpaceGame::tap(int x, int y) {
         if (num_lives_ == 0) {
             num_lives_ = 5;
         }
-        setupGame(config_);
-        resume();
+        initLevel();
     }
 }
 
@@ -144,15 +152,16 @@ void SpaceGame::gameOver() {
     num_lives_ = num_lives_ > 0 ? num_lives_ - 1 : 0;
 }
 
+void SpaceGame::resize(int w, int h) {
+    width_ = w;
+    height_ = h;
+    getRenderer()->setScreeenSize(width_, height_);
+    scene_.setupScene(config_.scale_, aspect() * config_.scale_);
+    spaceship_->getShift() =
+        spaceship_->getShift() + spaceship_->getBBox().clamp(scene_.getBBox());
+}
+
 void SpaceGame::renderStep() {
-    int w, h;
-    renderer_->getScreeenSize(w, h);
-    if (w != width_ || h != height_) {
-        width_ = w;
-        height_ = h;
-        aspect_ = static_cast<float>(height_) / width_;
-        scene_.setupScene(config_.scale_, aspect_ * config_.scale_);
-    }
     renderer_->prepareFrame();
 
     if (!paused_) {
@@ -197,9 +206,8 @@ void SpaceGame::createAsteroid() {
     float size = asteroids_size_(generator_);
     size = size < 0.1 ? 0.1 : size;
     asteroid->scale(size);
-
-    asteroid->move(
-        Vector(asteroid_place_(generator_), config_.scale_ * aspect_ * 1.7, 0));
+    asteroid->move(Vector(asteroid_place_(generator_),
+                          config_.scale_ * aspect() * 1.7, 0));
     float angle = asteroids_speed_angle_(generator_);
     asteroid->getV() =
         Vector((asteroids_speed_(generator_) - config_.asteroids_avg_speed_) *

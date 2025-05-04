@@ -1,23 +1,18 @@
-//
-//  object3d.cpp
-//  SpaceArcade
-//
-//  Created by Stanislav Fedorov on 20/10/14.
-//
-//
 
 #include "iobject.h"
 
 namespace Game {
-IObject::IObject()
-    : parent_(nullptr), radius_(1.), box_(1.), shouldBeRemoved(false) {}
+IObject::IObject() :
+    parent_(nullptr), radius_(1.), box_(1.), shouldBeRemoved(false) {}
 
 void IObject::move(const Vector& s) {
     shift_ += s;
     box_.move(s);
 }
 
-void IObject::rotate(const Mat& r) { rot_ = r * rot_; }
+void IObject::rotate(const Mat& r) {
+    rot_ = r * rot_;
+}
 
 void IObject::scale(float s) {
     radius_ *= s;
@@ -43,7 +38,9 @@ void IObject::removeChildren() {
     }
     children_.clear();
 }
-IObject::~IObject() { removeChildren(); }
+IObject::~IObject() {
+    removeChildren();
+}
 
 void IObject::visitAll(Visitor& v) {
     const char* objName = name();

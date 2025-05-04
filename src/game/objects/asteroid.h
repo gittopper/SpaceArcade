@@ -1,27 +1,18 @@
-//
-//  asteroid.h
-//  SpaceArcade
-//
-//  Created by Stanislav Fedorov on 20/10/14.
-//
-//
+#pragma once
 
-#ifndef Shader_asteroid_h
-#define Shader_asteroid_h
+#include <game/iobject.h>
 
 #include <cmath>
 #include <random>
-
-#include "game/iobject.h"
 using namespace std;
 
 namespace Game {
 
 class Asteroid : public IObject {
-   public:
+  public:
     struct AsteroidConfig {
-        AsteroidConfig() : asteroidExplosionSigma(0.2) {}
-        double asteroidExplosionSigma;
+        AsteroidConfig() : asteroid_explosion_sigma(0.2) {}
+        double asteroid_explosion_sigma;
     } conf;
 
     Asteroid();
@@ -32,25 +23,27 @@ class Asteroid : public IObject {
 
     void explode();
 
-    virtual void accept(Visitor& visitor) { visitor.visit(*this); }
+    virtual void accept(Visitor& visitor) {
+        visitor.visit(*this);
+    }
 
     static normal_distribution<float> parts_distrib;
     static normal_distribution<float> uneven_distrib;
 
     void setParted();
-    bool isParted() { return piece; }
+    bool isParted() {
+        return piece;
+    }
 
-   protected:
+  protected:
     bool piece;
 
     static default_random_engine generator;
-    static normal_distribution<float> colorDistrib;
-    static uniform_real_distribution<float> explosionDistib;
+    static normal_distribution<float> color_distrib;
+    static uniform_real_distribution<float> explosion_distib;
 
     float getRandColorComponent();
 
     void getNormalizedRandArray(vector<float>& vals, int num);
 };
 }  // namespace Game
-
-#endif

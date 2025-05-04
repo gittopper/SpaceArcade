@@ -1,13 +1,4 @@
-//
-//  igame.h
-//  SpaceArcade
-//
-//  Created by Admin on 22/10/14.
-//
-//
-
-#ifndef __SpaceArcade__gameinstance__
-#define __SpaceArcade__gameinstance__
+#pragma once
 
 #include "isoundplayer.h"
 
@@ -32,4 +23,3 @@ class IGame {
 };
 
 }  // namespace Game
-#endif /* defined(__SpaceArcade__gameinstance__) */

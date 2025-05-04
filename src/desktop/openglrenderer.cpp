@@ -40,6 +40,11 @@ bool OpenGLRenderer::updateInfoAboutWindow() {
 void OpenGLRenderer::prepareFrame() {
     glClear(GL_COLOR_BUFFER_BIT |
             GL_DEPTH_BUFFER_BIT);  // чистим буфер изображения и буфер глубины
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glViewport(0, 0, width_, height_);
+    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);  // устанавливаем матрицу
     glLoadIdentity();            // загружаем матрицу
     glOrtho(-width_ / 2, width_ / 2, height_ / 2, -height_ / 2, 1,

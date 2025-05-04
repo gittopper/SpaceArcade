@@ -22,9 +22,13 @@ namespace Game {
 
 class SpaceGame : public IGame {
   public:
+    struct GameState {};
+
     SpaceGame();
 
-    void setupGame(GameConfig conf = GameConfig());
+    void setupGame(int w, int h);
+
+    void resize(int w, int h);
     GameConfig* getGameConfig() override {
         return &config_;
     }
@@ -69,21 +73,22 @@ class SpaceGame : public IGame {
   private:
     void createAsteroid();
     void renderOverlay();
+    void initLevel();
+    float aspect() const;
 
     int width_, height_;
-    int num_lives_;
+
     Scene scene_;
     SpaceShip* spaceship_;
 
     ObjectsSet objects_to_add_;
 
     Timer time_;
-    float asteroids_next_time_;
-
+    double last_update_time_ = 0;
     bool game_lost_;
     bool paused_;
-    float aspect_;
-
+    int num_lives_;
+    float asteroids_next_time_;
     GameConfig config_;
 
     default_random_engine generator_;
@@ -95,7 +100,6 @@ class SpaceGame : public IGame {
 
     SpaceGameRenderer* renderer_;
     std::shared_ptr<ISoundPlayer> player_;
-    double last_update_time_ = 0;
     Physics physics_;
     Collider collider_;
     std::shared_ptr<ResourceLoader> resource_loader_;

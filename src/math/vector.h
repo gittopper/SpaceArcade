@@ -1,13 +1,4 @@
-//
-//  vector.h
-//  SpaceArcade
-//
-//  Created by Stanislav Fedorov on 20/10/14.
-//
-//
-
-#ifndef _Vector_h_
-#define _Vector_h_
+#pragma once
 
 #include <cfloat>
 #include <vector>
@@ -18,10 +9,12 @@ using namespace std;
 
 namespace Math {
 class Vector {
-   public:
+  public:
     Vector(float x = 0, float y = 0, float z = 0);
 
-    const float& operator[](int i) const { return vec_[i]; }
+    const float& operator[](int i) const {
+        return vec_[i];
+    }
 
     Vector& operator=(const Vector& v) {
         vec_[0] = v.vec_[0];
@@ -30,7 +23,9 @@ class Vector {
         return *this;
     }
 
-    float& operator[](int i) { return vec_[i]; }
+    float& operator[](int i) {
+        return vec_[i];
+    }
 
     Vector operator*(float f) const;
 
@@ -67,11 +62,13 @@ class Vector {
 
     float len() const;
 
-   private:
+  private:
     float vec_[3];
 };
 
-inline Vector operator*(float f, Vector& v) { return v * f; }
+inline Vector operator*(float f, Vector& v) {
+    return v * f;
+}
 
 Vector cross(const Vector& v1, const Vector& v2);
 
@@ -88,5 +85,3 @@ float maxRadius(VArray& p);
 #define MAX_VECTOR Vector(FLT_MAX, FLT_MAX, FLT_MAX)
 #define MIN_VECTOR Vector(FLT_MIN, FLT_MIN, FLT_MIN)
 }  // namespace Math
-
-#endif

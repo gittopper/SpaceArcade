@@ -1,14 +1,4 @@
-//
-//  iboject.h
-//  SpaceArcade
-//
-//  Created by Stanislav Fedorov on 20/10/14.
-//
-//
-
-#ifndef _IObject_h_
-#define _IObject_h_
-
+#pragma once
 #include <set>
 
 #include "igame.h"
@@ -29,7 +19,7 @@ typedef set<IObject*> ObjectsSet;
 //    typedef vector<float> FArray;
 
 class IObject : public RegressVisitor {
-   public:
+  public:
     IObject();
 
     virtual ~IObject();
@@ -44,21 +34,43 @@ class IObject : public RegressVisitor {
 
     void addChild(IObject* child);
 
-    IObject* getParent() const { return parent_; }
-    const ObjectsSet& getChildren() const { return children_; }
+    IObject* getParent() const {
+        return parent_;
+    }
+    const ObjectsSet& getChildren() const {
+        return children_;
+    }
 
     void removeChild(IObject* child);
     void removeChildren();
 
-    Mat getTransform() const { return rot_ * radius_; }
-    const Vector& getShift() const { return shift_; }
+    Mat getTransform() const {
+        return rot_ * radius_;
+    }
+    const Vector& getShift() const {
+        return shift_;
+    }
 
-    const float getMass() const { return mass_; }
-    Vector& getV() { return velocity_; }
+    Vector& getShift() {
+        return shift_;
+    }
 
-    VArray& getPoints() { return points_; }
-    VArray& getDrawPoints() { return drawPoints_; }
-    V4Array& getColors() { return colors_; }
+    const float getMass() const {
+        return mass_;
+    }
+    Vector& getV() {
+        return velocity_;
+    }
+
+    VArray& getPoints() {
+        return points_;
+    }
+    VArray& getDrawPoints() {
+        return drawPoints_;
+    }
+    V4Array& getColors() {
+        return colors_;
+    }
     // should be defined for the implementation only
 
     virtual void accept(Visitor& v) = 0;
@@ -73,14 +85,16 @@ class IObject : public RegressVisitor {
     float distance(IObject* other);
     bool intersects(IObject* other);
     bool contains(IObject* other);
-    BoundingBox2D& getBBox() { return box_; }
+    BoundingBox2D& getBBox() {
+        return box_;
+    }
 
     bool shouldBeRemoved;
 
     static IGame* game;
     void cacheDrawPoints();
 
-   protected:
+  protected:
     Mat rot_;
     Vector shift_;
     float radius_;
@@ -100,4 +114,3 @@ class IObject : public RegressVisitor {
 
 void removePostponed(IObject* obj);
 }  // namespace Game
-#endif

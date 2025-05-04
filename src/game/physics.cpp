@@ -1,10 +1,3 @@
-//
-//  physics.cpp
-//  SpaceArcade
-//
-//  Created by Stanislav Fedorov on 21/10/14.
-//
-//
 
 #include "physics.h"
 
