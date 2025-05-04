@@ -27,20 +27,28 @@ class Timer {
 
     void start() {
         begin_time_ = now();
+        is_running_ = true;
     }
     double stop() {
         std::chrono::duration<double> diff = now() - begin_time_;
         elapsed_time_ = diff.count();
         ++n_;
         total_time_ += elapsed_time_;
+        is_running_ = false;
         return elapsed_time_;
     }
 
     double time() const {
+        if (!is_running_) {
+            return total_time_;
+        }
         std::chrono::duration<double> diff = now() - begin_time_;
-        return diff.count();
+        return total_time_ + diff.count();
     }
     void reset() {
+        total_time_ = 0;
+        elapsed_time_ = 0;
+        n_ = 0;
         start();
     }
     static std::string asString(float t, bool with_ms = true) {
@@ -75,6 +83,7 @@ class Timer {
     int n_ = 0;
     double total_time_ = 0;
     double elapsed_time_ = 0;
+    bool is_running_;
 };
 
 inline std::string getTimestamp() {

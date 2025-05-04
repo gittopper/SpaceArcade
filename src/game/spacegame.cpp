@@ -25,8 +25,13 @@ void SpaceGame::resume() {
 
 void SpaceGame::initLevel() {
     game_lost_ = false;
-    paused_ = false;
+    if (num_lives_ == 0) {
+        num_lives_ = 5;
+        timer_.reset();
+        stats = {};
+    }
     timer_.start();
+    paused_ = false;
     scene_.removeChildren();
     spaceship_ = new SpaceShip(config_.bullet_speed_);
     scene_.addChild(spaceship_);
@@ -137,10 +142,6 @@ void SpaceGame::drag(int x, int y) {
 void SpaceGame::tap(int x, int y) {
     spaceship_->shoot();
     if (game_lost_) {
-        game_lost_ = false;
-        if (num_lives_ == 0) {
-            num_lives_ = 5;
-        }
         initLevel();
     }
 }
@@ -149,7 +150,11 @@ void SpaceGame::gameOver() {
     pause();
     player()->play("ship_crash.ogg");
     game_lost_ = true;
-    num_lives_ = num_lives_ > 0 ? num_lives_ - 1 : 0;
+    timer_.stop();
+    if (num_lives_ == 0) {
+    } else {
+        --num_lives_;
+    }
 }
 
 void SpaceGame::resize(int w, int h) {
