@@ -1,13 +1,5 @@
-//
-//  glesrenderer.h
-//  SpaceArcade
-//
-//  Created by Stanislav Fedorov on 20/10/14.
-//
-//
+#pragma once
 
-#ifndef Shader_glesrenderer_h
-#define Shader_glesrenderer_h
 
 #ifndef __APPLE__
 #include <GLES/gl.h>
@@ -67,4 +59,3 @@ class GLESRenderer : virtual public Renderer {
     GLuint depthRenderbuffer_;
 };
 
-#endif

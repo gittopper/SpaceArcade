@@ -1,12 +1,4 @@
-//
-//  glesrenderer.cpp
-//  SpaceArcade
-//
-//  Created by Stanislav Fedorov on 20/10/14.
-//
-//
-
-#include "glesrenderer.h"
+#include <android/glesrenderer.h>
 
 #define USE_DEPTH_BUFFER 0
 
@@ -151,7 +143,7 @@ void GLESRenderer::prepareFrame() {
     SetOrtho(proj_, -hs, hs, -aspect * hs, aspect * hs, -scale_, scale_);
 
     glBindFramebuffer(GL_FRAMEBUFFER_OES, viewFramebuffer_);
-    // glViewport(0, 0, backingWidth_, backingHeight_);
+    glViewport(0, 0, backingWidth_, backingHeight_);
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
