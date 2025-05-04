@@ -37,10 +37,12 @@ void SpaceGame::initLevel() {
         num_lives_ = config_.num_lives_;
         num_level_ = 1;
         game_timer_.reset();
-        level_timer_.reset();
         stats = {};
         config_ = GameConfig();
         level_presentation_timer_.reset();
+        level_presentation_timer_.start();
+        level_pass_timer_.reset();
+        return;
     }
     level_pass_timer_.start();
     game_timer_.start();

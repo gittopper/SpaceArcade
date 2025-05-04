@@ -94,7 +94,6 @@ class SpaceGame : public IGame {
     float asteroids_next_time_;
     GameConfig config_;
     Timer game_timer_;
-    Timer level_timer_;
     Timer level_presentation_timer_;
     Timer level_pass_timer_;
     int num_level_ = 1;
