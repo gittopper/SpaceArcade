@@ -11,7 +11,7 @@ SpaceGame::SpaceGame() :
     asteroids_next_time_(-1),
     renderer_(nullptr),
     game_lost_(false),
-    num_lives_(5) {
+    num_lives_(0) {
     time_.start();
 }
 
@@ -34,14 +34,13 @@ void SpaceGame::initLevel() {
     game_lost_ = false;
     clearScene();
     if (num_lives_ == 0) {
-        num_lives_ = 5;
+        num_lives_ = config_.num_lives_;
         num_level_ = 1;
         game_timer_.reset();
         level_timer_.reset();
         stats = {};
         config_ = GameConfig();
         level_presentation_timer_.reset();
-        return;
     }
     level_pass_timer_.start();
     game_timer_.start();
@@ -116,11 +115,14 @@ void SpaceGame::renderOverlay() {
         font_->setFontSize(100);
         Color green{0, 255, 0, 255};
         Color red{255, 0, 0, 255};
-        font_->setColor(num_lives_ > 0 ? green : red);
+        font_->setColor(num_lives_ > 0 || level_presentation_timer_.isRunning()
+                            ? green
+                            : red);
         auto rect = font_->getTextRect(text);
-        auto text_y = height_ / 2 - rect.height / 2;
-        auto text_x = width_ / 2 - rect.width / 2;
-        font_->renderText(*overlay_, text_x, text_y, text);
+        rect.x = width_ / 2 - rect.width / 2;
+        rect.y = height_ / 2 - rect.height / 2;
+        font_->renderText(*overlay_, rect.x, rect.y, text);
+        game_lost_rect_ = rect;
     }
     if (!level_presentation_timer_.isRunning()) {
         font_->setFontSize(40);
@@ -164,7 +166,9 @@ void SpaceGame::drag(int x, int y) {
 
 void SpaceGame::tap(int x, int y) {
     if (game_lost_) {
-        initLevel();
+        if (game_lost_rect_.isInside(x, y)) {
+            initLevel();
+        }
     } else {
         if (nullptr != spaceship_) {
             spaceship_->shoot();

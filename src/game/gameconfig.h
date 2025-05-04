@@ -19,7 +19,8 @@ struct GameConfig {
         bullet_speed_(4),
         max_space_ship_speed_(4),
         level_presentation_time_(3),
-        level_pass_time_(60) {}
+        level_pass_time_(60),
+        num_lives_(5) {}
 
     // screen width length in relative points
     float scale_;
@@ -48,5 +49,6 @@ struct GameConfig {
     float max_space_ship_speed_;
     float level_presentation_time_;
     float level_pass_time_;
+    int num_lives_;
 };
 }  // namespace Game

@@ -98,6 +98,7 @@ class SpaceGame : public IGame {
     Timer level_presentation_timer_;
     Timer level_pass_timer_;
     int num_level_ = 1;
+    Rect2D game_lost_rect_;
 
     default_random_engine generator_;
     normal_distribution<float> asteroids_delay_;
