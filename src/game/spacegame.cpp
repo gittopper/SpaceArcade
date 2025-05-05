@@ -212,7 +212,6 @@ void SpaceGame::step() {
         ++config_.bullet_speed_;
         level_presentation_timer_.reset();
         level_presentation_timer_.start();
-        clearScene();
         paused_ = true;
         level_pass_timer_.reset();
     }
