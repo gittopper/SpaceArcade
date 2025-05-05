@@ -61,8 +61,10 @@ class Timer {
         is_paused_ = true;
     }
     void resume() {
-        start();
-        is_paused_ = false;
+        if (is_paused_) {
+            start();
+            is_paused_ = false;
+        }
     }
 
     static std::string asString(float t, bool with_ms = true) {
