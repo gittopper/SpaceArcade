@@ -101,7 +101,7 @@ class SpaceGame : public IGame {
             }
             Collider collider(&scene_);
             scene_.visitAll(collider);
-            removePostponed(&scene_, spaceship_);
+            removePostponed(&scene_);
 
             auto cur_time = game_data_->time_.time();
             auto dt = cur_time - last_update_time_;
