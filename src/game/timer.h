@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <chrono>
 #include <iomanip>
 #include <sstream>
@@ -48,6 +49,7 @@ class Timer {
         stop();
         total_time_ = 0;
         n_ = 0;
+        is_paused_ = false;
     }
 
     bool isRunning() const {
@@ -55,15 +57,17 @@ class Timer {
     }
 
     void pause() {
-        std::chrono::duration<double> diff = now() - begin_time_;
-        double elapsed_time = diff.count();
-        total_time_ += elapsed_time;
-        is_paused_ = true;
+        assert(is_running_ || !is_paused_);
+        if (is_running_) {
+            std::chrono::duration<double> diff = now() - begin_time_;
+            double elapsed_time = diff.count();
+            total_time_ += elapsed_time;
+            is_paused_ = true;
+        }
     }
     void resume() {
-        if (is_paused_) {
+        if (is_paused_ || !is_running_) {
             start();
-            is_paused_ = false;
         }
     }
 

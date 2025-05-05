@@ -9,8 +9,6 @@ void Level::setupLevel(const LevelConfig& level_config) {
     clearScene();
     config_ = level_config;
     asteroids_next_time_ = game_data_.time_.time();
-    level_pass_timer_.start();
-    game_data_.time_.start();
     scene_.setupScene(game_data_.camera_.internalWidth(),
                       game_data_.camera_.internalHeight());
     spaceship_ = new SpaceShip(config_.bullet_speed_);
@@ -51,11 +49,9 @@ void Level::clearScene() {
     spaceship_ = nullptr;
 }
 void Level::pause() {
-    level_pass_timer_.pause();
     game_data_.time_.pause();
 }
 void Level::resume() {
-    level_pass_timer_.resume();
     game_data_.time_.resume();
 }
 void Level::drag(int x, int y) {
@@ -110,9 +106,6 @@ void Level::createAsteroid() {
                -asteroids_speed_(game_data_.generator_) * cos(angle), 0);
 
     scene_.addChild(asteroid);
-}
-bool Level::isFinished() const {
-    return level_pass_timer_.time() > config_.level_pass_time_;
 }
 
 }  // namespace Game

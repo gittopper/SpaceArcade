@@ -27,15 +27,11 @@ void SpaceGame::initLevel() {
         game_state_.num_shoots = 0;
         game_state_.num_asteroids = 0;
         game_state_.time_.reset();
-        level_state_.setupLevel(LevelConfig{});
-        level_state_.pause();
-        overlay_.state = Overlay::NewLevel;
         level_pass_timer_.reset();
-        level_presentation_timer_.reset();
-        level_presentation_timer_.start();
+        level_state_.setupLevel(LevelConfig{});
+        overlay_.state = Overlay::NewLevel;
         return;
     }
-
     level_state_.setupLevel(level_state_.config_);
     overlay_.state = Overlay::Stats;
 }
@@ -51,7 +47,6 @@ void SpaceGame::setupGame(int w, int h) {
     overlay_.setup();
     IObject::game = this;
     initLevel();
-    level_state_.pause();
     overlay_.state = Overlay::NewLevel;
     level_presentation_timer_.start();
 }
@@ -63,8 +58,15 @@ void SpaceGame::drag(int x, int y) {
 void SpaceGame::tap(int x, int y) {
     if (overlay_.state == Overlay::LiveLost) {
         if (overlay_.game_lost_rect_.isInside(x, y)) {
-            level_pass_timer_.resume();
+            auto is_lost = game_state_.isGameLost();
             initLevel();
+            if (is_lost) {
+                overlay_.state = Overlay::NewLevel;
+                level_presentation_timer_.start();
+            } else {
+                level_state_.resume();
+                level_pass_timer_.resume();
+            }
         }
     } else {
         if (overlay_.state == Overlay::Stats) {
@@ -86,7 +88,7 @@ void SpaceGame::gameOver() {
 void SpaceGame::step() {
     if (level_pass_timer_.isRunning() &&
         level_pass_timer_.time() > level_state_.config_.level_pass_time_) {
-        level_pass_timer_.stop();
+        level_pass_timer_.reset();
         level_state_.pause();
         ++game_state_.num_level_;
         LevelConfig config = level_state_.config_;
@@ -96,7 +98,6 @@ void SpaceGame::step() {
         ++config.max_space_ship_speed_;
         ++config.bullet_speed_;
         level_state_.setupLevel(config);
-        level_state_.pause();
         level_presentation_timer_.reset();
         level_presentation_timer_.start();
         overlay_.state = Overlay::NewLevel;
@@ -104,11 +105,10 @@ void SpaceGame::step() {
     if (level_presentation_timer_.isRunning() &&
         level_presentation_timer_.time() >
             level_state_.config_.level_presentation_time_) {
-        level_presentation_timer_.stop();
+        level_presentation_timer_.reset();
         overlay_.state = Overlay::Stats;
         level_state_.resume();
-        level_pass_timer_.reset();
-        level_pass_timer_.start();
+        level_pass_timer_.resume();
     }
     level_state_.step();
 }

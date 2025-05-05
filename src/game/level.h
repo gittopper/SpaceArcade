@@ -32,7 +32,6 @@ class Level {
     normal_distribution<float> asteroids_speed_angle_;
     uniform_real_distribution<float> asteroid_place_;
 
-    Timer level_pass_timer_;
     LevelConfig config_;
     float asteroids_next_time_ = 0;
 };

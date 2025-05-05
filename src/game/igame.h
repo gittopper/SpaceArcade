@@ -26,7 +26,7 @@ class IGame {
         int num_asteroids = 0;
         std::default_random_engine generator_;
 
-        bool gameLost() const {
+        bool isGameLost() const {
             return num_lives_ == 0;
         }
     };
