@@ -15,7 +15,7 @@ normal_distribution<float> Asteroid::uneven_distrib;
 default_random_engine Asteroid::generator;
 
 Asteroid::Asteroid() : piece(false) {
-    ++game->stats.num_asteroids;
+    ++game->game_state_.num_asteroids;
     float PI2 = (atan(1) * 8);
 
     int n = 7;
@@ -53,12 +53,12 @@ float Asteroid::getRandColorComponent() {
 
 void Asteroid::explode() {
     shouldBeRemoved = true;
-    ++game->stats.num_exploded_asteroids;
+    ++game->game_state_.num_exploded_asteroids;
     if (piece) {
-        game->player()->play("small_explode.ogg");
+        game->game_state_.player_->play("small_explode.ogg");
         return;
     }
-    game->player()->play("big_explode.ogg");
+    game->game_state_.player_->play("big_explode.ogg");
 
     int n = parts_distrib(generator);
 
@@ -90,7 +90,7 @@ void Asteroid::explode() {
         asteroid->move(shift_);
         asteroid->setParted();
 
-        game->addGameObject(asteroid);
+        parent_->addChild(asteroid);
     }
 }
 

@@ -46,7 +46,7 @@ SpaceShip::SpaceShip(float bul_speed)
 }
 
 void SpaceShip::shoot() {
-    game->player()->play("shoot.ogg");
+    game->game_state_.player_->play("shoot.ogg");
     Vector v(0.3, 0, 0);
 
     IObject* bullet = new Bullet(getShift() + v, Vector(0, bullet_speed_));

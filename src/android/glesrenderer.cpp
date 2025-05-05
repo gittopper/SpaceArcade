@@ -70,7 +70,7 @@ std::uint32_t compileProgram(ResourceLoader* loader,
 }
 }  // namespace
 
-GLESRenderer::GLESRenderer() : scale_(1) {}
+GLESRenderer::GLESRenderer(){}
 
 bool GLESRenderer::initRenderer(ResourceLoader* loader) {
     program_overlay_id_ =
@@ -93,14 +93,6 @@ bool GLESRenderer::initRenderer(ResourceLoader* loader) {
     return true;
 }
 
-void GLESRenderer::getScreeenSize(int& w, int& h) {
-    w = backingWidth_;
-    h = backingHeight_;
-}
-void GLESRenderer::setScreeenSize(int w, int h) {
-    backingWidth_ = w;
-    backingHeight_ = h;
-}
 
 void GLESRenderer::createFramebuffer() {
     glGenFramebuffers(1, &viewFramebuffer_);
@@ -113,16 +105,18 @@ void GLESRenderer::createFramebuffer() {
                               GL_RENDERBUFFER_OES, viewRenderbuffer_);
 }
 bool GLESRenderer::updateInfoAboutWindow() {
+    int w, h;
     glGetRenderbufferParameteriv(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES,
-                                 &backingWidth_);
+                                 &w);
     glGetRenderbufferParameteriv(GL_RENDERBUFFER_OES,
-                                 GL_RENDERBUFFER_HEIGHT_OES, &backingHeight_);
+                                 GL_RENDERBUFFER_HEIGHT_OES, &h);
+    camera_->setViewport(w, h);
 
     if (USE_DEPTH_BUFFER) {
         glGenRenderbuffers(1, &depthRenderbuffer_);
         glBindRenderbuffer(GL_RENDERBUFFER_OES, depthRenderbuffer_);
         glRenderbufferStorage(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES,
-                              backingWidth_, backingHeight_);
+                              camera_->width(), camera_->height());
         glFramebufferRenderbuffer(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES,
                                   GL_RENDERBUFFER_OES, depthRenderbuffer_);
     }
@@ -136,23 +130,20 @@ bool GLESRenderer::updateInfoAboutWindow() {
 }
 
 void GLESRenderer::prepareFrame() {
-    float aspect = (float)backingHeight_ / backingWidth_;
+    float aspect = camera_->aspect();
 
-    float hs = scale_ / 2;
+    float ws = camera_->internalWidth() / 2;
+    float hs = camera_->internalHeight() / 2;
 
-    SetOrtho(proj_, -hs, hs, -aspect * hs, aspect * hs, -scale_, scale_);
+    SetOrtho(proj_, -ws, ws, -hs, hs, -1, 1);
 
     glBindFramebuffer(GL_FRAMEBUFFER_OES, viewFramebuffer_);
-    glViewport(0, 0, backingWidth_, backingHeight_);
+    glViewport(0, 0, camera_->width(), camera_->height());
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     glUseProgram(program_id_);
-}
-
-void GLESRenderer::setScale(float s) {
-    scale_ = s;
 }
 
 void GLESRenderer::showFrame() {

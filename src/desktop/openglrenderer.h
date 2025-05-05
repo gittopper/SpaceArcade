@@ -15,9 +15,9 @@ class OpenGLRenderer : public SpaceGameRenderer {
     void prepareFrame() override;
     void showFrame() override;
 
-    void getScreeenSize(int& w, int& h) override;
-    void setScreeenSize(int w, int h) override;
-    void setScale(float s) override;
+    void setCamera(Camera* camera) override {
+        camera_ = camera;
+    }
 
     bool initRenderer(ResourceLoader* loader) override;
     void drawSprite(int x,
@@ -33,8 +33,6 @@ class OpenGLRenderer : public SpaceGameRenderer {
     void drawOverlayRGBA(const void* data, int data_width, int data_height);
 
     void drawGameObject(IObject& obj) const;
-    int width_ = 500;
-    int height_ = 500;
-    double scale_;
+    Camera* camera_ = nullptr;
 };
 }  // namespace Game

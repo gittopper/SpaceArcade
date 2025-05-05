@@ -29,6 +29,8 @@ set(ARCADE_SOURCES
         ${GAME_SOURCES}/game/font.h
         ${GAME_SOURCES}/game/collider.cpp
         ${GAME_SOURCES}/game/collider.h
+        ${GAME_SOURCES}/game/camera.cpp
+        ${GAME_SOURCES}/game/camera.h
         ${GAME_SOURCES}/game/collisionrules.cpp
         ${GAME_SOURCES}/game/collisionrules.h
         ${GAME_SOURCES}/game/gameconfig.h

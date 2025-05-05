@@ -18,11 +18,9 @@ void OpenGLRenderer::drawGameObject(IObject& obj) const {
         glColor3f(c[0], c[1], c[2]);  // Цвет курсора
         // Координаты курсора
         glVertex2f((p[0] * obj.getTransform().el(0, 0) +
-                    p[1] * obj.getTransform().el(0, 1) + obj.getShift()[0]) *
-                       width_ / scale_,
+                    p[1] * obj.getTransform().el(0, 1) + obj.getShift()[0]),
                    (p[0] * obj.getTransform().el(1, 0) +
-                    p[1] * obj.getTransform().el(1, 1) + obj.getShift()[1]) *
-                       width_ / scale_);
+                    p[1] * obj.getTransform().el(1, 1) + obj.getShift()[1]));
     }
     glEnd();
 }
@@ -42,12 +40,13 @@ void OpenGLRenderer::prepareFrame() {
             GL_DEPTH_BUFFER_BIT);  // чистим буфер изображения и буфер глубины
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glViewport(0, 0, width_, height_);
+    glViewport(0, 0, camera_->width(), camera_->height());
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);  // устанавливаем матрицу
     glLoadIdentity();            // загружаем матрицу
-    glOrtho(-width_ / 2, width_ / 2, height_ / 2, -height_ / 2, 1,
+    glOrtho(camera_->xLeft(), camera_->xRight(), camera_->yBottom(),
+            camera_->yTop(), 1,
             0);  // подготавливаем плоскости для матрицы
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -55,12 +54,14 @@ void OpenGLRenderer::prepareFrame() {
 
 void OpenGLRenderer::drawSprite(
     int x, int y, int w, int h, int pixel_size, const Color* sprite) {
+    auto pix_size = static_cast<float>(pixel_size) / camera_->width() *
+                    camera_->internalWidth();
     for (int i = 0; i < w; ++i) {
         for (int j = 0; j < h; ++j) {
             double pos_x =
-                -width_ / 2 + static_cast<double>((x + i)) * pixel_size;
+                camera_->xLeft() + static_cast<double>((x + i)) * pix_size;
             double pos_y =
-                -height_ / 2 + static_cast<double>((y + j)) * pixel_size;
+                camera_->yBottom() + static_cast<double>((y + j)) * pix_size;
             const auto& c = sprite[j * w + i];
             glColor4f(c.r / 255.0, c.g / 255.0, c.b / 255.0, c.a / 255.0);
             glBegin(GL_QUADS);
@@ -74,25 +75,6 @@ void OpenGLRenderer::drawSprite(
 }
 
 void OpenGLRenderer::showFrame() {}
-
-void OpenGLRenderer::getScreeenSize(int& w, int& h) {
-    w = width_;
-    h = height_;
-}
-
-void OpenGLRenderer::setScreeenSize(int w, int h) {
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glViewport(0, 0, (GLint)w, (GLint)h);
-    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    width_ = w;
-    height_ = h;
-}
-
-void OpenGLRenderer::setScale(float s) {
-    scale_ = s;
-}
 
 bool OpenGLRenderer::initRenderer(ResourceLoader* loader) {
     return true;
@@ -125,14 +107,14 @@ void OpenGLRenderer::drawOverlayRGBA(const void* data,
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
     // glGenerateMipmap(GL_TEXTURE_2D);
-    float width = width_ / 2;
-    float height = height_ / 2;
     GLfloat verts3[] = {
-        -width, -height, 0.0f, width,  -height, 0.0f,
-        width,  height,  0.0f, -width, height,  0.0f,
+        camera_->xLeft(),  camera_->yBottom(), -0.5f,
+        camera_->xRight(), camera_->yBottom(), -0.5f,
+        camera_->xRight(), camera_->yTop(),    -0.5f,
+        camera_->xLeft(),  camera_->yTop(),    -0.5f,
     };
     GLfloat texCoords[] = {
-        0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+        0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
     };
     GLuint indices3[] = {0, 1, 2, 3};
     glEnableClientState(GL_VERTEX_ARRAY);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "game/iobject.h"
+#include <game/iobject.h>
 
 namespace Game {
 

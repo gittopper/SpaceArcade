@@ -9,7 +9,7 @@ using Clock = std::chrono::system_clock;
 
 class Timer {
   public:
-    Timer() {}
+    Timer() : is_running_(false), is_paused_(false) {}
 
     double totalTime() const {
         return total_time_;
@@ -26,31 +26,43 @@ class Timer {
     void start() {
         begin_time_ = now();
         is_running_ = true;
+        is_paused_ = false;
     }
     double stop() {
         std::chrono::duration<double> diff = now() - begin_time_;
-        elapsed_time_ = diff.count();
+        double elapsed_time = diff.count();
         ++n_;
-        total_time_ += elapsed_time_;
+        total_time_ += elapsed_time;
         is_running_ = false;
-        return elapsed_time_;
+        return elapsed_time;
     }
 
     double time() const {
-        if (!is_running_) {
+        if (!is_running_ || is_paused_) {
             return total_time_;
         }
         std::chrono::duration<double> diff = now() - begin_time_;
         return total_time_ + diff.count();
     }
     void reset() {
+        stop();
         total_time_ = 0;
-        elapsed_time_ = 0;
         n_ = 0;
     }
 
     bool isRunning() const {
-        return is_running_;
+        return is_running_ && !is_paused_;
+    }
+
+    void pause() {
+        std::chrono::duration<double> diff = now() - begin_time_;
+        double elapsed_time = diff.count();
+        total_time_ += elapsed_time;
+        is_paused_ = true;
+    }
+    void resume() {
+        start();
+        is_paused_ = false;
     }
 
     static std::string asString(float t, bool with_ms = true) {
@@ -84,8 +96,8 @@ class Timer {
     Clock::time_point begin_time_;
     int n_ = 0;
     double total_time_ = 0;
-    double elapsed_time_ = 0;
     bool is_running_;
+    bool is_paused_;
 };
 
 inline std::string getTimestamp() {

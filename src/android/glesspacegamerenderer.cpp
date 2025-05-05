@@ -41,7 +41,8 @@ void GLESSpaceGameRenderer::drawArray(VArray& points, V4Array& colors) const {
 }
 void GLESSpaceGameRenderer::drawSprite(
     int x, int y, int w, int h, int pixel_size, const Color* sprite) {
-    float scale = scale_ / backingWidth_;
+    float scale = camera_->internalWidth() / camera_->width();
+    float psize = pixel_size * scale;
     VArray points;
     V4Array colors;
     Mat tr{};
@@ -52,9 +53,9 @@ void GLESSpaceGameRenderer::drawSprite(
                 continue;
             }
             float pos_x =
-                -backingWidth_ / 2.f + static_cast<float>(x + i) * pixel_size;
-            float pos_y = backingHeight_ / 2.f -
-                          static_cast<float>(y + j + 1) * pixel_size;
+                camera_->xLeft() + static_cast<float>(x + i) * psize;
+            float pos_y = camera_->yTop() -
+                          static_cast<float>(y + j + 1) * psize;
             Vector4 color{static_cast<float>(c.r) / 255.0f,
                           static_cast<float>(c.g) / 255.0f,
                           static_cast<float>(c.b) / 255.0f,
@@ -66,11 +67,11 @@ void GLESSpaceGameRenderer::drawSprite(
             colors.push_back(color);
             colors.push_back(color);
             points.push_back(Vector{0, 0, 0.0});
-            points.push_back(Vector{0, scale * pixel_size, 0.0});
+            points.push_back(Vector{0,  psize, 0.0});
             points.push_back(
-                Vector{scale * pixel_size, scale * pixel_size, 0.0});
-            points.push_back(Vector{scale * pixel_size, 0, 0.0});
-            Vector shift{pos_x * scale, pos_y * scale, 0.0};
+                Vector{psize,  psize, 0.0});
+            points.push_back(Vector{ psize, 0, 0.0});
+            Vector shift{pos_x ,  pos_y , 0.0};
             setPosition(tr, shift);
             drawArray(points, colors);
         }
@@ -101,12 +102,10 @@ void GLESSpaceGameRenderer::drawOverlay(const void* data,
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, data_width, data_height, 0, GL_RGBA,
                  GL_UNSIGNED_BYTE, data);
 
-    float aspect = static_cast<float>(backingHeight_) / backingWidth_;
-    float pano_x = scale_;
-    float pano_y = aspect * scale_;
+
     float vertices[] = {
-        -pano_x / 2.f, pano_y / 2.f, 0.f, -pano_x / 2.f, -pano_y / 2.f, 0.f,
-        pano_x / 2.f,  pano_y / 2.f, 0.f, pano_x / 2.f,  -pano_y / 2.f, 0.f,
+        camera_->xLeft(), camera_->yTop(), 0.f, camera_->xLeft(), camera_->yBottom(), 0.f,
+        camera_->xRight(),  camera_->yTop(), 0.f, camera_->xRight(),  camera_->yBottom(), 0.f,
     };
 
     float texture[] = {0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f};

@@ -12,7 +12,7 @@ Bullet::Bullet(Vector startPoint, Vector speed) {
     points_.push_back(Vector(1, 0));
     points_.push_back(Vector(0, 0));
 
-    ++game->stats.num_shoots;
+    ++game->game_state_.num_shoots;
     normalize();
 
     getV() = speed;

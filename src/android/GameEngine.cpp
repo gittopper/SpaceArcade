@@ -16,6 +16,8 @@ std::shared_ptr<SpaceGame> game;
 std::shared_ptr<EnvWrapper> env_wrapper;
 static GLESSpaceGameRenderer renderer;
 std::mutex m;
+
+
 extern "C" {
 
 JNIEXPORT void JNICALL
@@ -31,18 +33,15 @@ JNIEXPORT void JNICALL
         game = std::make_shared<SpaceGame>();
         game->setRenderer(&renderer);
         env_wrapper = std::make_shared<EnvWrapper>(env);
-        game->setPlayer(std::make_shared<SoundPlayer>(res_loader));
-        game->setResourceLoader(res_loader);
+        game->game_state_.player_ = std::make_shared<SoundPlayer>(res_loader);
+        game->game_state_.resource_loader_ = res_loader;
         game->getRenderer()->initRenderer(res_loader.get());
         game->setupGame(width, height);
     }
-    game->setResourceLoader(res_loader);
+    game->game_state_.resource_loader_ = res_loader;
     game->getRenderer()->initRenderer(res_loader.get());
-    int w, h;
-    game->getRenderer()->getScreeenSize(w, h);
-    if (w != width || h != height) {
-        game->resize(width, height);
-    }
+    game->resize(width, height);
+
 }
 
 JNIEXPORT void JNICALL
@@ -50,6 +49,22 @@ JNIEXPORT void JNICALL
     std::lock_guard<std::mutex> lock(m);
     env_wrapper->setEnv(env);
     game->renderStep();
+}
+
+JNIEXPORT void JNICALL
+Java_com_example_arcadegame_GameEngine_onPause(JNIEnv* env, jobject obj) {
+    std::lock_guard<std::mutex> lock(m);
+    env_wrapper->setEnv(env);
+    game->pause();
+}
+
+JNIEXPORT void JNICALL
+Java_com_example_arcadegame_GameEngine_onResume(JNIEnv* env, jobject obj) {
+    std::lock_guard<std::mutex> lock(m);
+    if (game) {
+        env_wrapper->setEnv(env);
+        game->resume();
+    }
 }
 
 JNIEXPORT void JNICALL

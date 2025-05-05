@@ -1,5 +1,8 @@
 #include <game/collisionrules.h>
 #include <game/gameconfig.h>
+#include <game/objects/spaceship.h>
+
+#include <cassert>
 
 namespace {
 void cutShift(BoundingBox2D& box, BoundingBox2D& envelopBox, Vector& shift) {
@@ -42,12 +45,13 @@ void Scene::visit(class IObject& obj) {
                                  0  // not in scene and moving away
                                     //&& distance(&obj) > 1.5
     ) {
+        assert(dynamic_cast<SpaceShip*>(&obj) == nullptr);
         obj.shouldBeRemoved = true;
     }
 }
 
 void Bullet::visit(Asteroid& a) {
-    bool collide = game->getGameConfig()->collide_with_asteroid_parts_;
+    bool collide = game->getLevelConfig()->collide_with_asteroid_parts_;
     if (a.intersects(this) && (collide || !a.isParted())) {
         a.explode();
         shouldBeRemoved = true;
@@ -55,18 +59,11 @@ void Bullet::visit(Asteroid& a) {
 }
 
 void Asteroid::visit(SpaceShip& s) {
-    bool collide = game->getGameConfig()->collide_with_asteroid_parts_;
+    bool collide = game->getLevelConfig()->collide_with_asteroid_parts_;
     if (this->intersects(&s) && (collide || !piece)) {
         VArray apoints, spoints;
         getProcessedPoints(apoints);
         s.getProcessedPoints(spoints);
-        /*
-                    Asteroid* p = new Asteroid;
-                    p->getPoints() = apoints;
-                    p->piece = true;
-                    p->cacheDrawPoints();
-                    game->addGameObject(p);
-        */
         if (advancedInsideCheck(apoints, spoints)) {
             game->gameOver();
         }

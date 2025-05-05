@@ -1,4 +1,3 @@
-#pragma once
 #include <game/collisionrules.h>
 #include <game/objects/scene.h>
 

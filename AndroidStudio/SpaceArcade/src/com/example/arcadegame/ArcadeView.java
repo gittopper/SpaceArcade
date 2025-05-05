@@ -66,6 +66,19 @@ public class ArcadeView extends GLSurfaceView {
        
         return true;
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        GameEngine.onPause();
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        GameEngine.onResume();
+    }
 	private static class Renderer implements GLSurfaceView.Renderer{
         Sprite sprite;
 

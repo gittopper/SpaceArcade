@@ -30,13 +30,14 @@ class GLESRenderer : virtual public Renderer {
     void prepareFrame() override;
     void showFrame() override;
 
-    void getScreeenSize(int& w, int& h) override;
-    void setScreeenSize(int w, int h) override;
-    void setScale(float s) override;
+    void setCamera(Camera* camera) override{
+        camera_ = camera;
+    }
 
     bool initRenderer(ResourceLoader* loader) override;
 
    protected:
+    Camera* camera_;
 
     std::uint32_t program_overlay_id_;
     std::uint32_t overlay_vert_loc_;
@@ -48,12 +49,7 @@ class GLESRenderer : virtual public Renderer {
     std::uint32_t a_colorHandle_;
     std::uint32_t u_mvpHandle_;
 
-    float scale_;
     Mat44 proj_;
-
-    /* The pixel dimensions of the backbuffer */
-    GLint backingWidth_;
-    GLint backingHeight_;
 
     GLuint viewRenderbuffer_, viewFramebuffer_;
     GLuint depthRenderbuffer_;

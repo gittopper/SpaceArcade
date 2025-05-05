@@ -7,9 +7,11 @@
 #include <game/spacegame.h>
 
 #include <mainwindow.h>
+#include <mutex>
 
 using namespace Game;
 std::unique_ptr<SpaceGame> game;
+std::mutex mutex_;
 
 MainWindow::MainWindow(QWidget* parent) : QOpenGLWidget(parent) {
     point = 0;
@@ -32,14 +34,15 @@ void MainWindow::initializeGL() {
 }
 
 void MainWindow::resizeGL(int w, int h) {
+    std::lock_guard<std::mutex> lock(mutex_);
     if (!game) {
         game.reset(new SpaceGame);
         game->setRenderer(new OpenGLRenderer);
         auto rloader = std::make_shared<FileResourceLoader>();
         rloader->setResourcesPath(
             QApplication::applicationDirPath().toStdString() + "/assets/");
-        game->setPlayer(std::make_shared<SoundPlayer>(rloader));
-        game->setResourceLoader(rloader);
+        game->game_state_.player_ = std::make_shared<SoundPlayer>(rloader);
+        game->game_state_.resource_loader_ = rloader;
         GameConfig config;
         game->setupGame(w, h);
     }
@@ -48,6 +51,7 @@ void MainWindow::resizeGL(int w, int h) {
 }
 
 void MainWindow::paintGL() {
+    std::lock_guard<std::mutex> lock(mutex_);
     //  qglColor(Qt::white);
     //  renderText(10, 10, 0, QString::fromUtf8("Вы набрали %1
     //  очков:").arg(point),
@@ -59,6 +63,7 @@ void MainWindow::paintGL() {
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* ke) {
+    std::lock_guard<std::mutex> lock(mutex_);
     switch (ke->key()) {
         case Qt::Key_Space:
             break;
@@ -67,9 +72,10 @@ void MainWindow::keyPressEvent(QKeyEvent* ke) {
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent* me) {
+    std::lock_guard<std::mutex> lock(mutex_);
     // Получаем координаты курсора
     cax = me->position().x();
-    cay = me->position().y();
+    cay = game->game_state_.camera_.height() - me->position().y();
     if (singling) {
         game->drag(cax - cbx, cby - cay);
     }
@@ -77,11 +83,12 @@ void MainWindow::mouseMoveEvent(QMouseEvent* me) {
 }
 
 void MainWindow::mousePressEvent(QMouseEvent* me) {
+    std::lock_guard<std::mutex> lock(mutex_);
     if (me->button() == Qt::LeftButton) {
         game->tap(me->position().x(), me->position().y());
         singling = true;
         cbx = me->position().x();
-        cby = me->position().y();
+        cby = game->game_state_.camera_.height() - me->position().y();
         update();
     } else {
         singling = false;
@@ -90,6 +97,7 @@ void MainWindow::mousePressEvent(QMouseEvent* me) {
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent* me) {
+    std::lock_guard<std::mutex> lock(mutex_);
     // Если отпускаем левую кнопку мыши - удалить выделение
     if (singling == true && me->button() == Qt::LeftButton) {
         singling = false;
