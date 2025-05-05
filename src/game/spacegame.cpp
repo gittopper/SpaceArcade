@@ -93,6 +93,7 @@ void SpaceGame::setupGame(int w, int h) {
     font_ = std::make_shared<Font>(font_mem_file);
 
     IObject::game = this;
+    initLevel();
     level_presentation_timer_.start();
 }
 
