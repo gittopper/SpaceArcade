@@ -32,7 +32,7 @@ struct LevelConfig {
     float bullet_speed_ = 4;
     float max_space_ship_speed_ = 4;
     float level_presentation_time_ = 3;
-    float level_pass_time_ = 20;
+    float level_pass_time_ = 60;
 };
 
 }  // namespace Game
