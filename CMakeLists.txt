@@ -31,6 +31,10 @@ set(ARCADE_SOURCES
         ${GAME_SOURCES}/game/collider.h
         ${GAME_SOURCES}/game/camera.cpp
         ${GAME_SOURCES}/game/camera.h
+        ${GAME_SOURCES}/game/level.cpp
+        ${GAME_SOURCES}/game/level.h
+        ${GAME_SOURCES}/game/overlay.cpp
+        ${GAME_SOURCES}/game/overlay.h
         ${GAME_SOURCES}/game/collisionrules.cpp
         ${GAME_SOURCES}/game/collisionrules.h
         ${GAME_SOURCES}/game/gameconfig.h

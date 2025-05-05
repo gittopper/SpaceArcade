@@ -39,7 +39,11 @@ void SpaceGame::initLevel() {
     level_state_.setupLevel(level_state_.config_);
     overlay_.state = Overlay::Stats;
 }
-
+void SpaceGame::resize(int w, int h) {
+    game_state_.camera_.setViewport(w, h);
+    level_state_.resize();
+    overlay_.resize();
+}
 void SpaceGame::setupGame(int w, int h) {
     game_state_.camera_.setViewport(w, h);
     game_state_.camera_.setInternalWidth(game_state_.config_.internal_width_);
@@ -79,11 +83,6 @@ void SpaceGame::gameOver() {
     }
 }
 
-void SpaceGame::resize(int w, int h) {
-    game_state_.camera_.setViewport(w, h);
-    level_state_.resize();
-    overlay_.resize();
-}
 void SpaceGame::step() {
     if (level_pass_timer_.isRunning() &&
         level_pass_timer_.time() > level_state_.config_.level_pass_time_) {
