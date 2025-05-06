@@ -1,17 +1,7 @@
-//
-//  glesspacegamerenderer.cpp
-//  SpaceArcade
-//
-//  Created by Stanislav Fedorov on 21/10/14.
-//
-//
 
-#include "glesspacegamerenderer.h"
-
-#include "game/objects/gameobjects.h"
-#include "math/gamemath.h"
-
-using namespace Math;
+#include <game/objects/gameobjects.h>
+#include <math/gamemath.h>
+#include <rendering/glesspacegamerenderer.h>
 
 namespace Game {
 void GLESSpaceGameRenderer::visit(IObject& a) {
@@ -52,10 +42,9 @@ void GLESSpaceGameRenderer::drawSprite(
             if (c.a == 0) {
                 continue;
             }
-            float pos_x =
-                camera_->xLeft() + static_cast<float>(x + i) * psize;
-            float pos_y = camera_->yTop() -
-                          static_cast<float>(y + j + 1) * psize;
+            float pos_x = camera_->xLeft() + static_cast<float>(x + i) * psize;
+            float pos_y =
+                camera_->yTop() - static_cast<float>(y + j + 1) * psize;
             Vector4 color{static_cast<float>(c.r) / 255.0f,
                           static_cast<float>(c.g) / 255.0f,
                           static_cast<float>(c.b) / 255.0f,
@@ -67,11 +56,10 @@ void GLESSpaceGameRenderer::drawSprite(
             colors.push_back(color);
             colors.push_back(color);
             points.push_back(Vector{0, 0, 0.0});
-            points.push_back(Vector{0,  psize, 0.0});
-            points.push_back(
-                Vector{psize,  psize, 0.0});
-            points.push_back(Vector{ psize, 0, 0.0});
-            Vector shift{pos_x ,  pos_y , 0.0};
+            points.push_back(Vector{0, psize, 0.0});
+            points.push_back(Vector{psize, psize, 0.0});
+            points.push_back(Vector{psize, 0, 0.0});
+            Vector shift{pos_x, pos_y, 0.0};
             setPosition(tr, shift);
             drawArray(points, colors);
         }
@@ -102,10 +90,11 @@ void GLESSpaceGameRenderer::drawOverlay(const void* data,
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, data_width, data_height, 0, GL_RGBA,
                  GL_UNSIGNED_BYTE, data);
 
-
     float vertices[] = {
-        camera_->xLeft(), camera_->yTop(), 0.f, camera_->xLeft(), camera_->yBottom(), 0.f,
-        camera_->xRight(),  camera_->yTop(), 0.f, camera_->xRight(),  camera_->yBottom(), 0.f,
+        camera_->xLeft(),  camera_->yTop(),    0.f,
+        camera_->xLeft(),  camera_->yBottom(), 0.f,
+        camera_->xRight(), camera_->yTop(),    0.f,
+        camera_->xRight(), camera_->yBottom(), 0.f,
     };
 
     float texture[] = {0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f};
@@ -119,7 +108,8 @@ void GLESSpaceGameRenderer::drawOverlay(const void* data,
 
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
-    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA, GL_DST_ALPHA);
+    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
+                        GL_ONE_MINUS_DST_ALPHA, GL_DST_ALPHA);
     glUniformMatrix4fv(overlay_mat_loc_, 1, GL_FALSE, (GLfloat*)&proj_.m_[0]);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glDisable(GL_BLEND);

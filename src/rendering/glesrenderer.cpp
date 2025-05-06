@@ -1,4 +1,4 @@
-#include <android/glesrenderer.h>
+#include <rendering/glesrenderer.h>
 
 #define USE_DEPTH_BUFFER 0
 
@@ -70,7 +70,7 @@ std::uint32_t compileProgram(ResourceLoader* loader,
 }
 }  // namespace
 
-GLESRenderer::GLESRenderer(){}
+GLESRenderer::GLESRenderer() {}
 
 bool GLESRenderer::initRenderer(ResourceLoader* loader) {
     program_overlay_id_ =
@@ -90,9 +90,9 @@ bool GLESRenderer::initRenderer(ResourceLoader* loader) {
 
     u_mvpHandle_ = glGetUniformLocation(program_id_, "u_mvpMatrix");
 
+    // createFramebuffer();
     return true;
 }
-
 
 void GLESRenderer::createFramebuffer() {
     glGenFramebuffers(1, &viewFramebuffer_);
@@ -137,7 +137,7 @@ void GLESRenderer::prepareFrame() {
 
     SetOrtho(proj_, -ws, ws, -hs, hs, -1, 1);
 
-    glBindFramebuffer(GL_FRAMEBUFFER_OES, viewFramebuffer_);
+    // glBindFramebuffer(GL_FRAMEBUFFER_OES, viewFramebuffer_);
     glViewport(0, 0, camera_->width(), camera_->height());
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
@@ -147,7 +147,7 @@ void GLESRenderer::prepareFrame() {
 }
 
 void GLESRenderer::showFrame() {
-    glBindRenderbuffer(GL_RENDERBUFFER_OES, viewRenderbuffer_);
+    // glBindRenderbuffer(GL_RENDERBUFFER_OES, viewRenderbuffer_);
 }
 
 void GLESRenderer::destroyFramebuffer() {

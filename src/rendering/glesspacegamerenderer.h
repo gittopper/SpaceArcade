@@ -1,9 +1,8 @@
 #pragma once
 
 #include <game/objects/gameobjects.h>
+#include <rendering/glesrenderer.h>
 #include <rendering/spacegamerenderer.h>
-
-#include <android/glesrenderer.h>
 
 #include <SFML/Graphics/Image.hpp>
 

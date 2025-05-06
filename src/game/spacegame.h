@@ -33,10 +33,10 @@ class SpaceGame : public IGame {
     }
     void renderStep();
     void showFrame();
-    void setRenderer(SpaceGameRenderer* r) {
+    void setRenderer(std::shared_ptr<SpaceGameRenderer> r) {
         renderer_ = r;
     }
-    Renderer* getRenderer() {
+    std::shared_ptr<SpaceGameRenderer> getRenderer() {
         return renderer_;
     }
 
@@ -57,7 +57,7 @@ class SpaceGame : public IGame {
     double drag_start_;
     double internal_scale_start_;
 
-    SpaceGameRenderer* renderer_ = nullptr;
+    std::shared_ptr<SpaceGameRenderer> renderer_;
     Timer level_presentation_timer_;
     Timer level_pass_timer_;
 };

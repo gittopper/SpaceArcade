@@ -63,14 +63,16 @@ set(ARCADE_SOURCES
         ${GAME_SOURCES}/rendering/spacegamerenderer.cpp
         ${GAME_SOURCES}/rendering/spacegamerenderer.h
         ${GAME_SOURCES}/rendering/renderer.h
+        ${GAME_SOURCES}/rendering/glesrenderer.cpp
+        ${GAME_SOURCES}/rendering/glesrenderer.h
+        ${GAME_SOURCES}/rendering/glesspacegamerenderer.cpp
+        ${GAME_SOURCES}/rendering/glesspacegamerenderer.h
 )
 
 if(ANDROID_REGIME)
 
     list(APPEND ARCADE_SOURCES
             ${GAME_SOURCES}/android/GameEngine.cpp
-            ${GAME_SOURCES}/android/glesrenderer.cpp
-            ${GAME_SOURCES}/android/glesspacegamerenderer.cpp
             ${GAME_SOURCES}/android/androidresourceloader.cpp
     )
     set(TARGET GameEngine)
@@ -89,8 +91,6 @@ else()
     list(APPEND ARCADE_SOURCES
         ${GAME_SOURCES}/desktop/fileresourceloader.cpp
         ${GAME_SOURCES}/desktop/fileresourceloader.h
-        ${GAME_SOURCES}/desktop/openglrenderer.cpp
-        ${GAME_SOURCES}/desktop/openglrenderer.h
         )
     file(COPY ${GAME_SOURCES}/assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 

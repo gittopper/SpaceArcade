@@ -1,6 +1,5 @@
 #pragma once
 
-
 #ifndef __APPLE__
 #include <GLES/gl.h>
 #include <GLES/glext.h>
@@ -12,16 +11,13 @@
 #include <OpenGLES/ES2/gl.h>
 #endif
 
-#include <memory>
-
 #include <math/gamemath.h>
 #include <rendering/renderer.h>
 
-using namespace std;
-using namespace Math;
+#include <memory>
 
 class GLESRenderer : virtual public Renderer {
-   public:
+  public:
     GLESRenderer();
     void createFramebuffer() override;
     void destroyFramebuffer() override;
@@ -30,13 +26,13 @@ class GLESRenderer : virtual public Renderer {
     void prepareFrame() override;
     void showFrame() override;
 
-    void setCamera(Camera* camera) override{
+    void setCamera(Camera* camera) override {
         camera_ = camera;
     }
 
     bool initRenderer(ResourceLoader* loader) override;
 
-   protected:
+  protected:
     Camera* camera_;
 
     std::uint32_t program_overlay_id_;
@@ -49,9 +45,8 @@ class GLESRenderer : virtual public Renderer {
     std::uint32_t a_colorHandle_;
     std::uint32_t u_mvpHandle_;
 
-    Mat44 proj_;
+    Math::Mat44 proj_;
 
     GLuint viewRenderbuffer_, viewFramebuffer_;
     GLuint depthRenderbuffer_;
 };
-

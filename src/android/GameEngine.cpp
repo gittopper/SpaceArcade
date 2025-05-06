@@ -14,9 +14,7 @@ using namespace Game;
 
 std::shared_ptr<SpaceGame> game;
 std::shared_ptr<EnvWrapper> env_wrapper;
-static GLESSpaceGameRenderer renderer;
 std::mutex m;
-
 
 extern "C" {
 
@@ -31,17 +29,17 @@ JNIEXPORT void JNICALL
         AAssetManager_fromJava(env, javaAssetManager)));
     if (nullptr == game) {
         game = std::make_shared<SpaceGame>();
-        game->setRenderer(&renderer);
+        auto renderer = std::make_shared<GLESSpaceGameRenderer>();
+        renderer->initRenderer(res_loader.get());
+        game->setRenderer(renderer);
         env_wrapper = std::make_shared<EnvWrapper>(env);
         game->game_state_.player_ = std::make_shared<SoundPlayer>(res_loader);
         game->game_state_.resource_loader_ = res_loader;
-        game->getRenderer()->initRenderer(res_loader.get());
         game->setupGame(width, height);
     }
     game->game_state_.resource_loader_ = res_loader;
     game->getRenderer()->initRenderer(res_loader.get());
     game->resize(width, height);
-
 }
 
 JNIEXPORT void JNICALL
@@ -52,14 +50,14 @@ JNIEXPORT void JNICALL
 }
 
 JNIEXPORT void JNICALL
-Java_com_example_arcadegame_GameEngine_onPause(JNIEnv* env, jobject obj) {
+    Java_com_example_arcadegame_GameEngine_onPause(JNIEnv* env, jobject obj) {
     std::lock_guard<std::mutex> lock(m);
     env_wrapper->setEnv(env);
     game->pause();
 }
 
 JNIEXPORT void JNICALL
-Java_com_example_arcadegame_GameEngine_onResume(JNIEnv* env, jobject obj) {
+    Java_com_example_arcadegame_GameEngine_onResume(JNIEnv* env, jobject obj) {
     std::lock_guard<std::mutex> lock(m);
     if (game) {
         env_wrapper->setEnv(env);
@@ -74,36 +72,27 @@ JNIEXPORT void JNICALL
     game->showFrame();
 }
 
-
 JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_tap(JNIEnv* env,
                                                                   jobject obj,
                                                                   jfloat x,
                                                                   jfloat y) {}
 
-JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_dragStart(JNIEnv* env,
-                                                                  jobject obj,
-                                                                  jfloat x1,
-                                                                  jfloat y1,
-                                                                        jfloat x2,
-                                                                        jfloat y2) {
+JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_dragStart(
+    JNIEnv* env, jobject obj, jfloat x1, jfloat y1, jfloat x2, jfloat y2) {
     std::lock_guard<std::mutex> lock(m);
     env_wrapper->setEnv(env);
     game->dragStart(x1, y1, x2, y2);
 }
 
-JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_drag(JNIEnv* env,
-                                                                        jobject obj,
-                                                                        jfloat x1,
-                                                                        jfloat y1,
-                                                                        jfloat x2,
-                                                                        jfloat y2) {
+JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_drag(
+    JNIEnv* env, jobject obj, jfloat x1, jfloat y1, jfloat x2, jfloat y2) {
     std::lock_guard<std::mutex> lock(m);
     env_wrapper->setEnv(env);
     game->drag(x1, y1, x2, y2);
 }
 
-JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_dragStop(JNIEnv* env,
-                                                                   jobject obj) {
+JNIEXPORT void JNICALL
+    Java_com_example_arcadegame_GameEngine_dragStop(JNIEnv* env, jobject obj) {
     std::lock_guard<std::mutex> lock(m);
     env_wrapper->setEnv(env);
     game->dragStop();
