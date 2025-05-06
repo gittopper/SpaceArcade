@@ -16,6 +16,7 @@ class Level {
     void pause();
     void resume();
     void drag(int x, int y);
+    void setInternalWidth(float internal_scale);
     void step();
     void resize();
     void createAsteroid();

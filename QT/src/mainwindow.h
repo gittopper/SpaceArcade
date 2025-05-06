@@ -5,31 +5,25 @@
 #include <QtOpenGL>
 
 class MainWindow : public QOpenGLWidget {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  MainWindow(QWidget *parent = 0);
+  public:
+    MainWindow(QWidget* parent = 0);
 
-protected:
-  void initializeGL(); // Метод для инициализирования opengl
-  void resizeGL(
-      int nWidth,
-      int nHeight); // Метод вызываемый после каждого изменения размера окна
-  void paintGL(); // Метод для вывода изображения на экран
-  void
-  keyPressEvent(QKeyEvent *ke); // Для перехвата нажатия клавиш на клавиатуре
-  void
-  mouseMoveEvent(QMouseEvent *me); // Метод реагирует на перемещение указателя,
-                                   // но по умолчанию setMouseTracking(false)
-  void mousePressEvent(QMouseEvent *me); // Реагирует на нажатие кнопок мыши
-  void mouseReleaseEvent(
-      QMouseEvent *me); // Метод реагирует на "отжатие" кнопки мыши
+  protected:
+    void initializeGL() override;
+    void resizeGL(int w, int h) override;
+    void paintGL() override;
+    void keyPressEvent(QKeyEvent* ke) override;
+    void mouseMoveEvent(QMouseEvent* me) override;
+    void mousePressEvent(QMouseEvent* me) override;
+    void wheelEvent(QWheelEvent* we) override;
+    void mouseReleaseEvent(QMouseEvent* me) override;
 
-  int point;              // набранные очки
-  int gdx, gdy;           // Координаты объектов (гусей)
-  int cax, cay, cbx, cby; // Координаты курсора
-  bool singling;          // Для выделение области
-
-protected slots:
-  void render(); // Определяем координаты объектов
+    int point;
+    int gdx, gdy;
+    int cax, cay, cbx, cby;
+    bool singling;
+  protected slots:
+    void render();  // Определяем координаты объектов
 };

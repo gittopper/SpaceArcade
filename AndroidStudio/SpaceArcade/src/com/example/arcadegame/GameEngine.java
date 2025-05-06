@@ -13,6 +13,10 @@ public class GameEngine {
 	public static native void onResume();
 	public static native void showFrame();
 
+	public static native void dragStart(float x1, float y1, float x2, float y2);
+	public static native void drag(float x1, float y1, float x2, float y2);
+	public static native void dragStop();
+
 	public static native void tap(float x, float y);
 	public static native void actionUp(float x, float y);
 	public static native void actionDown(float x, float y);

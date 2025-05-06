@@ -20,6 +20,12 @@ class SpaceGame : public IGame {
 
     void drag(int x, int y);
 
+    void zoom(float zoom);
+
+    void dragStart(int x1, int y1, int x2, int y2);
+    void drag(int x1, int y1, int x2, int y2);
+    void dragStop();
+
     void tap(int x, int y);
 
     LevelConfig* getLevelConfig() override {
@@ -48,6 +54,8 @@ class SpaceGame : public IGame {
 
     Level level_state_;
     Overlay overlay_;
+    double drag_start_;
+    double internal_scale_start_;
 
     SpaceGameRenderer* renderer_ = nullptr;
     Timer level_presentation_timer_;

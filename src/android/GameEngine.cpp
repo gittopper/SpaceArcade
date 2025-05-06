@@ -74,12 +74,40 @@ JNIEXPORT void JNICALL
     game->showFrame();
 }
 
-JNIEXPORT void JNICALL
-    Java_com_example_arcadegame_GameEngine_setup(JNIEnv* env, jobject obj) {}
+
 JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_tap(JNIEnv* env,
                                                                   jobject obj,
                                                                   jfloat x,
                                                                   jfloat y) {}
+
+JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_dragStart(JNIEnv* env,
+                                                                  jobject obj,
+                                                                  jfloat x1,
+                                                                  jfloat y1,
+                                                                        jfloat x2,
+                                                                        jfloat y2) {
+    std::lock_guard<std::mutex> lock(m);
+    env_wrapper->setEnv(env);
+    game->dragStart(x1, y1, x2, y2);
+}
+
+JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_drag(JNIEnv* env,
+                                                                        jobject obj,
+                                                                        jfloat x1,
+                                                                        jfloat y1,
+                                                                        jfloat x2,
+                                                                        jfloat y2) {
+    std::lock_guard<std::mutex> lock(m);
+    env_wrapper->setEnv(env);
+    game->drag(x1, y1, x2, y2);
+}
+
+JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_dragStop(JNIEnv* env,
+                                                                   jobject obj) {
+    std::lock_guard<std::mutex> lock(m);
+    env_wrapper->setEnv(env);
+    game->dragStop();
+}
 
 JNIEXPORT void JNICALL Java_com_example_arcadegame_GameEngine_actionDown(
     JNIEnv* env, jobject obj, jfloat x, jfloat y) {

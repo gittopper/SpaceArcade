@@ -55,6 +55,20 @@ void SpaceGame::drag(int x, int y) {
     level_state_.drag(x, y);
 }
 
+void SpaceGame::zoom(float zoom) {
+    level_state_.setInternalWidth(zoom * game_state_.camera_.internalWidth());
+}
+void SpaceGame::dragStart(int x1, int y1, int x2, int y2) {
+    drag_start_ = (Vector(x1, y1, 0) - Vector(x2, y2, 0)).len();
+    internal_scale_start_ = game_state_.camera_.internalWidth();
+}
+void SpaceGame::drag(int x1, int y1, int x2, int y2) {
+    auto cur_drag = (Vector(x1, y1, 0) - Vector(x2, y2, 0)).len();
+    auto internal_scale = internal_scale_start_ * drag_start_ / cur_drag;
+    level_state_.setInternalWidth(internal_scale);
+}
+void SpaceGame::dragStop() {}
+
 void SpaceGame::tap(int x, int y) {
     if (overlay_.state == Overlay::LiveLost) {
         if (overlay_.game_lost_rect_.isInside(x, y)) {

@@ -52,10 +52,6 @@ void MainWindow::resizeGL(int w, int h) {
 
 void MainWindow::paintGL() {
     std::lock_guard<std::mutex> lock(mutex_);
-    //  qglColor(Qt::white);
-    //  renderText(10, 10, 0, QString::fromUtf8("Вы набрали %1
-    //  очков:").arg(point),
-    //             QFont());
 
     game->renderStep();
 
@@ -69,6 +65,14 @@ void MainWindow::keyPressEvent(QKeyEvent* ke) {
             break;
     }
     update();
+}
+
+void MainWindow::wheelEvent(QWheelEvent* we) {
+    if (we->angleDelta().y() > 0) {
+        game->zoom(1.1);
+    } else {
+        game->zoom(0.9);
+    }
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent* me) {

@@ -91,6 +91,12 @@ void Level::resize() {
                                  spaceship_->getBBox().clamp(scene_.getBBox());
     }
 }
+void Level::setInternalWidth(float internal_scale) {
+    game_data_.camera_.setInternalWidth(internal_scale);
+    resize();
+    asteroid_place_ = uniform_real_distribution<float>(
+        game_data_.camera_.xLeft(), game_data_.camera_.xRight());
+}
 void Level::createAsteroid() {
     IObject* asteroid = new Asteroid;
     float size = asteroids_size_(game_data_.generator_);

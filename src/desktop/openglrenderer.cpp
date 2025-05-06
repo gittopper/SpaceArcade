@@ -3,6 +3,7 @@
 #include "game/objects/gameobjects.h"
 #include "math/gamemath.h"
 #include <GL/gl.h>
+#include <GLES3/gl3.h>
 using namespace Math;
 
 namespace Game {
@@ -124,7 +125,8 @@ void OpenGLRenderer::drawOverlayRGBA(const void* data,
     glVertexPointer(3, GL_FLOAT, 0, verts3);
     glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_DST_ALPHA,
+                        GL_ONE_MINUS_DST_ALPHA);
     glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, indices3);
 
     glDisableClientState(GL_VERTEX_ARRAY);
