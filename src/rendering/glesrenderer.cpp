@@ -90,7 +90,6 @@ bool GLESRenderer::initRenderer(ResourceLoader* loader) {
 
     u_mvpHandle_ = glGetUniformLocation(program_id_, "u_mvpMatrix");
 
-    // createFramebuffer();
     return true;
 }
 
@@ -137,7 +136,9 @@ void GLESRenderer::prepareFrame() {
 
     SetOrtho(proj_, -ws, ws, -hs, hs, -1, 1);
 
-    // glBindFramebuffer(GL_FRAMEBUFFER_OES, viewFramebuffer_);
+#ifdef __APPLE__
+    glBindFramebuffer(GL_FRAMEBUFFER_OES, viewFramebuffer_);
+#endif
     glViewport(0, 0, camera_->width(), camera_->height());
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
@@ -147,7 +148,9 @@ void GLESRenderer::prepareFrame() {
 }
 
 void GLESRenderer::showFrame() {
-    // glBindRenderbuffer(GL_RENDERBUFFER_OES, viewRenderbuffer_);
+#ifdef __APPLE__
+    glBindRenderbuffer(GL_RENDERBUFFER_OES, viewRenderbuffer_);
+#endif
 }
 
 void GLESRenderer::destroyFramebuffer() {
