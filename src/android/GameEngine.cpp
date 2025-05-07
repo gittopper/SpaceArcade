@@ -1,6 +1,6 @@
 #include <android/androidresourceloader.h>
 #include <android/envwrapper.h>
-#include <android/glesspacegamerenderer.h>
+#include <rendering//glesspacegamerenderer.h>
 #include <game/soundplayer.h>
 #include <game/spacegame.h>
 
