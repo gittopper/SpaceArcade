@@ -13,6 +13,9 @@ void RegressVisitor::visit(SpaceShip& s) {
 void RegressVisitor::visit(Bullet& b) {
     this->visit(dynamic_cast<IObject&>(b));
 }
+void RegressVisitor::visit(Perk& b) {
+    this->visit(dynamic_cast<IObject&>(b));
+}
 void RegressVisitor::visit(Scene& b) {
     this->visit(dynamic_cast<IObject&>(b));
 }

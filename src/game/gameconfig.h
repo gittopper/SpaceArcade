@@ -11,7 +11,13 @@ struct LevelConfig {
 
     float ship_size_ = 1.;
 
-    float asteroids_avg_per_sec_ = 3.;
+    struct LivePerkSettings {
+        float avg_per_sec_ = 0.003;
+        float sigma_per_sec_ = 1.;
+        float size = 0.5;
+    } live_perk_settings;
+
+    float asteroids_avg_per_sec_ = 1.;
     float asteroids_sigma_per_sec_ = 1.;
     float asteroid_avg_size_ = 0.5;
 

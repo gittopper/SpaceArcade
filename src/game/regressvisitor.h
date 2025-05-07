@@ -9,6 +9,7 @@ class RegressVisitor : public Visitor {
   public:
     virtual void visit(class IObject&) {}
 
+    void visit(Perk&);
     void visit(Asteroid&);
     void visit(SpaceShip&);
     void visit(Bullet&);

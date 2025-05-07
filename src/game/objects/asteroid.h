@@ -4,7 +4,6 @@
 
 #include <cmath>
 #include <random>
-using namespace std;
 
 namespace Game {
 

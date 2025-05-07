@@ -107,7 +107,7 @@ void SpaceGame::step() {
         ++game_state_.num_level_;
         LevelConfig config = level_state_.config_;
         ++config.asteroid_avg_parts_number_;
-        ++config.asteroids_avg_per_sec_;
+        config.asteroids_avg_per_sec_ += 0.3;
         ++config.asteroids_avg_speed_;
         ++config.max_space_ship_speed_;
         ++config.bullet_speed_;

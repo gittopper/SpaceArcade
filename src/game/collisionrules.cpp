@@ -1,6 +1,5 @@
 #include <game/collisionrules.h>
 #include <game/gameconfig.h>
-#include <game/objects/spaceship.h>
 
 #include <cassert>
 
@@ -47,6 +46,14 @@ void Scene::visit(class IObject& obj) {
     ) {
         assert(dynamic_cast<SpaceShip*>(&obj) == nullptr);
         obj.shouldBeRemoved = true;
+    }
+}
+
+void Perk::visit(SpaceShip& a) {
+
+    if (a.intersects(this)) {
+        ++game->game_state_.num_lives_;
+        shouldBeRemoved = true;
     }
 }
 

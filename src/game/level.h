@@ -20,6 +20,7 @@ class Level {
     void step();
     void resize();
     void createAsteroid();
+    void createLivePerk();
     bool isFinished() const;
     IGame::GameStateData& game_data_;
     Scene scene_;
@@ -28,6 +29,7 @@ class Level {
     double last_update_time_ = 0;
 
     normal_distribution<float> asteroids_delay_;
+    normal_distribution<float> live_perk_delay_;
     normal_distribution<float> asteroids_speed_;
     normal_distribution<float> asteroids_size_;
     normal_distribution<float> asteroids_speed_angle_;
@@ -35,6 +37,7 @@ class Level {
 
     LevelConfig config_;
     float asteroids_next_time_ = 0;
+    float live_perk_next_time_ = 0;
 };
 
 }  // namespace Game

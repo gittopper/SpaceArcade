@@ -51,6 +51,8 @@ set(ARCADE_SOURCES
         ${GAME_SOURCES}/game/pngreader.cpp
         ${GAME_SOURCES}/game/objects/asteroid.cpp
         ${GAME_SOURCES}/game/objects/asteroid.h
+        ${GAME_SOURCES}/game/objects/perk.cpp
+        ${GAME_SOURCES}/game/objects/perk.h
         ${GAME_SOURCES}/game/objects/bullet.cpp
         ${GAME_SOURCES}/game/objects/bullet.h
         ${GAME_SOURCES}/game/objects/scene.cpp

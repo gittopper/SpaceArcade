@@ -20,8 +20,12 @@ void Level::setupLevel(const LevelConfig& level_config) {
         0, scene_.getBBox().getMin()[1] +
                (spaceship_->getShift() - spaceship_->getBBox().getMin())[1]));
     asteroids_delay_ = normal_distribution<float>(
-        1 / config_.asteroids_avg_per_sec_,
-        config_.asteroids_sigma_per_sec_ / config_.asteroids_avg_per_sec_);
+        1 / (config_.asteroids_avg_per_sec_ * game_data_.camera_.internalWidth()),
+        config_.asteroids_sigma_per_sec_);
+    live_perk_delay_ = normal_distribution<float>(
+        1 / (config_.live_perk_settings.avg_per_sec_ * game_data_.camera_.internalWidth()),
+        config_.live_perk_settings.sigma_per_sec_);
+    live_perk_next_time_ = game_data_.time_.time() + live_perk_delay_(game_data_.generator_);
 
     asteroids_speed_ = normal_distribution<float>(
         config_.asteroids_avg_speed_, config_.asteroids_sigma_speed_);
@@ -72,6 +76,10 @@ void Level::step() {
         asteroids_next_time_ =
             game_data_.time_.time() + asteroids_delay_(game_data_.generator_);
     }
+    if (live_perk_next_time_ < game_data_.time_.time()) {
+        createLivePerk();
+        live_perk_next_time_ = game_data_.time_.time() + live_perk_delay_(game_data_.generator_);
+    }
     Collider collider(&scene_);
     scene_.visitAll(collider);
     removePostponed(&scene_);
@@ -112,6 +120,21 @@ void Level::createAsteroid() {
                -asteroids_speed_(game_data_.generator_) * cos(angle), 0);
 
     scene_.addChild(asteroid);
+}
+void Level::createLivePerk() {
+    IObject* live_perk = new Perk(Perk::Live);
+
+    live_perk->scale(config_.live_perk_settings.size);
+    live_perk->move(Vector(asteroid_place_(game_data_.generator_),
+                          game_data_.camera_.internalHeight(), 0));
+    float angle = asteroids_speed_angle_(game_data_.generator_);
+    live_perk->getV() =
+        Vector((asteroids_speed_(game_data_.generator_) -
+                config_.asteroids_avg_speed_) *
+                   sin(angle),
+               -asteroids_speed_(game_data_.generator_) * cos(angle), 0);
+
+    scene_.addChild(live_perk);
 }
 
 }  // namespace Game

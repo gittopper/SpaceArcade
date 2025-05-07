@@ -7,6 +7,7 @@ class Visitor {
     virtual void visit(class Bullet&) = 0;
     virtual void visit(class SpaceShip&) = 0;
     virtual void visit(class Scene&) = 0;
+    virtual void visit(class Perk&) = 0;
     virtual ~Visitor() {}
 };
 }  // namespace Game
